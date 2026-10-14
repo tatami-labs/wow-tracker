@@ -42,7 +42,7 @@
 
   <!-- TOP NAVIGATION BAR -->
   <header class="bg-wow-panel border-b border-wow-border sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+    <div class="max-w-[1440px] mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500 to-yellow-700 flex items-center justify-center text-slate-950 font-black text-xl shadow">
           W
@@ -54,7 +54,7 @@
               ⚠️ API nicht verbunden
             </span>
           </h1>
-          <p class="text-xs text-slate-400">Exakte Waffen-/Ring-/Schmuck-Regeln, SimCraft Taschen-Scanner & Wappen-Rabatte</p>
+          <p class="text-xs text-slate-400">331 Ø Item-Level-Rechner, SimCraft Taschen- & Marken-Scanner & Twink-Rabatte</p>
         </div>
       </div>
 
@@ -83,7 +83,7 @@
   </header>
 
   <!-- MAIN CONTENT AREA -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
+  <main class="flex-1 max-w-[1440px] w-full mx-auto px-4 py-6">
 
     <!-- EMPTY STATE / ONBOARDING (Nur sichtbar, solange keine eigenen Charaktere geladen sind) -->
     <section id="emptyStateSection" class="hidden bg-wow-panel border border-wow-border rounded-2xl p-8 max-w-2xl mx-auto my-8 shadow-xl">
@@ -98,7 +98,6 @@
       </div>
 
       <div class="mt-6 space-y-4">
-        <!-- Option 1: API Setup -->
         <div class="p-4 rounded-xl bg-wow-card border border-wow-border flex items-center justify-between gap-4">
           <div>
             <div class="text-xs font-bold uppercase tracking-wider text-wow-gold">Schritt 1 (Für Battle.net-Scan)</div>
@@ -110,7 +109,6 @@
           </button>
         </div>
 
-        <!-- Option 2: Battle.net Account Scan -->
         <div class="p-4 rounded-xl bg-wow-card border border-wow-border flex items-center justify-between gap-4">
           <div>
             <div class="text-xs font-bold uppercase tracking-wider text-blue-400">Schritt 2 (Account-Übersicht)</div>
@@ -122,12 +120,11 @@
           </button>
         </div>
 
-        <!-- Option 3: WoW -> SimCraft Import -->
         <div class="p-4 rounded-xl bg-purple-950/30 border border-purple-700/50 flex items-center justify-between gap-4">
           <div>
-            <div class="text-xs font-bold uppercase tracking-wider text-purple-300">Direkt aus dem Spiel (inkl. Taschen!)</div>
+            <div class="text-xs font-bold uppercase tracking-wider text-purple-300">Direkt aus dem Spiel (inkl. Taschen & Marken!)</div>
             <div class="text-sm font-semibold text-white">WoW ➔ SimCraft Import (/simc)</div>
-            <div class="text-xs text-slate-400 mt-0.5">Liest angelegte Items <strong>und</strong> das höchste Item-Level in deinen Taschen separat aus.</div>
+            <div class="text-xs text-slate-400 mt-0.5">Liest angelegte Items, Taschen-Items sowie deine Hero- & Mythisch-Marken für den 331-Rechner ein.</div>
           </div>
           <button onclick="openSimcModal()" class="px-4 py-2 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-xs font-bold shrink-0 transition">
             📋 WoW ➔ SimCraft
@@ -136,12 +133,73 @@
       </div>
     </section>
 
-    <!-- DASHBOARD CONTENT -->
-    <div id="dashboardContent" class="hidden space-y-6">
+    <!-- DASHBOARD MIT LINKEM SEITENMENÜ -->
+    <div id="dashboardContent" class="hidden flex flex-col lg:flex-row gap-6 items-start">
 
-      <!-- TOP KPI CARDS & RULES -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <!-- LINKES NAVIGATIONS-MENÜ -->
+      <aside class="w-full lg:w-64 shrink-0 space-y-4 lg:sticky lg:top-20">
+        <div class="bg-wow-panel border border-wow-border rounded-2xl p-3 space-y-1.5 shadow-lg">
+          <div class="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            Navigation
+          </div>
+
+          <!-- NEUER MENÜPUNKT LINKS: DURCHSCHNITTLICHES ITEM-LEVEL -->
+          <button onclick="switchTab('avgilvl')" id="tabBtn-avgilvl" class="w-full text-left px-3.5 py-3 rounded-xl transition flex items-start gap-3 bg-wow-gold text-slate-950 font-bold shadow">
+            <span class="text-lg leading-none mt-0.5">📈</span>
+            <div>
+              <div class="text-xs font-bold leading-tight">Durchschnittliches Item-Level</div>
+              <div class="text-[10px] opacity-80 font-medium mt-0.5">331-Speed-Rechner & Marken</div>
+            </div>
+          </button>
+
+          <button onclick="switchTab('matrix')" id="tabBtn-matrix" class="w-full text-left px-3.5 py-3 rounded-xl transition flex items-start gap-3 bg-wow-card/60 hover:bg-wow-card text-slate-200 border border-transparent">
+            <span class="text-lg leading-none mt-0.5">📊</span>
+            <div>
+              <div class="text-xs font-bold leading-tight">16-Slot-Matrix</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">Kriegsmeuten-Vergleich</div>
+            </div>
+          </button>
+
+          <button onclick="switchTab('planner')" id="tabBtn-planner" class="w-full text-left px-3.5 py-3 rounded-xl transition flex items-start gap-3 bg-wow-card/60 hover:bg-wow-card text-slate-200 border border-transparent">
+            <span class="text-lg leading-none mt-0.5">🎯</span>
+            <div>
+              <div class="text-xs font-bold leading-tight">Twink-Upgrade-Planer</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">Offene Rabatt-Slots</div>
+            </div>
+          </button>
+
+          <button onclick="switchTab('crests')" id="tabBtn-crests" class="w-full text-left px-3.5 py-3 rounded-xl transition flex items-start gap-3 bg-wow-card/60 hover:bg-wow-card text-slate-200 border border-transparent">
+            <span class="text-lg leading-none mt-0.5">🏆</span>
+            <div>
+              <div class="text-xs font-bold leading-tight">Wappen-Rabatt-Stufen</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">Meilensteine & Waffen-Regeln</div>
+            </div>
+          </button>
+        </div>
+
+        <!-- OFFIZIELLE BERECHNUNGS-REGELN LINKS UNTER DEM MENÜ -->
+        <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 space-y-3 shadow-lg">
+          <div class="text-xs font-bold text-slate-300 uppercase tracking-wider">WoW Rabatt-Regeln</div>
+          <label class="flex items-center justify-between text-xs text-slate-300 cursor-pointer gap-2">
+            <span>Ring/Schmuck 2-Slot-Minimum</span>
+            <input type="checkbox" id="strictPairsToggle" onchange="toggleRules()" class="w-4 h-4 accent-amber-500 rounded cursor-pointer shrink-0" checked />
+          </label>
+          <label class="flex items-center justify-between text-xs text-amber-200 cursor-pointer gap-2">
+            <span>⚔️ Waffen-Regel (2H=Beide | 1H=Min)</span>
+            <input type="checkbox" id="strictWeaponsToggle" onchange="toggleRules()" class="w-4 h-4 accent-amber-500 rounded cursor-pointer shrink-0" checked />
+          </label>
+          <label class="flex items-center justify-between text-xs text-cyan-300 cursor-pointer gap-2">
+            <span>🎒 Taschen-Items zählen mit</span>
+            <input type="checkbox" id="includeBagsToggle" onchange="toggleRules()" class="w-4 h-4 accent-cyan-400 rounded cursor-pointer shrink-0" checked />
+          </label>
+        </div>
+      </aside>
+
+      <!-- RECHTER HAUPTBEREICH -->
+      <div class="flex-1 min-w-0 w-full space-y-6">
+
+        <!-- TOP KPI CARDS -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div class="bg-wow-panel border border-wow-border rounded-xl p-4">
             <div class="text-xs text-slate-400">Erfasste Charaktere</div>
             <div id="kpiCharCount" class="text-2xl font-bold text-white mt-1">0</div>
@@ -159,155 +217,201 @@
           </div>
         </div>
 
-        <!-- REGEL-SCHALTER -->
-        <div class="lg:col-span-5 bg-wow-panel border border-wow-border rounded-xl p-4 flex flex-col justify-center space-y-2">
-          <div class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Offizielle WoW Rabatt-Regeln</div>
-          <label class="flex items-center justify-between text-xs text-slate-300 cursor-pointer" title="Ringe & Schmuckstücke schalten den Rabatt erst frei, wenn BEIDE Slots das Item-Level erreicht haben.">
-            <span>Strenge Ring- & Schmuck-Regel (2-Slot-Minimum)</span>
-            <input type="checkbox" id="strictPairsToggle" onchange="toggleRules()" class="w-4 h-4 accent-amber-500 rounded cursor-pointer" checked />
-          </label>
-          <label class="flex items-center justify-between text-xs text-amber-200 cursor-pointer" title="Offizielle WoW-Regel: Eine 2H-Waffe deckt beide Hände ab. Bei 1H + Schild/Nebenhand zählt der niedrigere Wert aus beiden Händen für den Waffen-Rabatt!">
-            <span>⚔️ Strenge Waffen-Regel (2H = beide | 1H+OH = Minimum)</span>
-            <input type="checkbox" id="strictWeaponsToggle" onchange="toggleRules()" class="w-4 h-4 accent-amber-500 rounded cursor-pointer" checked />
-          </label>
-          <label class="flex items-center justify-between text-xs text-cyan-300 cursor-pointer">
-            <span>🎒 Taschen-Items (SimCraft) zählen für Kriegsmeuten-Max</span>
-            <input type="checkbox" id="includeBagsToggle" onchange="toggleRules()" class="w-4 h-4 accent-cyan-400 rounded cursor-pointer" checked />
-          </label>
-        </div>
+        <!-- =============================================================== -->
+        <!-- ANSICH NEUER MENÜPUNKT: DURCHSCHNITTLICHES ITEM-LEVEL (331)     -->
+        <!-- =============================================================== -->
+        <section id="tab-avgilvl" class="space-y-5">
+          <!-- Steuerleiste: Charakter, Ziel-iLvl & Marken-Vorrat -->
+          <div class="bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-4 shadow-lg">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-wow-border pb-4">
+              <div>
+                <h2 class="text-base font-bold text-white flex items-center gap-2">
+                  <span>📈</span> Durchschnittliches Item-Level – Schnellster Weg auf 331,0
+                </h2>
+                <p class="text-xs text-slate-400 mt-0.5">
+                  Berechnet mathematisch, welche Slots du mit deinen <strong>Hero-Marken</strong> und <strong>Mythisch-Marken</strong> zuerst upgraden musst, um mit minimalem Aufwand Ø 331,0 (`5.296 Gesamtpunkte`) zu knacken.
+                </p>
+              </div>
+              <button onclick="openSimcModal()" class="px-3.5 py-2 rounded-xl bg-purple-700 hover:bg-purple-600 text-white text-xs font-bold transition shrink-0">
+                📋 SimCraft & Marken aktualisieren
+              </button>
+            </div>
+
+            <!-- Eingabezeile: Charakter + Marken-Bestand + Kosten pro Schritt -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-1">
+              <div class="bg-wow-card border border-wow-border rounded-xl p-3">
+                <label class="block text-[11px] text-slate-400 font-semibold mb-1">Charakter auswählen</label>
+                <select id="avgIlvlCharSelect" onchange="onAvgCharChange()" class="w-full bg-wow-panel border border-wow-border rounded-lg px-2.5 py-1.5 text-xs text-white font-bold focus:outline-none focus:border-wow-gold"></select>
+              </div>
+
+              <div class="bg-wow-card border border-purple-700/50 rounded-xl p-3">
+                <label class="block text-[11px] text-purple-300 font-bold mb-1">🟣 Deine Hero-Marken (bis 321)</label>
+                <input type="number" id="heroMarksInput" min="0" step="5" oninput="saveCharMarksAndRender()" class="w-full bg-wow-panel border border-purple-700/60 rounded-lg px-2.5 py-1.5 text-sm text-purple-200 font-black" placeholder="z. B. 90" />
+              </div>
+
+              <div class="bg-wow-card border border-amber-600/50 rounded-xl p-3">
+                <label class="block text-[11px] text-wow-gold font-bold mb-1">🟠 Deine Mythisch-Marken (bis 334)</label>
+                <input type="number" id="mythMarksInput" min="0" step="5" oninput="saveCharMarksAndRender()" class="w-full bg-wow-panel border border-amber-600/60 rounded-lg px-2.5 py-1.5 text-sm text-amber-300 font-black" placeholder="z. B. 60" />
+              </div>
+
+              <div class="bg-wow-card border border-wow-border rounded-xl p-3">
+                <label class="block text-[11px] text-slate-400 font-semibold mb-1">Marken-Kosten pro Upgrade-Stufe</label>
+                <select id="crestStepCostSelect" onchange="renderAvgIlvlOptimizer()" class="w-full bg-wow-panel border border-wow-border rounded-lg px-2.5 py-1.5 text-xs text-white font-semibold">
+                  <option value="15">15 Marken pro Stufe (Standard)</option>
+                  <option value="20">20 Marken pro Stufe (Ohne Rabatt)</option>
+                  <option value="10">10 Marken pro Stufe (50% Twink-Rabatt)</option>
+                </select>
+              </div>
+
+              <div class="bg-wow-card border border-wow-border rounded-xl p-3">
+                <label class="block text-[11px] text-slate-400 font-semibold mb-1">Ziel-Durchschnitts-iLvl</label>
+                <input type="number" id="avgTargetIlvlInput" value="331" step="0.5" onchange="renderAvgIlvlOptimizer()" class="w-full bg-wow-panel border border-wow-border rounded-lg px-2.5 py-1.5 text-sm text-wow-gold font-black text-center" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Fortschritts-KPI-Karten für den ausgewählten Charakter -->
+          <div id="avgIlvlStatusCards" class="grid grid-cols-1 md:grid-cols-4 gap-4"></div>
+
+          <!-- Zusammenfassungs-Banner (Reichen die Marken?) -->
+          <div id="avgIlvlVerdictBanner" class="p-4 rounded-2xl border text-sm"></div>
+
+          <!-- Konkreter Schritt-für-Schritt-Upgrade-Plan -->
+          <div class="bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-4 shadow-lg">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 class="text-sm font-bold text-white">🎯 Dein optimaler Upgrade-Fahrplan (Sortiert nach höchster Effizienz)</h3>
+                <p class="text-xs text-slate-400">
+                  Grün markierte Schritte kannst du dir <strong>sofort mit deinen vorhandenen Marken</strong> leisten. Der Algorithmus bevorzugt automatisch kostenlose Taschen-/Rabatt-Upgrades, 2H-Waffen (doppelte Punkte!) und den <strong>+4 iLvl Sprung (321 ➔ 325)</strong>.
+                </p>
+              </div>
+            </div>
+
+            <div id="avgIlvlStepsContainer" class="space-y-2.5"></div>
+          </div>
+        </section>
+
+        <!-- =============================================================== -->
+        <!-- ANSICHT 1: 16-SLOT-MATRIX                                       -->
+        <!-- =============================================================== -->
+        <section id="tab-matrix" class="hidden space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400 px-1">
+            <span>💡 Klicke auf eine Zelle, um Angelegt & Tasche manuell anzupassen.</span>
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="inline-flex items-center gap-1"><span class="px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-700/60 text-[10px] font-bold">🎒 321</span> = Höheres Item in Tasche</span>
+              <span class="inline-flex items-center gap-1"><span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-700/60 text-[10px] font-bold">⚠️ Paar</span> = 1H wird durch Nebenhand gebremst</span>
+            </div>
+          </div>
+
+          <div class="bg-wow-panel border border-wow-border rounded-xl overflow-hidden shadow-lg">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr id="matrixHeaderRow" class="bg-wow-card border-b border-wow-border text-xs text-slate-300"></tr>
+                </thead>
+                <tbody id="matrixBody" class="divide-y divide-wow-border/60 text-sm"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =============================================================== -->
+        <!-- ANSICHT 2: TWINK UPGRADE PLANNER                                -->
+        <!-- =============================================================== -->
+        <section id="tab-planner" class="hidden space-y-4">
+          <div class="bg-wow-panel border border-wow-border rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <label for="plannerCharSelect" class="text-sm font-semibold text-white">Twink auswählen:</label>
+              <select id="plannerCharSelect" onchange="renderPlannerView()" class="bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-wow-gold"></select>
+            </div>
+            <div id="plannerSummaryText" class="text-xs text-slate-300"></div>
+          </div>
+          <div id="plannerCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </section>
+
+        <!-- =============================================================== -->
+        <!-- ANSICHT 3: WAPPEN-RABATT-STUFEN & WAFFEN-REGELN                 -->
+        <!-- =============================================================== -->
+        <section id="tab-crests" class="hidden space-y-6">
+          <div class="bg-wow-panel border border-wow-border rounded-xl p-5 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h3 class="text-base font-bold text-white">🏆 Offizielle Wappen-Rabatt-Stufen (50 % Twink-Rabatt)</h3>
+                <p class="text-xs text-slate-400">
+                  Sobald jeder der 16 Slots (inkl. beider Ringe, Schmuckstücke und beider Waffen-Hände) das Ziel-Item-Level erreicht hat, zahlen alle Twinks 50 % weniger Wappen.
+                </p>
+              </div>
+              <div class="flex items-center gap-2">
+                <label class="text-xs text-slate-300">Ziel-iLvl:</label>
+                <input type="number" id="crestTargetInput" value="321" onchange="renderCrestsView()" class="w-24 bg-wow-card border border-wow-border rounded-lg px-3 py-1.5 text-sm text-white font-bold text-center" />
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              <span class="text-xs text-slate-400 mr-1">Schnellauswahl (Midnight S2):</span>
+              <button onclick="setCrestTarget(282)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-slate-200 transition">
+                Abenteurer 6/6 (<strong>282</strong>)
+              </button>
+              <button onclick="setCrestTarget(295)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-emerald-300 transition">
+                Veteran 6/6 (<strong>295</strong>)
+              </button>
+              <button onclick="setCrestTarget(308)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-blue-300 transition">
+                Champion 6/6 (<strong>308</strong>)
+              </button>
+              <button onclick="setCrestTarget(321)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-purple-300 transition">
+                Held 6/6 (<strong>321</strong>)
+              </button>
+              <button onclick="setCrestTarget(331)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-wow-gold transition">
+                Mythos 5/6 (<strong>331</strong>)
+              </button>
+              <button onclick="setCrestTarget(334)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-amber-400 transition">
+                Mythos 6/6 Max (<strong>334</strong>)
+              </button>
+            </div>
+
+            <div id="crestStatusBanner" class="p-4 rounded-xl border"></div>
+            <div id="crestSlotsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3"></div>
+          </div>
+
+          <div class="bg-wow-panel border border-wow-border rounded-xl p-5 space-y-3">
+            <h4 class="text-sm font-bold text-wow-gold">⚔️ Wichtige WoW-Regeln für Waffen-Rabatte (Haupthand & Nebenhand)</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-300">
+              <div class="p-3.5 rounded-xl bg-wow-card border border-wow-border space-y-1">
+                <div class="font-bold text-white">1. Zweihandwaffe (2H) = Beide Hände</div>
+                <p class="text-slate-400 leading-relaxed">
+                  Eine einzelne Zweihandwaffe (Stab, 2H-Schwert, Bogen etc.) zählt im WoW-System automatisch für <strong>Haupthand UND Nebenhand</strong> gleichzeitig.
+                </p>
+              </div>
+              <div class="p-3.5 rounded-xl bg-wow-card border border-wow-border space-y-1">
+                <div class="font-bold text-amber-300">2. Einhand + Schild/Nebenhand = Minimum!</div>
+                <p class="text-slate-400 leading-relaxed">
+                  Trägst du <strong>1H + Schild/Nebenhand</strong> (oder zwei 1H-Waffen), gilt als Waffen-Rabatt-Schwelle immer das <strong>niedrigere Item-Level der beiden Hände</strong>.
+                </p>
+              </div>
+              <div class="p-3.5 rounded-xl bg-wow-card border border-wow-border space-y-1">
+                <div class="font-bold text-purple-300">3. Furor-Krieger Trick (Titanengriff)</div>
+                <p class="text-slate-400 leading-relaxed">
+                  Da Furor-Krieger zwei 2H-Waffen tragen, zählt eine einzelne 2H-Waffe dort nur halb. <strong>Trick:</strong> Kurz auf <em>Waffen (Arms)</em> umspeccen und die 2H-Waffe neu anlegen!
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
       </div>
-
-      <!-- VIEW TABS -->
-      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-wow-border pb-3">
-        <div class="flex flex-wrap gap-2">
-          <button onclick="switchTab('matrix')" id="tabBtn-matrix" class="px-4 py-2 rounded-lg text-xs font-semibold bg-wow-gold text-slate-950 transition">
-            📊 Ansicht 1: 16-Slot-Matrix
-          </button>
-          <button onclick="switchTab('planner')" id="tabBtn-planner" class="px-4 py-2 rounded-lg text-xs font-semibold bg-wow-panel text-slate-300 hover:bg-wow-card border border-wow-border transition">
-            🎯 Ansicht 2: Twink-Upgrade-Planer
-          </button>
-          <button onclick="switchTab('crests')" id="tabBtn-crests" class="px-4 py-2 rounded-lg text-xs font-semibold bg-wow-panel text-slate-300 hover:bg-wow-card border border-wow-border transition">
-            🏆 Ansicht 3: Wappen-Rabatt-Stufen & Waffen-Regeln
-          </button>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-3 text-xs text-slate-400">
-          <span class="inline-flex items-center gap-1"><span class="px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-700/60 text-[10px] font-bold">🎒 321</span> = Höheres Item in Tasche</span>
-          <span class="hidden sm:inline">|</span>
-          <span class="inline-flex items-center gap-1"><span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-700/60 text-[10px] font-bold">⚠️ Paar-Limit</span> = 1H wird durch Nebenhand gebremst</span>
-        </div>
-      </div>
-
-      <!-- TAB 1: MATRIX VIEW -->
-      <section id="tab-matrix" class="bg-wow-panel border border-wow-border rounded-xl overflow-hidden shadow-lg">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr id="matrixHeaderRow" class="bg-wow-card border-b border-wow-border text-xs text-slate-300">
-                <!-- Dynamisch gefüllt -->
-              </tr>
-            </thead>
-            <tbody id="matrixBody" class="divide-y divide-wow-border/60 text-sm">
-              <!-- Dynamisch gefüllt -->
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- TAB 2: TWINK UPGRADE PLANNER -->
-      <section id="tab-planner" class="hidden space-y-4">
-        <div class="bg-wow-panel border border-wow-border rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
-          <div class="flex items-center gap-3">
-            <label for="plannerCharSelect" class="text-sm font-semibold text-white">Twink auswählen:</label>
-            <select id="plannerCharSelect" onchange="renderPlannerView()" class="bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-wow-gold"></select>
-          </div>
-          <div id="plannerSummaryText" class="text-xs text-slate-300"></div>
-        </div>
-        <div id="plannerCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-      </section>
-
-      <!-- TAB 3: CREST BOTTLENECK FINDER & WEAPON RULES TABLE -->
-      <section id="tab-crests" class="hidden space-y-6">
-        <div class="bg-wow-panel border border-wow-border rounded-xl p-5 space-y-4">
-          <div class="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h3 class="text-base font-bold text-white">🏆 Offizielle Wappen-Rabatt-Stufen (50 % Twink-Rabatt)</h3>
-              <p class="text-xs text-slate-400">
-                Sobald jeder der 16 Slots (inkl. beider Ringe, Schmuckstücke und beider Waffen-Hände) das Ziel-Item-Level erreicht hat, zahlen alle Twinks 50 % weniger Wappen (10 statt 20 pro Stufe).
-              </p>
-            </div>
-            <div class="flex items-center gap-2">
-              <label class="text-xs text-slate-300">Ziel-iLvl:</label>
-              <input type="number" id="crestTargetInput" value="308" onchange="renderCrestsView()" class="w-24 bg-wow-card border border-wow-border rounded-lg px-3 py-1.5 text-sm text-white font-bold text-center" />
-            </div>
-          </div>
-
-          <!-- SCHNELLAUSWAHL-BUTTONS FÜR DIE OFFIZIELLEN SCHWELLENWERTE -->
-          <div class="flex flex-wrap items-center gap-2 pt-1">
-            <span class="text-xs text-slate-400 mr-1">Schnellauswahl (Midnight S2):</span>
-            <button onclick="setCrestTarget(282)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-slate-200 transition">
-              Abenteurer 6/6 (<strong>282</strong>)
-            </button>
-            <button onclick="setCrestTarget(295)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-emerald-300 transition">
-              Veteran 6/6 (<strong>295</strong>)
-            </button>
-            <button onclick="setCrestTarget(308)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-blue-300 transition">
-              Champion 6/6 (<strong>308</strong>)
-            </button>
-            <button onclick="setCrestTarget(321)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-purple-300 transition">
-              Held 6/6 (<strong>321</strong>)
-            </button>
-            <button onclick="setCrestTarget(331)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-wow-gold transition">
-              Mythos 5/6 (<strong>331</strong>)
-            </button>
-            <button onclick="setCrestTarget(334)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-amber-400 transition">
-              Mythos 6/6 Max (<strong>334</strong>)
-            </button>
-          </div>
-
-          <div id="crestStatusBanner" class="p-4 rounded-xl border"></div>
-          <div id="crestSlotsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3"></div>
-        </div>
-
-        <!-- SPICKZETTEL: WAFFEN- & RABATT-REGELN -->
-        <div class="bg-wow-panel border border-wow-border rounded-xl p-5 space-y-3">
-          <h4 class="text-sm font-bold text-wow-gold">⚔️ Wichtige WoW-Regeln für Waffen-Rabatte (Haupthand & Nebenhand)</h4>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-300">
-            <div class="p-3.5 rounded-xl bg-wow-card border border-wow-border space-y-1">
-              <div class="font-bold text-white">1. Zweihandwaffe (2H) = Beide Hände</div>
-              <p class="text-slate-400 leading-relaxed">
-                Eine einzelne Zweihandwaffe (Stab, 2H-Schwert, Bogen etc.) zählt im WoW-System automatisch für <strong>Haupthand UND Nebenhand</strong> gleichzeitig.
-              </p>
-            </div>
-            <div class="p-3.5 rounded-xl bg-wow-card border border-wow-border space-y-1">
-              <div class="font-bold text-amber-300">2. Einhand + Schild/Nebenhand = Minimum!</div>
-              <p class="text-slate-400 leading-relaxed">
-                Trägst du <strong>1H + Schild/Nebenhand</strong> (oder zwei 1H-Waffen), gilt als Waffen-Rabatt-Schwelle immer das <strong>niedrigere Item-Level der beiden Hände</strong> (z. B. 321 Haupthand + 295 Schild = Rabatt nur bis 295!).
-              </p>
-            </div>
-            <div class="p-3.5 rounded-xl bg-wow-card border border-wow-border space-y-1">
-              <div class="font-bold text-purple-300">3. Furor-Krieger Trick (Titanengriff)</div>
-              <p class="text-slate-400 leading-relaxed">
-                Da Furor-Krieger zwei 2H-Waffen tragen, zählt eine einzelne 2H-Waffe dort nur halb. <strong>Trick:</strong> Kurz auf <em>Waffen (Arms)</em> umspeccen und die 2H-Waffe einmal neu anlegen – schon zählt sie für beide Slots!
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
     </div>
   </main>
 
   <!-- MODAL 1: WOW -> SIMCRAFT (/simc) IMPORT -->
   <div id="simcModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-    <div class="bg-wow-panel border border-wow-border rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl flex flex-col max-h-[90vh]">
+    <div class="bg-wow-panel border border-wow-border rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl flex flex-col max-h-[92vh]">
       <div class="flex items-center justify-between">
         <div>
           <h3 class="text-base font-bold text-white flex items-center gap-2">
             <span>📋</span> WoW ➔ SimCraft Import (/simc Addon)
           </h3>
           <p class="text-xs text-slate-400">
-            Überträgt deinen SimCraft-Export aus WoW in den Tracker – inklusive <strong>angezogener Ausrüstung</strong> und dem <strong>höchsten Item-Level in deinen Taschen</strong> (`Gear from Bags`).
+            Überträgt deine <strong>angezogene Ausrüstung</strong>, das <strong>höchste Taschen-Item-Level</strong> (`Gear from Bags`) sowie deine <strong>Hero- & Mythisch-Marken</strong>.
           </p>
         </div>
         <button onclick="closeModal('simcModal')" class="text-slate-400 hover:text-white text-lg">&times;</button>
@@ -316,16 +420,28 @@
       <div class="bg-wow-card border border-wow-border rounded-xl p-3 text-xs text-slate-300 space-y-1">
         <div class="font-semibold text-purple-300">So holst du die Daten aus WoW nach SimCraft:</div>
         <div>1. Tippe in WoW im Chat <code class="px-1.5 py-0.5 rounded bg-black/50 text-amber-300 font-mono">/simc</code> ein und drücke <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-600">Strg + C</kbd>.</div>
-        <div>2. Füge den gesamten kopierten Text hier unten mit <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-600">Strg + V</kbd> ein.</div>
+        <div>2. Füge den gesamten Text hier unten ein. Falls deine SimCraft-Version die Marken-Anzahl nicht im Text mitliefert, kannst du sie direkt darunter eintragen.</div>
       </div>
 
       <textarea
         id="simcTextarea"
         oninput="previewSimcInput()"
-        rows="8"
+        rows="7"
         placeholder="# Charakter - Spec - 2026-10-14 ...&#10;warrior=&quot;DeinName&quot;&#10;server=blackhand&#10;...&#10;### Gear from Bags"
         class="w-full bg-wow-bg border border-wow-border rounded-xl p-3 text-xs text-slate-200 font-mono focus:outline-none focus:border-purple-500"
       ></textarea>
+
+      <!-- Marken-Felder im SimC-Dialog (werden automatisch befüllt, falls im SimC-Text enthalten) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="bg-wow-card border border-purple-700/50 rounded-xl p-3">
+          <label class="block text-xs font-bold text-purple-300 mb-1">🟣 Vorhandene Hero-Marken (Helden-Wappen)</label>
+          <input type="number" id="simcHeroMarksInput" min="0" step="5" placeholder="z. B. 90" class="w-full bg-wow-panel border border-wow-border rounded-lg px-3 py-1.5 text-sm text-white font-bold" />
+        </div>
+        <div class="bg-wow-card border border-amber-600/50 rounded-xl p-3">
+          <label class="block text-xs font-bold text-wow-gold mb-1">🟠 Vorhandene Mythisch-Marken (Mythos-Wappen)</label>
+          <input type="number" id="simcMythMarksInput" min="0" step="5" placeholder="z. B. 60" class="w-full bg-wow-panel border border-wow-border rounded-lg px-3 py-1.5 text-sm text-white font-bold" />
+        </div>
+      </div>
 
       <!-- Live-Vorschau des erkannten SimC-Strings -->
       <div id="simcPreviewBox" class="hidden p-3.5 rounded-xl bg-purple-950/30 border border-purple-700/50 text-xs space-y-1.5"></div>
@@ -333,13 +449,13 @@
       <div class="flex items-center justify-end gap-2 pt-2">
         <button onclick="closeModal('simcModal')" class="px-4 py-2 rounded-lg bg-wow-card hover:bg-slate-700 text-xs text-slate-300">Abbrechen</button>
         <button onclick="importSimcProfile()" class="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow">
-          📥 WoW ➔ SimCraft Daten speichern
+          📥 WoW ➔ SimCraft Daten speichern & 331 berechnen
         </button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL 2: SLOT MANUELL BEARBEITEN (ANGELEGT & TASCHE) -->
+  <!-- MODAL 2: SLOT MANUELL BEARBEITEN -->
   <div id="editSlotModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-wow-panel border border-wow-border rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between">
@@ -539,13 +655,18 @@
 
     const TWO_HAND_INVENTORY_TYPES = ['TWOHWEAPON', 'RANGED', 'RANGEDRIGHT', 'THROWN'];
 
-    // Offizielle Midnight Season 2 Wappen-Schwellenwerte
+    // Offizielle Upgrade-Stufen (Midnight Season 2)
+    // Hero-Marken bringen Items bis 321 (Held 6/6 bzw. Mythos 2/6)
+    // Mythisch-Marken bringen Items von 321 über 325 (+4!), 328 (+3), 331 (+3) auf 334 (+3)
+    const HERO_UPGRADE_STEPS = [298, 302, 305, 308, 312, 315, 318, 321];
+    const MYTH_UPGRADE_STEPS = [325, 328, 331, 334];
+
     const CREST_MILESTONES = [
-      { ilvl: 282, name: 'Abenteurer des Nebels (282)' },
-      { ilvl: 295, name: 'Veteran des Nebels (295)' },
-      { ilvl: 308, name: 'Champion des Nebels (308)' },
-      { ilvl: 321, name: 'Held des Nebels (321)' },
-      { ilvl: 331, name: 'Mythos des Nebels (331)' }
+      { ilvl: 282, name: 'Abenteurer (282)' },
+      { ilvl: 295, name: 'Veteran (295)' },
+      { ilvl: 308, name: 'Champion (308)' },
+      { ilvl: 321, name: 'Held (321)' },
+      { ilvl: 331, name: 'Mythos (331)' }
     ];
 
     // =========================================================================
@@ -614,16 +735,14 @@
     }
 
     // =========================================================================
-    // 4. BERECHNUNGS-LOGIK (INKL. OFFIZIELLER WAFFEN-ZWILLINGS-REGEL)
+    // 4. BERECHNUNGS-LOGIK (INKL. WAFFEN-ZWILLINGS-REGEL)
     // =========================================================================
-    // Prüft, ob der Charakter eine 2H-Waffe ohne separate Nebenhand trägt
     function isUsingSingleTwoHander(char) {
       const rawOh = Number(char.slots?.offhand || 0);
       const rawMh = Number(char.slots?.mainhand || 0);
       return rawMh > 0 && rawOh === 0 && (char.hasTwoHand !== false);
     }
 
-    // Gibt das angelegte Item-Level eines Slots zurück (bei 2H-Waffe wird Nebenhand automatisch mit abgedeckt)
     function getEquippedSlotIlvl(char, slotKey) {
       const raw = Number(char.slots?.[slotKey] || 0);
       if (slotKey === 'offhand' && rules.strictWeapons && isUsingSingleTwoHander(char)) {
@@ -632,7 +751,6 @@
       return raw;
     }
 
-    // Gibt das maximale Taschen-Item-Level für diesen Slot zurück (aus SimCraft)
     function getBagSlotIlvl(char, slotKey) {
       const rawBag = Number(char.bagSlots?.[slotKey] || 0);
       if (slotKey === 'offhand' && rules.strictWeapons && rawBag === 0 && Number(char.bagTwoHandMax || 0) > 0) {
@@ -641,16 +759,12 @@
       return rawBag;
     }
 
-    // Roh-Maximum eines Slots (Angelegt vs. Tasche) auf einem einzelnen Charakter
     function getRawCharSlotMax(char, slotKey) {
       const eq = getEquippedSlotIlvl(char, slotKey);
       const bag = getBagSlotIlvl(char, slotKey);
       return rules.includeBags ? Math.max(eq, bag) : eq;
     }
 
-    // Offizielles Waffen-Wasserzeichen eines Charakters:
-    // - Trägt er eine 2H-Waffe (oder hat eine hohe 2H in der Tasche), zählt diese für beide Hände.
-    // - Trägt er 1H + Schild/Nebenhand (oder 2x Waffe bei Furor), zählt das MINIMUM aus Haupthand und Nebenhand!
     function getCharacterWeaponWatermark(char) {
       const mhMax = getRawCharSlotMax(char, 'mainhand');
       const ohMax = getRawCharSlotMax(char, 'offhand');
@@ -659,8 +773,6 @@
         return { mainhand: mhMax, offhand: ohMax };
       }
 
-      // Wenn 1H + Nebenhand getragen wird, zählt in WoW das Minimum aus beiden Händen
-      // (es sei denn, in der Tasche liegt zusätzlich eine 2H-Waffe, die höher ist)
       const pairMin = Math.min(mhMax, ohMax);
       const twoHandBag = rules.includeBags ? Number(char.bagTwoHandMax || 0) : 0;
       const effectiveWeaponWatermark = isUsingSingleTwoHander(char)
@@ -680,7 +792,6 @@
         return benchmarks;
       }
 
-      // 1. Standard-Rüstungsslots berechnen
       SLOTS.forEach(slot => {
         let max = 0;
         characters.forEach(c => {
@@ -690,7 +801,6 @@
         benchmarks[slot.key] = max;
       });
 
-      // 2. Strenge Ring- & Schmuck-Regel (Minimum aus Slot 1 & Slot 2 pro Charakter)
       if (rules.strictPairs) {
         let bestRingPair = 0;
         let bestTrinketPair = 0;
@@ -713,7 +823,6 @@
         benchmarks.trinket2 = bestTrinketPair;
       }
 
-      // 3. Strenge Waffen-Regel (2H = beide Hände | 1H + Nebenhand = Minimum aus beiden Händen)
       if (rules.strictWeapons) {
         let bestWeaponWatermark = 0;
         characters.forEach(c => {
@@ -736,7 +845,358 @@
     }
 
     // =========================================================================
-    // 5. SIMCRAFT (/simc) PARSER (ANGELEGT & GEAR FROM BAGS)
+    // 5. NEUER 331-SPEED-RECHNER (HERO-MARKEN & MYTHISCH-MARKEN OPTIMIZER)
+    // =========================================================================
+    function populateAvgCharSelect() {
+      const sel = document.getElementById('avgIlvlCharSelect');
+      if (!sel) return;
+      const currentVal = sel.value;
+      sel.innerHTML = characters.map((c, idx) =>
+        `<option value="${idx}">${escapeHtml(c.name)} (${escapeHtml(c.realm)}) – ${getCharAverageEquippedIlvl(c)} Ø</option>`
+      ).join('');
+      if (currentVal && characters[currentVal]) {
+        sel.value = currentVal;
+      } else {
+        sel.value = '0';
+      }
+      syncMarkInputsFromSelectedChar();
+    }
+
+    function onAvgCharChange() {
+      syncMarkInputsFromSelectedChar();
+      renderAvgIlvlOptimizer();
+    }
+
+    function syncMarkInputsFromSelectedChar() {
+      const sel = document.getElementById('avgIlvlCharSelect');
+      const idx = parseInt(sel?.value || '0', 10);
+      const char = characters[idx];
+      if (!char) return;
+      document.getElementById('heroMarksInput').value = char.heroMarks ?? 0;
+      document.getElementById('mythMarksInput').value = char.mythMarks ?? 0;
+    }
+
+    function saveCharMarksAndRender() {
+      const sel = document.getElementById('avgIlvlCharSelect');
+      const idx = parseInt(sel?.value || '0', 10);
+      const char = characters[idx];
+      if (!char) return;
+
+      char.heroMarks = Math.max(0, parseInt(document.getElementById('heroMarksInput').value || '0', 10));
+      char.mythMarks = Math.max(0, parseInt(document.getElementById('mythMarksInput').value || '0', 10));
+      saveCharsToStorage();
+      renderAvgIlvlOptimizer();
+    }
+
+    function renderAvgIlvlOptimizer() {
+      const sel = document.getElementById('avgIlvlCharSelect');
+      const idx = parseInt(sel?.value || '0', 10);
+      const char = characters[idx];
+      if (!char) return;
+
+      const targetAvg = parseFloat(document.getElementById('avgTargetIlvlInput').value || '331');
+      const targetTotalPoints = Math.ceil(targetAvg * 16);
+      const baseStepCost = parseInt(document.getElementById('crestStepCostSelect').value || '15', 10);
+
+      const availableHeroMarks = Number(char.heroMarks || 0);
+      const availableMythMarks = Number(char.mythMarks || 0);
+      const benchmarks = calculateWarbandBenchmarks();
+      const using2H = isUsingSingleTwoHander(char);
+
+      // Arbeitskopie der 16 Slots erstellen
+      const simSlots = {};
+      SLOTS.forEach(s => {
+        simSlots[s.key] = getEquippedSlotIlvl(char, s.key);
+      });
+
+      const getSumPoints = () => Object.values(simSlots).reduce((a, b) => a + b, 0);
+      const startPoints = getSumPoints();
+      const startAvg = (startPoints / 16).toFixed(2);
+
+      const planSteps = [];
+
+      // -----------------------------------------------------------------------
+      // PHASE 1: HÖHERE ITEMS AUS DER TASCHE ANLEGEN (0 MARKEN)
+      // -----------------------------------------------------------------------
+      SLOTS.forEach(s => {
+        if (s.key === 'offhand' && using2H) return;
+        const bagVal = getBagSlotIlvl(char, s.key);
+        const curVal = simSlots[s.key];
+        if (bagVal > curVal && getSumPoints() < targetTotalPoints) {
+          const is2HWeapon = (s.key === 'mainhand' && using2H);
+          const pointGain = is2HWeapon ? (bagVal - curVal) * 2 : (bagVal - curVal);
+          simSlots[s.key] = bagVal;
+          if (is2HWeapon) simSlots.offhand = bagVal;
+
+          planSteps.push({
+            slotKey: s.key,
+            slotLabel: is2HWeapon ? 'Haupthand (2H zählt doppelt!)' : s.label,
+            fromIlvl: curVal,
+            toIlvl: bagVal,
+            pointGain,
+            markType: 'bag',
+            markCost: 0,
+            reason: '🎒 Höheres Item liegt bereits in deiner Tasche (SimCraft)'
+          });
+        }
+      });
+
+      // -----------------------------------------------------------------------
+      // PHASE 2: KOSTENLOSE KRIEGSMEUTEN-RABATT-UPGRADES (0 MARKEN)
+      // -----------------------------------------------------------------------
+      SLOTS.forEach(s => {
+        if (s.key === 'offhand' && using2H) return;
+        const wbMax = benchmarks[s.key] || 0;
+        const curVal = simSlots[s.key];
+        if (wbMax > curVal && getSumPoints() < targetTotalPoints) {
+          const is2HWeapon = (s.key === 'mainhand' && using2H);
+          const pointGain = is2HWeapon ? (wbMax - curVal) * 2 : (wbMax - curVal);
+          simSlots[s.key] = wbMax;
+          if (is2HWeapon) simSlots.offhand = wbMax;
+
+          planSteps.push({
+            slotKey: s.key,
+            slotLabel: is2HWeapon ? 'Haupthand (2H zählt doppelt!)' : s.label,
+            fromIlvl: curVal,
+            toIlvl: wbMax,
+            pointGain,
+            markType: 'free',
+            markCost: 0,
+            reason: `👑 Kriegsmeuten-Rabatt bis ${wbMax} bereits freigeschaltet (0 Marken)`
+          });
+        }
+      });
+
+      // -----------------------------------------------------------------------
+      // PHASE 3 & 4: GREEDY OPTIMIZER FÜR HERO-MARKEN (<=321) & MYTHISCH-MARKEN (325-334)
+      // Wählt in jedem Schritt das Upgrade mit dem höchsten (iLvl-Punkte / Marken)-Verhältnis
+      // und bevorzugt Hero-Marken vor Mythisch-Marken, um Mythisch-Marken zu sparen!
+      // -----------------------------------------------------------------------
+      let safetyCounter = 0;
+      while (getSumPoints() < targetTotalPoints && safetyCounter < 200) {
+        safetyCounter++;
+        let bestCandidate = null;
+
+        SLOTS.forEach(s => {
+          if (s.key === 'offhand' && using2H) return;
+          const curVal = simSlots[s.key];
+          if (curVal >= 334) return; // Max Mythos 6/6 erreicht
+
+          const is2HWeapon = (s.key === 'mainhand' && using2H);
+          let nextIlvl = 0;
+          let markType = '';
+
+          if (curVal < 321) {
+            // Nächste Stufe mit Hero-Marken bis max. 321
+            const foundHeroStep = HERO_UPGRADE_STEPS.find(step => step > curVal);
+            nextIlvl = foundHeroStep || 321;
+            markType = 'hero';
+          } else {
+            // Nächste Stufe mit Mythisch-Marken (325, 328, 331, 334)
+            const foundMythStep = MYTH_UPGRADE_STEPS.find(step => step > curVal);
+            if (!foundMythStep) return;
+            nextIlvl = foundMythStep;
+            markType = 'myth';
+          }
+
+          const rawGain = nextIlvl - curVal;
+          const totalPointGain = is2HWeapon ? rawGain * 2 : rawGain;
+          const cost = baseStepCost;
+
+          // Effizienz-Score:
+          // - Hero-Marken bekommen Vorrang (+100 Bonus), damit alle Slots erst auf 321 gezogen werden
+          // - 2H-Waffe hat doppelten totalPointGain (+6 bis +8 Punkte für 1x Marken!)
+          // - Der Sprung 321 -> 325 (+4 iLvl) schlägt automatisch 325 -> 328 (+3 iLvl)!
+          const priorityScore = (markType === 'hero' ? 100 : 0) + (totalPointGain / cost) * 10 - (curVal * 0.001);
+
+          if (!bestCandidate || priorityScore > bestCandidate.priorityScore) {
+            bestCandidate = {
+              slotKey: s.key,
+              slotLabel: is2HWeapon ? 'Haupthand (2H zählt doppelt!)' : s.label,
+              fromIlvl: curVal,
+              toIlvl: nextIlvl,
+              pointGain: totalPointGain,
+              markType,
+              markCost: cost,
+              is2HWeapon,
+              priorityScore,
+              reason: markType === 'hero'
+                ? `🟣 Hero-Marken Upgrade auf ${nextIlvl} iLvl`
+                : (rawGain >= 4
+                    ? `🟠 Mythisch-Marken Power-Sprung (+${rawGain} iLvl auf ${nextIlvl}!)`
+                    : `🟠 Mythisch-Marken Upgrade auf ${nextIlvl} iLvl`)
+            };
+          }
+        });
+
+        if (!bestCandidate) break;
+
+        // Schritt anwenden
+        simSlots[bestCandidate.slotKey] = bestCandidate.toIlvl;
+        if (bestCandidate.is2HWeapon) {
+          simSlots.offhand = bestCandidate.toIlvl;
+        }
+        planSteps.push(bestCandidate);
+      }
+
+      // -----------------------------------------------------------------------
+      // AUSWERTUNG GEGEN DEINEN MARKEN-VORRAT
+      // -----------------------------------------------------------------------
+      let usedHeroMarks = 0;
+      let usedMythMarks = 0;
+      let reachablePointsWithCurrentMarks = startPoints;
+
+      planSteps.forEach(step => {
+        if (step.markType === 'bag' || step.markType === 'free') {
+          step.affordable = true;
+          reachablePointsWithCurrentMarks += step.pointGain;
+        } else if (step.markType === 'hero') {
+          if (usedHeroMarks + step.markCost <= availableHeroMarks) {
+            step.affordable = true;
+            reachablePointsWithCurrentMarks += step.pointGain;
+          } else {
+            step.affordable = false;
+          }
+          usedHeroMarks += step.markCost;
+        } else if (step.markType === 'myth') {
+          if (usedMythMarks + step.markCost <= availableMythMarks) {
+            step.affordable = true;
+            reachablePointsWithCurrentMarks += step.pointGain;
+          } else {
+            step.affordable = false;
+          }
+          usedMythMarks += step.markCost;
+        }
+        step.runningAvgAfter = (
+          (startPoints + planSteps.slice(0, planSteps.indexOf(step) + 1).reduce((acc, s) => acc + s.pointGain, 0)) / 16
+        ).toFixed(2);
+      });
+
+      const finalPoints = getSumPoints();
+      const missingPointsStart = Math.max(0, targetTotalPoints - startPoints);
+      const reachableAvgNow = (reachablePointsWithCurrentMarks / 16).toFixed(2);
+      const heroDeficit = Math.max(0, usedHeroMarks - availableHeroMarks);
+      const mythDeficit = Math.max(0, usedMythMarks - availableMythMarks);
+
+      // 1. KPI-Karten rendern
+      document.getElementById('avgIlvlStatusCards').innerHTML = `
+        <div class="bg-wow-panel border border-wow-border rounded-xl p-4">
+          <div class="text-xs text-slate-400">Aktuelles Ø Item-Level</div>
+          <div class="text-2xl font-black text-white mt-1">${startAvg} <span class="text-xs font-normal text-slate-400">/ ${targetAvg.toFixed(1)}</span></div>
+          <div class="text-xs text-slate-400 mt-1">Punkte: ${startPoints} / ${targetTotalPoints} (Fehlt: <strong class="text-amber-300">+${missingPointsStart}</strong>)</div>
+        </div>
+
+        <div class="bg-wow-panel border border-wow-border rounded-xl p-4">
+          <div class="text-xs text-slate-400">Sofort erreichbar mit deinen Marken</div>
+          <div class="text-2xl font-black ${ parseFloat(reachableAvgNow) >= targetAvg ? 'text-emerald-400' : 'text-cyan-300' } mt-1">${reachableAvgNow} Ø</div>
+          <div class="text-xs text-slate-400 mt-1">Mit ${availableHeroMarks} Hero & ${availableMythMarks} Mythisch</div>
+        </div>
+
+        <div class="bg-wow-panel border border-purple-700/40 rounded-xl p-4">
+          <div class="text-xs text-purple-300">Benötigte Hero-Marken (bis 321)</div>
+          <div class="text-2xl font-black text-purple-200 mt-1">${usedHeroMarks} <span class="text-xs font-normal text-slate-400">(Du hast: ${availableHeroMarks})</span></div>
+          <div class="text-xs ${heroDeficit === 0 ? 'text-emerald-400' : 'text-red-300'} mt-1">
+            ${heroDeficit === 0 ? '✔️ Genug Hero-Marken vorhanden!' : `⚠️ Es fehlen noch ${heroDeficit} Hero-Marken`}
+          </div>
+        </div>
+
+        <div class="bg-wow-panel border border-amber-600/40 rounded-xl p-4">
+          <div class="text-xs text-wow-gold">Benötigte Mythisch-Marken (bis ${targetAvg})</div>
+          <div class="text-2xl font-black text-amber-300 mt-1">${usedMythMarks} <span class="text-xs font-normal text-slate-400">(Du hast: ${availableMythMarks})</span></div>
+          <div class="text-xs ${mythDeficit === 0 ? 'text-emerald-400' : 'text-red-300'} mt-1">
+            ${mythDeficit === 0 ? '✔️ Genug Mythisch-Marken vorhanden!' : `⚠️ Es fehlen noch ${mythDeficit} Mythisch-Marken`}
+          </div>
+        </div>
+      `;
+
+      // 2. Verdict-Banner rendern
+      const banner = document.getElementById('avgIlvlVerdictBanner');
+      if (missingPointsStart === 0) {
+        banner.className = 'p-4 rounded-2xl bg-emerald-950/60 border border-emerald-600/60 text-emerald-200 font-semibold';
+        banner.innerHTML = `🎉 <strong>${escapeHtml(char.name)}</strong> hat das Durchschnitts-Item-Level von <strong>${targetAvg.toFixed(1)}</strong> bereits erreicht (${startAvg} Ø)!`;
+      } else if (heroDeficit === 0 && mythDeficit === 0 && finalPoints >= targetTotalPoints) {
+        banner.className = 'p-4 rounded-2xl bg-emerald-950/60 border border-emerald-600/60 text-emerald-200';
+        banner.innerHTML = `✅ <strong>Du kannst Ø ${targetAvg.toFixed(1)} sofort erreichen!</strong> Deine vorhandenen Marken (${availableHeroMarks} Hero / ${availableMythMarks} Mythisch) reichen komplett für alle ${planSteps.length} Upgrade-Schritte unten aus.`;
+      } else {
+        banner.className = 'p-4 rounded-2xl bg-amber-950/40 border border-amber-700/50 text-amber-200';
+        banner.innerHTML = `⚡ Mit deinen aktuellen Marken kommst du sofort von <strong>${startAvg} Ø auf ${reachableAvgNow} Ø</strong>. Für die vollen <strong>${targetAvg.toFixed(1)} Ø</strong> benötigst du insgesamt <strong>${usedHeroMarks} Hero-Marken</strong> (fehlen: ${heroDeficit}) und <strong>${usedMythMarks} Mythisch-Marken</strong> (fehlen: ${mythDeficit}).`;
+      }
+
+      // 3. Kompakte Slot-Gruppierung & Schritt-Liste rendern
+      const stepsContainer = document.getElementById('avgIlvlStepsContainer');
+      if (planSteps.length === 0) {
+        stepsContainer.innerHTML = `<div class="text-xs text-slate-400 py-4 text-center">Keine weiteren Upgrades erforderlich – Ziel ist bereits erreicht!</div>`;
+        return;
+      }
+
+      // Wir fassen aufeinanderfolgende Upgrades desselben Slots & Markentyps übersichtlich zusammen
+      const groupedSteps = [];
+      planSteps.forEach(st => {
+        const last = groupedSteps[groupedSteps.length - 1];
+        if (last && last.slotKey === st.slotKey && last.markType === st.markType && last.affordable === st.affordable) {
+          last.toIlvl = st.toIlvl;
+          last.pointGain += st.pointGain;
+          last.markCost += st.markCost;
+          last.stepCount += 1;
+          last.runningAvgAfter = st.runningAvgAfter;
+        } else {
+          groupedSteps.push({ ...st, stepCount: 1 });
+        }
+      });
+
+      stepsContainer.innerHTML = groupedSteps.map((g, index) => {
+        let badgeColor = 'bg-slate-800 text-slate-300 border-slate-600';
+        let costLabel = '0 Marken';
+
+        if (g.markType === 'bag') {
+          badgeColor = 'bg-cyan-950 text-cyan-300 border-cyan-700/60';
+          costLabel = '🎒 0 Marken (Tasche)';
+        } else if (g.markType === 'free') {
+          badgeColor = 'bg-emerald-950 text-emerald-300 border-emerald-700/60';
+          costLabel = '👑 0 Marken (Rabatt)';
+        } else if (g.markType === 'hero') {
+          badgeColor = g.affordable
+            ? 'bg-purple-950 text-purple-200 border-purple-600'
+            : 'bg-red-950/60 text-red-300 border-red-800/60';
+          costLabel = `🟣 ${g.markCost} Hero-Marken (${g.stepCount}x)`;
+        } else if (g.markType === 'myth') {
+          badgeColor = g.affordable
+            ? 'bg-amber-950 text-amber-200 border-amber-600'
+            : 'bg-red-950/60 text-red-300 border-red-800/60';
+          costLabel = `🟠 ${g.markCost} Mythisch-Marken (${g.stepCount}x)`;
+        }
+
+        return `
+          <div class="p-3.5 rounded-xl border ${g.affordable ? 'bg-wow-card border-wow-border' : 'bg-wow-card/40 border-red-900/40 opacity-80'} flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 rounded-lg ${g.affordable ? 'bg-emerald-600 text-slate-950' : 'bg-slate-800 text-slate-400'} font-black text-xs flex items-center justify-center shrink-0">
+                ${index + 1}
+              </div>
+              <div>
+                <div class="text-sm font-bold text-white flex items-center gap-2">
+                  <span>${escapeHtml(g.slotLabel)}</span>
+                  <span class="text-wow-gold">${g.fromIlvl} &rarr; ${g.toIlvl} iLvl</span>
+                  <span class="text-xs font-semibold text-emerald-400">(+${g.pointGain} Pkt)</span>
+                </div>
+                <div class="text-xs text-slate-400 mt-0.5">${escapeHtml(g.reason)} • Neuer Schnitt danach: <strong class="text-slate-200">${g.runningAvgAfter} Ø</strong></div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 rounded-full border text-xs font-bold ${badgeColor}">
+                ${costLabel}
+              </span>
+              <span class="text-xs font-semibold ${g.affordable ? 'text-emerald-400' : 'text-red-400'}">
+                ${g.affordable ? '✔️ Machbar' : '⏳ Marken fehlen'}
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // =========================================================================
+    // 6. SIMCRAFT (/simc) PARSER (INKL. TASCHEN & MARKEN-ERKENNUNG)
     // =========================================================================
     function parseSimcString(rawText) {
       const lines = (rawText || '').split(/\r?\n/);
@@ -744,6 +1204,8 @@
       let realm = '';
       let region = apiConfig.region || 'eu';
       let className = '';
+      let detectedHeroMarks = null;
+      let detectedMythMarks = null;
 
       const equippedSlots = {};
       const bagSlots = {};
@@ -780,6 +1242,13 @@
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
         if (!line) continue;
+
+        // Prüfen, ob im SimC-String Hero- oder Mythisch-Marken / Wappen erwähnt sind
+        const heroMatch = line.match(/(?:hero_crests|hero_marks|helden_wappen|runed_crests|hero_wappen)\s*[=:]\s*(\d+)/i);
+        if (heroMatch) detectedHeroMarks = parseInt(heroMatch[1], 10);
+
+        const mythMatch = line.match(/(?:myth_crests|myth_marks|mythos_wappen|gilded_crests|mythisch_marken)\s*[=:]\s*(\d+)/i);
+        if (mythMatch) detectedMythMarks = parseInt(mythMatch[1], 10);
 
         if (i === 0 && line.startsWith('#')) {
           const headerParts = line.replace(/^#\s*/, '').split(' - ');
@@ -897,6 +1366,8 @@
         bagSlots,
         equippedCount,
         bagCount,
+        detectedHeroMarks,
+        detectedMythMarks,
         hasTwoHand: equippedSlots.mainhand > 0 && equippedSlots.offhand === 0
       };
     }
@@ -918,6 +1389,13 @@
       const parsed = parseSimcString(raw);
       preview.classList.remove('hidden');
 
+      if (parsed.detectedHeroMarks !== null) {
+        document.getElementById('simcHeroMarksInput').value = parsed.detectedHeroMarks;
+      }
+      if (parsed.detectedMythMarks !== null) {
+        document.getElementById('simcMythMarksInput').value = parsed.detectedMythMarks;
+      }
+
       if (!parsed.charName && parsed.equippedCount === 0) {
         preview.innerHTML = `<span class="text-red-300">⚠️ Noch kein gültiger SimCraft-Text erkannt. Bitte kompletten /simc Export aus WoW einfügen.</span>`;
         return;
@@ -937,7 +1415,7 @@
           </div>
           <div class="flex items-center gap-3">
             <span class="text-emerald-300 font-semibold">${parsed.equippedCount} angelegte Slots</span>
-            <span class="text-cyan-300 font-semibold">🎒 ${parsed.bagCount} Slots in Tasche (${higherBagCount} höher als angelegt)</span>
+            <span class="text-cyan-300 font-semibold">🎒 ${parsed.bagCount} Taschen-Slots (${higherBagCount} höher)</span>
           </div>
         </div>
       `;
@@ -956,6 +1434,9 @@
         return;
       }
 
+      const heroMarksVal = parseInt(document.getElementById('simcHeroMarksInput').value || '0', 10);
+      const mythMarksVal = parseInt(document.getElementById('simcMythMarksInput').value || '0', 10);
+
       const charObj = {
         name: parsed.charName,
         realm: parsed.realm,
@@ -964,18 +1445,30 @@
         hasTwoHand: parsed.hasTwoHand,
         slots: parsed.equippedSlots,
         bagSlots: parsed.bagSlots,
+        heroMarks: isNaN(heroMarksVal) ? 0 : heroMarksVal,
+        mythMarks: isNaN(mythMarksVal) ? 0 : mythMarksVal,
         updatedAt: new Date().toISOString()
       };
 
-      upsertCharacter(charObj);
+      const charIndex = upsertCharacter(charObj);
       saveCharsToStorage();
       renderAll();
+
+      // Wähle den importierten Charakter direkt im 331-Rechner aus
+      const sel = document.getElementById('avgIlvlCharSelect');
+      if (sel && charIndex >= 0) {
+        sel.value = String(charIndex);
+        syncMarkInputsFromSelectedChar();
+        renderAvgIlvlOptimizer();
+      }
+
       closeModal('simcModal');
-      showToast(`WoW ➔ SimCraft Daten für ${charObj.name} (inkl. Taschen) gespeichert!`, 'success');
+      switchTab('avgilvl');
+      showToast(`SimCraft & Marken für ${charObj.name} geladen!`, 'success');
     }
 
     // =========================================================================
-    // 6. DARSTELLUNG / RENDERING
+    // 7. DARSTELLUNG / RENDERING ALLER ANSICHTEN
     // =========================================================================
     function renderAll() {
       const emptySection = document.getElementById('emptyStateSection');
@@ -994,6 +1487,8 @@
       refreshAllBtn.classList.remove('hidden');
 
       renderKpis();
+      populateAvgCharSelect();
+      renderAvgIlvlOptimizer();
       renderMatrixView();
       populatePlannerSelect();
       renderPlannerView();
@@ -1026,13 +1521,12 @@
       document.getElementById('kpiBottleneck').textContent = `${minVal} iLvl`;
       document.getElementById('kpiBottleneckSlots').textContent = minSlots.join(', ');
 
-      // Zeige an, welcher 50%-Wappen-Rabatt bereits aktiv ist
       const achieved = CREST_MILESTONES.filter(m => minVal >= m.ilvl);
       const nextTier = CREST_MILESTONES.find(m => minVal < m.ilvl);
       const nextHint = document.getElementById('kpiNextCrestTier');
       if (achieved.length > 0) {
         const highest = achieved[achieved.length - 1];
-        nextHint.innerHTML = `<span class="text-emerald-400 font-semibold">✔️ ${highest.name} aktiv</span>`;
+        nextHint.innerHTML = `<span class="text-emerald-400 font-semibold">✔️ ${highest.name} Rabatt aktiv</span>`;
       } else if (nextTier) {
         nextHint.textContent = `Nächster 50%-Rabatt ab ${nextTier.ilvl} in allen Slots`;
       }
@@ -1095,7 +1589,6 @@
           const diff = maxIlvl - equippedVal;
           const isMirrored2H = slot.key === 'offhand' && rules.strictWeapons && isUsingSingleTwoHander(char);
 
-          // Prüfen, ob eine starke 1H-Waffe durch eine schwächere Nebenhand (oder umgekehrt) für den Rabatt gebremst wird
           let weaponPairThrottleWarning = '';
           if (isWeaponSlot && rules.strictWeapons && !isUsingSingleTwoHander(char)) {
             const wm = getCharacterWeaponWatermark(char);
@@ -1104,7 +1597,6 @@
             }
           }
 
-          // Kleine Taschen-Nummer direkt neben dem angelegten Item-Level
           let bagBadgeHtml = '';
           if (bagVal > 0) {
             if (bagVal > equippedVal) {
@@ -1114,7 +1606,6 @@
             }
           }
 
-          // Rechtsbündiges Status-Badge (Rabatt vs. Max)
           let statusBadgeHtml = '';
           let cellClass = 'text-slate-200 font-semibold';
 
@@ -1222,7 +1713,7 @@
     }
 
     function renderCrestsView() {
-      const target = parseInt(document.getElementById('crestTargetInput').value || '308', 10);
+      const target = parseInt(document.getElementById('crestTargetInput').value || '321', 10);
       const benchmarks = calculateWarbandBenchmarks();
       const banner = document.getElementById('crestStatusBanner');
       const grid = document.getElementById('crestSlotsGrid');
@@ -1261,7 +1752,7 @@
     }
 
     // =========================================================================
-    // 7. BLIZZARD API & BATTLE.NET OAUTH2 ACCOUNT SCANNER
+    // 8. BLIZZARD API & BATTLE.NET OAUTH2 ACCOUNT SCANNER
     // =========================================================================
     function updateApiBadge() {
       const badge = document.getElementById('apiStatusBadge');
@@ -1468,7 +1959,7 @@
     }
 
     // =========================================================================
-    // 8. AUSRÜSTUNGS-ABFRAGE (BLIZZARD API & RAIDER.IO)
+    // 9. AUSRÜSTUNGS-ABFRAGE (BLIZZARD API & RAIDER.IO)
     // =========================================================================
     function toRealmSlug(realm) {
       return String(realm || '')
@@ -1578,13 +2069,19 @@
           ...existing,
           ...newChar,
           realm: newChar.realm !== 'Unbekannt' ? newChar.realm : existing.realm,
-          bagSlots: newChar.bagSlots ? newChar.bagSlots : (existing.bagSlots || {})
+          bagSlots: newChar.bagSlots ? newChar.bagSlots : (existing.bagSlots || {}),
+          heroMarks: newChar.heroMarks !== undefined ? newChar.heroMarks : (existing.heroMarks || 0),
+          mythMarks: newChar.mythMarks !== undefined ? newChar.mythMarks : (existing.mythMarks || 0)
         };
+        return existingIdx;
       } else {
         characters.push({
           ...newChar,
-          bagSlots: newChar.bagSlots || {}
+          bagSlots: newChar.bagSlots || {},
+          heroMarks: newChar.heroMarks || 0,
+          mythMarks: newChar.mythMarks || 0
         });
+        return characters.length - 1;
       }
     }
 
@@ -1667,7 +2164,7 @@
     }
 
     // =========================================================================
-    // 9. MANUELLE SLOT-BEARBEITUNG (ANGELEGT, TASCHE & 2H-STATUS)
+    // 10. MANUELLE SLOT-BEARBEITUNG & UI HELFER
     // =========================================================================
     function openEditSlotModal(charIdx, slotKey, slotLabel) {
       const char = characters[charIdx];
@@ -1712,9 +2209,6 @@
       showToast('Slot-Werte gespeichert!', 'success');
     }
 
-    // =========================================================================
-    // 10. UI HELFER, TABS & BACKUP
-    // =========================================================================
     function toggleRules() {
       rules.strictPairs = document.getElementById('strictPairsToggle').checked;
       rules.strictWeapons = document.getElementById('strictWeaponsToggle').checked;
@@ -1724,13 +2218,13 @@
     }
 
     function switchTab(tab) {
-      ['matrix', 'planner', 'crests'].forEach(t => {
+      ['avgilvl', 'matrix', 'planner', 'crests'].forEach(t => {
         document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tab);
         const btn = document.getElementById(`tabBtn-${t}`);
         if (t === tab) {
-          btn.className = 'px-4 py-2 rounded-lg text-xs font-semibold bg-wow-gold text-slate-950 transition';
+          btn.className = 'w-full text-left px-3.5 py-3 rounded-xl transition flex items-start gap-3 bg-wow-gold text-slate-950 font-bold shadow';
         } else {
-          btn.className = 'px-4 py-2 rounded-lg text-xs font-semibold bg-wow-panel text-slate-300 hover:bg-wow-card border border-wow-border transition';
+          btn.className = 'w-full text-left px-3.5 py-3 rounded-xl transition flex items-start gap-3 bg-wow-card/60 hover:bg-wow-card text-slate-200 border border-transparent';
         }
       });
     }
