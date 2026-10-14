@@ -54,7 +54,7 @@
               ⚠️ API nicht verbunden
             </span>
           </h1>
-          <p class="text-xs text-slate-400">Accountweiter Item-Level-Benchmark, SimCraft Taschen-Scanner & Twink-Rabatt-Rechner</p>
+          <p class="text-xs text-slate-400">Exakte Waffen-/Ring-/Schmuck-Regeln, SimCraft Taschen-Scanner & Wappen-Rabatte</p>
         </div>
       </div>
 
@@ -63,8 +63,8 @@
         <button onclick="startBattleNetLogin()" class="px-3.5 py-2 rounded-lg bg-wow-bnet hover:bg-blue-600 text-white text-xs font-semibold flex items-center gap-1.5 shadow transition">
           <span>🌐</span> Mit Battle.net scannen
         </button>
-        <button onclick="openSimcModal()" class="px-3.5 py-2 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-xs font-semibold flex items-center gap-1.5 shadow transition">
-          <span>📋</span> SimCraft (/simc) Import
+        <button onclick="openSimcModal()" class="px-3.5 py-2 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-xs font-bold flex items-center gap-1.5 shadow border border-purple-500/40 transition">
+          <span>📋</span> WoW ➔ SimCraft Import
         </button>
         <button onclick="openAddCharModal()" class="px-3 py-2 rounded-lg bg-wow-card hover:bg-slate-700 text-slate-200 border border-wow-border text-xs font-medium transition">
           + Charakter einzeln
@@ -93,7 +93,7 @@
         </div>
         <h2 class="text-xl font-bold text-white">Bereit für deine Kriegsmeute</h2>
         <p class="text-sm text-slate-400">
-          Es sind keine Demo- oder Füller-Daten geladen. Lade deine Charaktere direkt über Battle.net oder füge deinen <strong>/simc</strong>-String aus dem Spiel ein.
+          Es sind keine Demo- oder Füller-Daten geladen. Lade deine Charaktere direkt über Battle.net oder nutze den <strong>WoW ➔ SimCraft Import</strong>.
         </p>
       </div>
 
@@ -122,15 +122,15 @@
           </button>
         </div>
 
-        <!-- Option 3: SimCraft Import -->
+        <!-- Option 3: WoW -> SimCraft Import -->
         <div class="p-4 rounded-xl bg-purple-950/30 border border-purple-700/50 flex items-center justify-between gap-4">
           <div>
             <div class="text-xs font-bold uppercase tracking-wider text-purple-300">Direkt aus dem Spiel (inkl. Taschen!)</div>
-            <div class="text-sm font-semibold text-white">SimCraft (/simc) String einfügen</div>
+            <div class="text-sm font-semibold text-white">WoW ➔ SimCraft Import (/simc)</div>
             <div class="text-xs text-slate-400 mt-0.5">Liest angelegte Items <strong>und</strong> das höchste Item-Level in deinen Taschen separat aus.</div>
           </div>
-          <button onclick="openSimcModal()" class="px-4 py-2 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-xs font-semibold shrink-0 transition">
-            📋 /simc einfügen
+          <button onclick="openSimcModal()" class="px-4 py-2 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-xs font-bold shrink-0 transition">
+            📋 WoW ➔ SimCraft
           </button>
         </div>
       </div>
@@ -150,7 +150,7 @@
           <div class="bg-wow-panel border border-wow-border rounded-xl p-4">
             <div class="text-xs text-slate-400">Kriegsmeuten-Ø (Rabatt-Benchmark)</div>
             <div id="kpiWarbandAvg" class="text-2xl font-bold text-wow-gold mt-1">0.0</div>
-            <div class="text-xs text-slate-400 mt-1">Durchschnitt über alle 16 Max-Slots</div>
+            <div id="kpiNextCrestTier" class="text-xs text-slate-400 mt-1">Durchschnitt über alle 16 Max-Slots</div>
           </div>
           <div class="bg-wow-panel border border-wow-border rounded-xl p-4">
             <div class="text-xs text-slate-400">Niedrigster Max-Slot (Flaschenhals)</div>
@@ -160,18 +160,18 @@
         </div>
 
         <!-- REGEL-SCHALTER -->
-        <div class="lg:col-span-5 bg-wow-panel border border-wow-border rounded-xl p-4 flex flex-col justify-center space-y-2.5">
-          <div class="text-xs font-semibold text-slate-300 uppercase tracking-wider">WoW Berechnungs-Regeln</div>
-          <label class="flex items-center justify-between text-xs text-slate-300 cursor-pointer">
-            <span>Strenge Ring/Schmuck-Regel (2-Slot-Minimum)</span>
+        <div class="lg:col-span-5 bg-wow-panel border border-wow-border rounded-xl p-4 flex flex-col justify-center space-y-2">
+          <div class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Offizielle WoW Rabatt-Regeln</div>
+          <label class="flex items-center justify-between text-xs text-slate-300 cursor-pointer" title="Ringe & Schmuckstücke schalten den Rabatt erst frei, wenn BEIDE Slots das Item-Level erreicht haben.">
+            <span>Strenge Ring- & Schmuck-Regel (2-Slot-Minimum)</span>
             <input type="checkbox" id="strictPairsToggle" onchange="toggleRules()" class="w-4 h-4 accent-amber-500 rounded cursor-pointer" checked />
           </label>
-          <label class="flex items-center justify-between text-xs text-slate-300 cursor-pointer">
-            <span>2H-Waffe zählt automatisch für Nebenhand</span>
-            <input type="checkbox" id="twoHandToggle" onchange="toggleRules()" class="w-4 h-4 accent-amber-500 rounded cursor-pointer" checked />
+          <label class="flex items-center justify-between text-xs text-amber-200 cursor-pointer" title="Offizielle WoW-Regel: Eine 2H-Waffe deckt beide Hände ab. Bei 1H + Schild/Nebenhand zählt der niedrigere Wert aus beiden Händen für den Waffen-Rabatt!">
+            <span>⚔️ Strenge Waffen-Regel (2H = beide | 1H+OH = Minimum)</span>
+            <input type="checkbox" id="strictWeaponsToggle" onchange="toggleRules()" class="w-4 h-4 accent-amber-500 rounded cursor-pointer" checked />
           </label>
           <label class="flex items-center justify-between text-xs text-cyan-300 cursor-pointer">
-            <span>🎒 Taschen-Items (SimC) zählen für Kriegsmeuten-Max</span>
+            <span>🎒 Taschen-Items (SimCraft) zählen für Kriegsmeuten-Max</span>
             <input type="checkbox" id="includeBagsToggle" onchange="toggleRules()" class="w-4 h-4 accent-cyan-400 rounded cursor-pointer" checked />
           </label>
         </div>
@@ -187,14 +187,14 @@
             🎯 Ansicht 2: Twink-Upgrade-Planer
           </button>
           <button onclick="switchTab('crests')" id="tabBtn-crests" class="px-4 py-2 rounded-lg text-xs font-semibold bg-wow-panel text-slate-300 hover:bg-wow-card border border-wow-border transition">
-            🏆 Ansicht 3: Wappen-Flaschenhälse
+            🏆 Ansicht 3: Wappen-Rabatt-Stufen & Waffen-Regeln
           </button>
         </div>
 
-        <div class="flex items-center gap-3 text-xs text-slate-400">
-          <span class="inline-flex items-center gap-1"><span class="px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-700/60 text-[10px] font-bold">🎒 626</span> = Höheres Item in Tasche</span>
+        <div class="flex flex-wrap items-center gap-3 text-xs text-slate-400">
+          <span class="inline-flex items-center gap-1"><span class="px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-700/60 text-[10px] font-bold">🎒 321</span> = Höheres Item in Tasche</span>
           <span class="hidden sm:inline">|</span>
-          <span class="hidden sm:inline">Klick auf Zelle = Manuell bearbeiten</span>
+          <span class="inline-flex items-center gap-1"><span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-700/60 text-[10px] font-bold">⚠️ Paar-Limit</span> = 1H wird durch Nebenhand gebremst</span>
         </div>
       </div>
 
@@ -226,48 +226,97 @@
         <div id="plannerCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
       </section>
 
-      <!-- TAB 3: CREST BOTTLENECK FINDER -->
-      <section id="tab-crests" class="hidden space-y-4">
+      <!-- TAB 3: CREST BOTTLENECK FINDER & WEAPON RULES TABLE -->
+      <section id="tab-crests" class="hidden space-y-6">
         <div class="bg-wow-panel border border-wow-border rounded-xl p-5 space-y-4">
           <div class="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h3 class="text-base font-bold text-white">Wappen-Rabatt-Erfolge & Ziel-Item-Level prüfen</h3>
+              <h3 class="text-base font-bold text-white">🏆 Offizielle Wappen-Rabatt-Stufen (50 % Twink-Rabatt)</h3>
               <p class="text-xs text-slate-400">
-                Für accountweite Wappen-Rabatte musst du in jedem der 16 Slots mindestens das geforderte Ziel-Item-Level erreicht haben.
+                Sobald jeder der 16 Slots (inkl. beider Ringe, Schmuckstücke und beider Waffen-Hände) das Ziel-Item-Level erreicht hat, zahlen alle Twinks 50 % weniger Wappen (10 statt 20 pro Stufe).
               </p>
             </div>
             <div class="flex items-center gap-2">
-              <label class="text-xs text-slate-300">Ziel-Item-Level:</label>
-              <input type="number" id="crestTargetInput" value="626" onchange="renderCrestsView()" class="w-24 bg-wow-card border border-wow-border rounded-lg px-3 py-1.5 text-sm text-white font-bold text-center" />
+              <label class="text-xs text-slate-300">Ziel-iLvl:</label>
+              <input type="number" id="crestTargetInput" value="308" onchange="renderCrestsView()" class="w-24 bg-wow-card border border-wow-border rounded-lg px-3 py-1.5 text-sm text-white font-bold text-center" />
             </div>
           </div>
+
+          <!-- SCHNELLAUSWAHL-BUTTONS FÜR DIE OFFIZIELLEN SCHWELLENWERTE -->
+          <div class="flex flex-wrap items-center gap-2 pt-1">
+            <span class="text-xs text-slate-400 mr-1">Schnellauswahl (Midnight S2):</span>
+            <button onclick="setCrestTarget(282)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-slate-200 transition">
+              Abenteurer 6/6 (<strong>282</strong>)
+            </button>
+            <button onclick="setCrestTarget(295)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-emerald-300 transition">
+              Veteran 6/6 (<strong>295</strong>)
+            </button>
+            <button onclick="setCrestTarget(308)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-blue-300 transition">
+              Champion 6/6 (<strong>308</strong>)
+            </button>
+            <button onclick="setCrestTarget(321)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-purple-300 transition">
+              Held 6/6 (<strong>321</strong>)
+            </button>
+            <button onclick="setCrestTarget(331)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-wow-gold transition">
+              Mythos 5/6 (<strong>331</strong>)
+            </button>
+            <button onclick="setCrestTarget(334)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-amber-400 transition">
+              Mythos 6/6 Max (<strong>334</strong>)
+            </button>
+          </div>
+
           <div id="crestStatusBanner" class="p-4 rounded-xl border"></div>
           <div id="crestSlotsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3"></div>
+        </div>
+
+        <!-- SPICKZETTEL: WAFFEN- & RABATT-REGELN -->
+        <div class="bg-wow-panel border border-wow-border rounded-xl p-5 space-y-3">
+          <h4 class="text-sm font-bold text-wow-gold">⚔️ Wichtige WoW-Regeln für Waffen-Rabatte (Haupthand & Nebenhand)</h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-300">
+            <div class="p-3.5 rounded-xl bg-wow-card border border-wow-border space-y-1">
+              <div class="font-bold text-white">1. Zweihandwaffe (2H) = Beide Hände</div>
+              <p class="text-slate-400 leading-relaxed">
+                Eine einzelne Zweihandwaffe (Stab, 2H-Schwert, Bogen etc.) zählt im WoW-System automatisch für <strong>Haupthand UND Nebenhand</strong> gleichzeitig.
+              </p>
+            </div>
+            <div class="p-3.5 rounded-xl bg-wow-card border border-wow-border space-y-1">
+              <div class="font-bold text-amber-300">2. Einhand + Schild/Nebenhand = Minimum!</div>
+              <p class="text-slate-400 leading-relaxed">
+                Trägst du <strong>1H + Schild/Nebenhand</strong> (oder zwei 1H-Waffen), gilt als Waffen-Rabatt-Schwelle immer das <strong>niedrigere Item-Level der beiden Hände</strong> (z. B. 321 Haupthand + 295 Schild = Rabatt nur bis 295!).
+              </p>
+            </div>
+            <div class="p-3.5 rounded-xl bg-wow-card border border-wow-border space-y-1">
+              <div class="font-bold text-purple-300">3. Furor-Krieger Trick (Titanengriff)</div>
+              <p class="text-slate-400 leading-relaxed">
+                Da Furor-Krieger zwei 2H-Waffen tragen, zählt eine einzelne 2H-Waffe dort nur halb. <strong>Trick:</strong> Kurz auf <em>Waffen (Arms)</em> umspeccen und die 2H-Waffe einmal neu anlegen – schon zählt sie für beide Slots!
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
     </div>
   </main>
 
-  <!-- MODAL 1: SIMCRAFT (/simc) IMPORT -->
+  <!-- MODAL 1: WOW -> SIMCRAFT (/simc) IMPORT -->
   <div id="simcModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-wow-panel border border-wow-border rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl flex flex-col max-h-[90vh]">
       <div class="flex items-center justify-between">
         <div>
           <h3 class="text-base font-bold text-white flex items-center gap-2">
-            <span>📋</span> SimulationCraft (/simc) Import
+            <span>📋</span> WoW ➔ SimCraft Import (/simc Addon)
           </h3>
           <p class="text-xs text-slate-400">
-            Liest sowohl deine <strong>angezogene Ausrüstung</strong> als auch das <strong>höchste Item-Level in deinen Taschen</strong> (`Gear from Bags`) aus.
+            Überträgt deinen SimCraft-Export aus WoW in den Tracker – inklusive <strong>angezogener Ausrüstung</strong> und dem <strong>höchsten Item-Level in deinen Taschen</strong> (`Gear from Bags`).
           </p>
         </div>
         <button onclick="closeModal('simcModal')" class="text-slate-400 hover:text-white text-lg">&times;</button>
       </div>
 
       <div class="bg-wow-card border border-wow-border rounded-xl p-3 text-xs text-slate-300 space-y-1">
-        <div class="font-semibold text-purple-300">So funktioniert's in 10 Sekunden:</div>
+        <div class="font-semibold text-purple-300">So holst du die Daten aus WoW nach SimCraft:</div>
         <div>1. Tippe in WoW im Chat <code class="px-1.5 py-0.5 rounded bg-black/50 text-amber-300 font-mono">/simc</code> ein und drücke <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-600">Strg + C</kbd>.</div>
-        <div>2. Füge den gesamten Text hier unten mit <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-600">Strg + V</kbd> ein.</div>
+        <div>2. Füge den gesamten kopierten Text hier unten mit <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-600">Strg + V</kbd> ein.</div>
       </div>
 
       <textarea
@@ -279,14 +328,12 @@
       ></textarea>
 
       <!-- Live-Vorschau des erkannten SimC-Strings -->
-      <div id="simcPreviewBox" class="hidden p-3.5 rounded-xl bg-purple-950/30 border border-purple-700/50 text-xs space-y-1.5">
-        <!-- Dynamisch per JS gefüllt -->
-      </div>
+      <div id="simcPreviewBox" class="hidden p-3.5 rounded-xl bg-purple-950/30 border border-purple-700/50 text-xs space-y-1.5"></div>
 
       <div class="flex items-center justify-end gap-2 pt-2">
         <button onclick="closeModal('simcModal')" class="px-4 py-2 rounded-lg bg-wow-card hover:bg-slate-700 text-xs text-slate-300">Abbrechen</button>
         <button onclick="importSimcProfile()" class="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow">
-          📥 Angelegte & Taschen-Items speichern
+          📥 WoW ➔ SimCraft Daten speichern
         </button>
       </div>
     </div>
@@ -307,6 +354,12 @@
         <div>
           <label class="block text-xs font-medium text-cyan-300 mb-1">🎒 Max. Item-Level in der Tasche (0 = keins)</label>
           <input type="number" id="editSlotBagInput" class="w-full bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-cyan-300 font-bold" />
+        </div>
+        <div id="editWeaponTypeBox" class="hidden pt-1">
+          <label class="flex items-center gap-2 text-xs text-amber-300 cursor-pointer">
+            <input type="checkbox" id="editSlotTwoHandCheckbox" class="w-4 h-4 accent-amber-500 rounded" />
+            <span>Charakter trägt eine Zweihandwaffe (deckt Nebenhand automatisch ab)</span>
+          </label>
         </div>
       </div>
       <div class="flex items-center justify-end gap-2 pt-2">
@@ -480,11 +533,20 @@
       { key: 'finger2',  label: 'Ring 2',        blizz: ['FINGER_2'],      simc: 'finger2',  pairGroup: 'rings' },
       { key: 'trinket1', label: 'Schmuck 1',     blizz: ['TRINKET_1'],     simc: 'trinket1', pairGroup: 'trinkets' },
       { key: 'trinket2', label: 'Schmuck 2',     blizz: ['TRINKET_2'],     simc: 'trinket2', pairGroup: 'trinkets' },
-      { key: 'mainhand', label: 'Haupthand',     blizz: ['MAIN_HAND'],     simc: 'main_hand' },
-      { key: 'offhand',  label: 'Nebenhand',     blizz: ['OFF_HAND'],      simc: 'off_hand' }
+      { key: 'mainhand', label: 'Haupthand',     blizz: ['MAIN_HAND'],     simc: 'main_hand', pairGroup: 'weapons' },
+      { key: 'offhand',  label: 'Nebenhand',     blizz: ['OFF_HAND'],      simc: 'off_hand',  pairGroup: 'weapons' }
     ];
 
     const TWO_HAND_INVENTORY_TYPES = ['TWOHWEAPON', 'RANGED', 'RANGEDRIGHT', 'THROWN'];
+
+    // Offizielle Midnight Season 2 Wappen-Schwellenwerte
+    const CREST_MILESTONES = [
+      { ilvl: 282, name: 'Abenteurer des Nebels (282)' },
+      { ilvl: 295, name: 'Veteran des Nebels (295)' },
+      { ilvl: 308, name: 'Champion des Nebels (308)' },
+      { ilvl: 321, name: 'Held des Nebels (321)' },
+      { ilvl: 331, name: 'Mythos des Nebels (331)' }
+    ];
 
     // =========================================================================
     // 2. STATE (OHNE DEMO- ODER FÜLLER-DATEN)
@@ -498,7 +560,7 @@
     };
     let rules = {
       strictPairs: true,
-      twoHandMirror: true,
+      strictWeapons: true,
       includeBags: true
     };
     let discoveredBnetChars = [];
@@ -539,8 +601,8 @@
         if (savedRules) {
           rules = { ...rules, ...JSON.parse(savedRules) };
         }
-        document.getElementById('strictPairsToggle').checked = rules.strictPairs;
-        document.getElementById('twoHandToggle').checked = rules.twoHandMirror;
+        document.getElementById('strictPairsToggle').checked = rules.strictPairs !== false;
+        document.getElementById('strictWeaponsToggle').checked = rules.strictWeapons !== false;
         document.getElementById('includeBagsToggle').checked = rules.includeBags !== false;
       } catch (e) {
         console.error('Fehler beim Laden aus dem Browser-Speicher:', e);
@@ -552,30 +614,63 @@
     }
 
     // =========================================================================
-    // 4. BERECHNUNGS-LOGIK (ANGELEGT + TASCHE + KRIEGSMEUTEN-MAX)
+    // 4. BERECHNUNGS-LOGIK (INKL. OFFIZIELLER WAFFEN-ZWILLINGS-REGEL)
     // =========================================================================
-    // Gibt das angelegte Item-Level zurück (inkl. 2H-Spiegelung auf Nebenhand)
+    // Prüft, ob der Charakter eine 2H-Waffe ohne separate Nebenhand trägt
+    function isUsingSingleTwoHander(char) {
+      const rawOh = Number(char.slots?.offhand || 0);
+      const rawMh = Number(char.slots?.mainhand || 0);
+      return rawMh > 0 && rawOh === 0 && (char.hasTwoHand !== false);
+    }
+
+    // Gibt das angelegte Item-Level eines Slots zurück (bei 2H-Waffe wird Nebenhand automatisch mit abgedeckt)
     function getEquippedSlotIlvl(char, slotKey) {
       const raw = Number(char.slots?.[slotKey] || 0);
-      if (slotKey === 'offhand' && rules.twoHandMirror) {
-        const mh = Number(char.slots?.mainhand || 0);
-        if (raw === 0 && (char.hasTwoHand || mh > 0)) {
-          return mh;
-        }
+      if (slotKey === 'offhand' && rules.strictWeapons && isUsingSingleTwoHander(char)) {
+        return Number(char.slots?.mainhand || 0);
       }
       return raw;
     }
 
     // Gibt das maximale Taschen-Item-Level für diesen Slot zurück (aus SimCraft)
     function getBagSlotIlvl(char, slotKey) {
-      return Number(char.bagSlots?.[slotKey] || 0);
+      const rawBag = Number(char.bagSlots?.[slotKey] || 0);
+      if (slotKey === 'offhand' && rules.strictWeapons && rawBag === 0 && Number(char.bagTwoHandMax || 0) > 0) {
+        return Number(char.bagTwoHandMax || 0);
+      }
+      return rawBag;
     }
 
-    // Gibt den effektiven Wert des Charakters zurück (entweder inkl. Tasche oder nur angelegt)
-    function getEffectiveSlotIlvl(char, slotKey) {
+    // Roh-Maximum eines Slots (Angelegt vs. Tasche) auf einem einzelnen Charakter
+    function getRawCharSlotMax(char, slotKey) {
       const eq = getEquippedSlotIlvl(char, slotKey);
       const bag = getBagSlotIlvl(char, slotKey);
       return rules.includeBags ? Math.max(eq, bag) : eq;
+    }
+
+    // Offizielles Waffen-Wasserzeichen eines Charakters:
+    // - Trägt er eine 2H-Waffe (oder hat eine hohe 2H in der Tasche), zählt diese für beide Hände.
+    // - Trägt er 1H + Schild/Nebenhand (oder 2x Waffe bei Furor), zählt das MINIMUM aus Haupthand und Nebenhand!
+    function getCharacterWeaponWatermark(char) {
+      const mhMax = getRawCharSlotMax(char, 'mainhand');
+      const ohMax = getRawCharSlotMax(char, 'offhand');
+
+      if (!rules.strictWeapons) {
+        return { mainhand: mhMax, offhand: ohMax };
+      }
+
+      // Wenn 1H + Nebenhand getragen wird, zählt in WoW das Minimum aus beiden Händen
+      // (es sei denn, in der Tasche liegt zusätzlich eine 2H-Waffe, die höher ist)
+      const pairMin = Math.min(mhMax, ohMax);
+      const twoHandBag = rules.includeBags ? Number(char.bagTwoHandMax || 0) : 0;
+      const effectiveWeaponWatermark = isUsingSingleTwoHander(char)
+        ? Math.max(mhMax, twoHandBag)
+        : Math.max(pairMin, twoHandBag);
+
+      return {
+        mainhand: effectiveWeaponWatermark,
+        offhand: effectiveWeaponWatermark
+      };
     }
 
     function calculateWarbandBenchmarks() {
@@ -585,28 +680,29 @@
         return benchmarks;
       }
 
+      // 1. Standard-Rüstungsslots berechnen
       SLOTS.forEach(slot => {
         let max = 0;
         characters.forEach(c => {
-          const val = getEffectiveSlotIlvl(c, slot.key);
+          const val = getRawCharSlotMax(c, slot.key);
           if (val > max) max = val;
         });
         benchmarks[slot.key] = max;
       });
 
-      // Strenge Ring- & Schmuck-Regel
+      // 2. Strenge Ring- & Schmuck-Regel (Minimum aus Slot 1 & Slot 2 pro Charakter)
       if (rules.strictPairs) {
         let bestRingPair = 0;
         let bestTrinketPair = 0;
 
         characters.forEach(c => {
-          const r1 = getEffectiveSlotIlvl(c, 'finger1');
-          const r2 = getEffectiveSlotIlvl(c, 'finger2');
+          const r1 = getRawCharSlotMax(c, 'finger1');
+          const r2 = getRawCharSlotMax(c, 'finger2');
           const charRingMin = Math.min(r1, r2);
           if (charRingMin > bestRingPair) bestRingPair = charRingMin;
 
-          const t1 = getEffectiveSlotIlvl(c, 'trinket1');
-          const t2 = getEffectiveSlotIlvl(c, 'trinket2');
+          const t1 = getRawCharSlotMax(c, 'trinket1');
+          const t2 = getRawCharSlotMax(c, 'trinket2');
           const charTrinketMin = Math.min(t1, t2);
           if (charTrinketMin > bestTrinketPair) bestTrinketPair = charTrinketMin;
         });
@@ -615,6 +711,19 @@
         benchmarks.finger2 = bestRingPair;
         benchmarks.trinket1 = bestTrinketPair;
         benchmarks.trinket2 = bestTrinketPair;
+      }
+
+      // 3. Strenge Waffen-Regel (2H = beide Hände | 1H + Nebenhand = Minimum aus beiden Händen)
+      if (rules.strictWeapons) {
+        let bestWeaponWatermark = 0;
+        characters.forEach(c => {
+          const wm = getCharacterWeaponWatermark(c);
+          if (wm.mainhand > bestWeaponWatermark) {
+            bestWeaponWatermark = wm.mainhand;
+          }
+        });
+        benchmarks.mainhand = bestWeaponWatermark;
+        benchmarks.offhand = bestWeaponWatermark;
       }
 
       return benchmarks;
@@ -672,7 +781,6 @@
         const line = lines[i].trim();
         if (!line) continue;
 
-        // 1. Erste Kommentarzeile prüfen: "# Name - Spec - Date - EU/Realm"
         if (i === 0 && line.startsWith('#')) {
           const headerParts = line.replace(/^#\s*/, '').split(' - ');
           if (headerParts.length >= 4) {
@@ -686,21 +794,14 @@
           }
         }
 
-        // 2. Sektions-Wechsel prüfen (### Gear from Bags usw.)
         if (line.startsWith('###')) {
           const lowerHeader = line.toLowerCase();
-          if (lowerHeader.includes('gear from bags')) {
-            inBagsSection = true;
-          } else {
-            inBagsSection = false;
-          }
+          inBagsSection = lowerHeader.includes('gear from bags');
           lastCommentIlvl = 0;
           continue;
         }
 
-        // 3. Außerhalb der Taschen-Sektion: Charakter-Metadaten & angelegte Items
         if (!inBagsSection) {
-          // Klassen-Zeile z.B. warrior="Thrall"
           const classMatch = line.match(/^(warrior|paladin|hunter|rogue|priest|deathknight|shaman|mage|warlock|monk|druid|demonhunter|evoker)="?([^"\n]+)"?/i);
           if (classMatch) {
             className = classMatch[1].toLowerCase();
@@ -720,7 +821,6 @@
             continue;
           }
 
-          // Kommentarzeile vor einem angelegten Item: "# Itemname (626)"
           if (line.startsWith('#')) {
             const ilvlMatch = line.match(/\((\d+)\)\s*$/);
             if (ilvlMatch) {
@@ -729,7 +829,6 @@
             continue;
           }
 
-          // Angelegte Slot-Zeile: "head=,id=..."
           const slotMatch = line.match(/^(head|neck|shoulder|back|chest|wrist|hands|waist|legs|feet|finger1|finger2|trinket1|trinket2|main_hand|off_hand)=/i);
           if (slotMatch) {
             const rawSlot = slotMatch[1].toLowerCase();
@@ -743,7 +842,6 @@
             lastCommentIlvl = 0;
           }
         } else {
-          // 4. Innerhalb von "### Gear from Bags" (alle Zeilen beginnen mit #)
           const stripped = line.replace(/^#\s*/, '');
           if (!stripped) continue;
 
@@ -765,7 +863,6 @@
             }
             lastCommentIlvl = 0;
           } else {
-            // Kommentarzeile über dem Taschen-Item: "# Itemname (639)"
             const ilvlMatch = stripped.match(/\((\d+)\)\s*$/);
             if (ilvlMatch) {
               lastCommentIlvl = parseInt(ilvlMatch[1], 10);
@@ -774,7 +871,6 @@
         }
       }
 
-      // Ringe & Schmuckstücke in den Taschen auf beide Ring-/Schmuck-Slots verteilen
       if (bagRingsList.length > 0) {
         bagRingsList.sort((a, b) => b - a);
         const maxRing = bagRingsList[0];
@@ -823,7 +919,7 @@
       preview.classList.remove('hidden');
 
       if (!parsed.charName && parsed.equippedCount === 0) {
-        preview.innerHTML = `<span class="text-red-300">⚠️ Noch kein gültiger SimCraft-Text erkannt. Bitte kompletten /simc Export einfügen.</span>`;
+        preview.innerHTML = `<span class="text-red-300">⚠️ Noch kein gültiger SimCraft-Text erkannt. Bitte kompletten /simc Export aus WoW einfügen.</span>`;
         return;
       }
 
@@ -835,7 +931,7 @@
       preview.innerHTML = `
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <span class="text-purple-300 font-bold">✔️ Erkannt:</span>
+            <span class="text-purple-300 font-bold">✔️ WoW ➔ SimCraft erkannt:</span>
             <strong class="text-white">${escapeHtml(parsed.charName || 'Unbekannt')}</strong>
             <span class="text-slate-400">(${escapeHtml(parsed.realm)})</span>
           </div>
@@ -850,13 +946,13 @@
     function importSimcProfile() {
       const raw = document.getElementById('simcTextarea').value;
       if (!raw.trim()) {
-        showToast('Bitte zuerst deinen /simc Text einfügen.', 'error');
+        showToast('Bitte zuerst deinen /simc Text aus WoW einfügen.', 'error');
         return;
       }
 
       const parsed = parseSimcString(raw);
       if (!parsed.charName || parsed.equippedCount === 0) {
-        showToast('Konnte keinen Charakter oder Ausrüstung im SimC-Text finden.', 'error');
+        showToast('Konnte keinen Charakter oder Ausrüstung im SimCraft-Text finden.', 'error');
         return;
       }
 
@@ -875,7 +971,7 @@
       saveCharsToStorage();
       renderAll();
       closeModal('simcModal');
-      showToast(`SimCraft-Daten für ${charObj.name} (inkl. Taschen) gespeichert!`, 'success');
+      showToast(`WoW ➔ SimCraft Daten für ${charObj.name} (inkl. Taschen) gespeichert!`, 'success');
     }
 
     // =========================================================================
@@ -929,6 +1025,17 @@
       const minSlots = SLOTS.filter(s => benchmarks[s.key] === minVal).map(s => s.label);
       document.getElementById('kpiBottleneck').textContent = `${minVal} iLvl`;
       document.getElementById('kpiBottleneckSlots').textContent = minSlots.join(', ');
+
+      // Zeige an, welcher 50%-Wappen-Rabatt bereits aktiv ist
+      const achieved = CREST_MILESTONES.filter(m => minVal >= m.ilvl);
+      const nextTier = CREST_MILESTONES.find(m => minVal < m.ilvl);
+      const nextHint = document.getElementById('kpiNextCrestTier');
+      if (achieved.length > 0) {
+        const highest = achieved[achieved.length - 1];
+        nextHint.innerHTML = `<span class="text-emerald-400 font-semibold">✔️ ${highest.name} aktiv</span>`;
+      } else if (nextTier) {
+        nextHint.textContent = `Nächster 50%-Rabatt ab ${nextTier.ilvl} in allen Slots`;
+      }
     }
 
     function renderMatrixView() {
@@ -938,8 +1045,8 @@
 
       let headerHtml = `
         <th class="py-3 px-4 font-bold text-white sticky left-0 bg-wow-card z-10 w-44">Ausrüstungs-Slot</th>
-        <th class="py-3 px-4 font-bold text-wow-gold bg-amber-950/20 border-x border-wow-border w-44">
-          👑 Kriegsmeuten-Max<br><span class="text-[11px] font-normal text-amber-200/70">Rabatt freigeschaltet bis</span>
+        <th class="py-3 px-4 font-bold text-wow-gold bg-amber-950/20 border-x border-wow-border w-48">
+          👑 Kriegsmeuten-Max<br><span class="text-[11px] font-normal text-amber-200/70">Kostenloser Slot-Rabatt bis</span>
         </th>
       `;
 
@@ -947,11 +1054,11 @@
         const avg = getCharAverageEquippedIlvl(char);
         const hasAnyBags = Object.values(char.bagSlots || {}).some(v => v > 0);
         headerHtml += `
-          <th class="py-3 px-4 min-w-[205px]">
+          <th class="py-3 px-4 min-w-[215px]">
             <div class="flex items-center justify-between gap-1">
               <span class="font-bold text-white text-sm truncate flex items-center gap-1.5">
                 ${escapeHtml(char.name)}
-                ${hasAnyBags ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-700/50 font-normal" title="SimCraft Taschen-Daten vorhanden">SimC</span>' : ''}
+                ${hasAnyBags ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-700/50 font-normal" title="WoW ➔ SimCraft Taschen-Daten aktiv">SimCraft</span>' : ''}
               </span>
               <div class="flex items-center gap-1">
                 <button onclick="refreshSingleCharacter(${idx})" title="Angelegte Items über API aktualisieren" class="p-1 rounded hover:bg-slate-700 text-slate-400 hover:text-white transition">🔄</button>
@@ -967,8 +1074,14 @@
       let bodyHtml = '';
       SLOTS.forEach(slot => {
         const maxIlvl = benchmarks[slot.key];
-        bodyHtml += `<tr class="hover:bg-white/[0.02] transition">`;
-        bodyHtml += `<td class="py-2.5 px-4 font-medium text-slate-200 sticky left-0 bg-wow-panel z-10">${slot.label}</td>`;
+        const isWeaponSlot = slot.key === 'mainhand' || slot.key === 'offhand';
+        bodyHtml += `<tr class="hover:bg-white/[0.02] transition ${isWeaponSlot ? 'bg-amber-950/[0.04]' : ''}">`;
+        bodyHtml += `
+          <td class="py-2.5 px-4 font-medium text-slate-200 sticky left-0 bg-wow-panel z-10 flex items-center gap-1.5">
+            <span>${slot.label}</span>
+            ${isWeaponSlot ? '<span class="text-[10px] text-amber-400" title="Zwillings-Slot: 2H zählt für beide, 1H+Nebenhand zählt das Minimum">⚔️</span>' : ''}
+          </td>
+        `;
         bodyHtml += `
           <td class="py-2.5 px-4 font-bold text-wow-gold bg-amber-950/10 border-x border-wow-border">
             ${maxIlvl > 0 ? maxIlvl + ' iLvl' : '–'}
@@ -978,9 +1091,18 @@
         characters.forEach((char, cIdx) => {
           const equippedVal = getEquippedSlotIlvl(char, slot.key);
           const bagVal = getBagSlotIlvl(char, slot.key);
-          const effectiveVal = getEffectiveSlotIlvl(char, slot.key);
+          const rawMax = getRawCharSlotMax(char, slot.key);
           const diff = maxIlvl - equippedVal;
-          const isMirrored2H = slot.key === 'offhand' && rules.twoHandMirror && Number(char.slots?.offhand || 0) === 0 && equippedVal > 0;
+          const isMirrored2H = slot.key === 'offhand' && rules.strictWeapons && isUsingSingleTwoHander(char);
+
+          // Prüfen, ob eine starke 1H-Waffe durch eine schwächere Nebenhand (oder umgekehrt) für den Rabatt gebremst wird
+          let weaponPairThrottleWarning = '';
+          if (isWeaponSlot && rules.strictWeapons && !isUsingSingleTwoHander(char)) {
+            const wm = getCharacterWeaponWatermark(char);
+            if (rawMax > wm.mainhand && wm.mainhand > 0) {
+              weaponPairThrottleWarning = `<span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-950/90 text-amber-300 border border-amber-700/60 ml-1" title="Offizielle WoW-Regel: Deine ${rawMax}er Waffe zählt für den Rabatt erst bis ${wm.mainhand} iLvl, weil deine andere Hand niedriger ist!">⚠️ Paar: ${wm.mainhand}</span>`;
+            }
+          }
 
           // Kleine Taschen-Nummer direkt neben dem angelegten Item-Level
           let bagBadgeHtml = '';
@@ -1001,7 +1123,7 @@
           } else if (diff > 0) {
             cellClass = 'text-emerald-300 font-bold';
             statusBadgeHtml = `<span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-950/90 text-emerald-300 border border-emerald-700/50 font-semibold shrink-0">🟢 +${diff} Rabatt</span>`;
-          } else if (effectiveVal >= maxIlvl && maxIlvl > 0) {
+          } else if (rawMax >= maxIlvl && maxIlvl > 0) {
             cellClass = 'text-amber-300 font-bold';
             statusBadgeHtml = `<span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-950/70 text-amber-300 border border-amber-700/40 shrink-0">👑 Max</span>`;
           }
@@ -1009,12 +1131,13 @@
           bodyHtml += `
             <td onclick="openEditSlotModal(${cIdx}, '${slot.key}', '${slot.label}')" class="py-2.5 px-4 cursor-pointer hover:bg-slate-800/60 transition" title="Klicken, um Angelegt & Tasche manuell zu bearbeiten">
               <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center">
+                <div class="flex items-center flex-wrap">
                   <span class="${cellClass}">
                     ${equippedVal > 0 ? equippedVal : '–'}
-                    ${isMirrored2H ? '<span class="text-[10px] text-slate-400 font-normal">(2H)</span>' : ''}
+                    ${isMirrored2H ? '<span class="text-[10px] text-amber-300/80 font-normal">(2H)</span>' : ''}
                   </span>
                   ${bagBadgeHtml}
+                  ${weaponPairThrottleWarning}
                 </div>
                 ${statusBadgeHtml}
               </div>
@@ -1093,8 +1216,13 @@
       `).join('');
     }
 
+    function setCrestTarget(val) {
+      document.getElementById('crestTargetInput').value = val;
+      renderCrestsView();
+    }
+
     function renderCrestsView() {
-      const target = parseInt(document.getElementById('crestTargetInput').value || '626', 10);
+      const target = parseInt(document.getElementById('crestTargetInput').value || '308', 10);
       const benchmarks = calculateWarbandBenchmarks();
       const banner = document.getElementById('crestStatusBanner');
       const grid = document.getElementById('crestSlotsGrid');
@@ -1103,20 +1231,28 @@
 
       if (missingSlots.length === 0) {
         banner.className = 'p-4 rounded-xl bg-emerald-950/50 border border-emerald-700/50 text-emerald-200 text-sm font-semibold';
-        banner.innerHTML = `✅ Ziel erreicht! Alle 16 Slots deiner Kriegsmeute sind mindestens auf Item-Level ${target}.`;
+        banner.innerHTML = `✅ Meilenstein erreicht! Alle 16 Slots deiner Kriegsmeute sind mindestens auf Item-Level ${target} – 50 % Wappen-Rabatt für Twinks ist freigeschaltet!`;
       } else {
-        banner.className = 'p-4 rounded-xl bg-amber-950/40 border border-amber-700/50 text-amber-200 text-sm';
-        banner.innerHTML = `⏳ Es fehlen noch <strong>${missingSlots.length} von 16 Slots</strong> bis zum Ziel-Item-Level ${target}.`;
+        const missingNames = missingSlots.map(s => s.label).join(', ');
+        banner.className = 'p-4 rounded-xl bg-amber-950/40 border border-amber-700/50 text-amber-200 text-sm space-y-1';
+        banner.innerHTML = `
+          <div>⏳ Es fehlen noch <strong>${missingSlots.length} von 16 Slots</strong> bis zum Ziel-Item-Level <strong>${target}</strong>:</div>
+          <div class="text-xs text-amber-300/90">Fehlende Slots: <strong>${missingNames}</strong></div>
+        `;
       }
 
       grid.innerHTML = SLOTS.map(s => {
         const val = benchmarks[s.key];
         const ok = val >= target;
+        const diff = target - val;
         return `
           <div class="p-3 rounded-xl border ${ok ? 'bg-emerald-950/20 border-emerald-800/50' : 'bg-red-950/20 border-red-800/50'} flex items-center justify-between">
             <div>
               <div class="text-xs text-slate-400">${s.label}</div>
-              <div class="text-sm font-bold ${ok ? 'text-emerald-300' : 'text-red-300'}">${val} / ${target}</div>
+              <div class="text-sm font-bold ${ok ? 'text-emerald-300' : 'text-red-300'}">
+                ${val} / ${target}
+                ${!ok ? `<span class="text-xs font-normal text-red-400/90">(fehlt: +${diff})</span>` : ''}
+              </div>
             </div>
             <span class="text-base">${ok ? '✔️' : '⚠️'}</span>
           </div>
@@ -1385,7 +1521,7 @@
         realm: data.character?.realm?.name || realm,
         realmSlug,
         source: 'blizzard',
-        hasTwoHand,
+        hasTwoHand: hasTwoHand && slots.offhand === 0,
         slots,
         updatedAt: new Date().toISOString()
       };
@@ -1429,7 +1565,6 @@
       };
     }
 
-    // Wichtig: Bewahrt vorhandene Taschen-Items (bagSlots), wenn ein Charakter über die Blizzard API aktualisiert wird!
     function upsertCharacter(newChar) {
       const existingIdx = characters.findIndex(
         c => c.name.toLowerCase() === newChar.name.toLowerCase() &&
@@ -1532,7 +1667,7 @@
     }
 
     // =========================================================================
-    // 9. MANUELLE SLOT-BEARBEITUNG (ANGELEGT & TASCHE)
+    // 9. MANUELLE SLOT-BEARBEITUNG (ANGELEGT, TASCHE & 2H-STATUS)
     // =========================================================================
     function openEditSlotModal(charIdx, slotKey, slotLabel) {
       const char = characters[charIdx];
@@ -1541,6 +1676,14 @@
       document.getElementById('editSlotTitle').textContent = `${char.name} – ${slotLabel}`;
       document.getElementById('editSlotEquippedInput').value = char.slots?.[slotKey] || 0;
       document.getElementById('editSlotBagInput').value = char.bagSlots?.[slotKey] || 0;
+
+      const weaponBox = document.getElementById('editWeaponTypeBox');
+      if (slotKey === 'mainhand' || slotKey === 'offhand') {
+        weaponBox.classList.remove('hidden');
+        document.getElementById('editSlotTwoHandCheckbox').checked = Boolean(char.hasTwoHand);
+      } else {
+        weaponBox.classList.add('hidden');
+      }
       openModal('editSlotModal');
     }
 
@@ -1559,6 +1702,10 @@
       char.slots[slotKey] = Math.max(0, isNaN(eqVal) ? 0 : eqVal);
       char.bagSlots[slotKey] = Math.max(0, isNaN(bagVal) ? 0 : bagVal);
 
+      if (slotKey === 'mainhand' || slotKey === 'offhand') {
+        char.hasTwoHand = document.getElementById('editSlotTwoHandCheckbox').checked;
+      }
+
       saveCharsToStorage();
       renderAll();
       closeModal('editSlotModal');
@@ -1570,7 +1717,7 @@
     // =========================================================================
     function toggleRules() {
       rules.strictPairs = document.getElementById('strictPairsToggle').checked;
-      rules.twoHandMirror = document.getElementById('twoHandToggle').checked;
+      rules.strictWeapons = document.getElementById('strictWeaponsToggle').checked;
       rules.includeBags = document.getElementById('includeBagsToggle').checked;
       localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules));
       renderAll();
