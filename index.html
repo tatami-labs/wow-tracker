@@ -108,29 +108,29 @@
 
           <!-- Veteran (c:3443) -->
           <div class="hidden xl:flex items-center gap-1.5 bg-emerald-950/40 border border-emerald-700/40 rounded-xl px-2.5 py-1" title="Veteranen-Nebelwappen (c:3443)">
-            <span class="text-[11px] font-bold text-emerald-300">🟢 Vet:</span>
+            <span class="text-[11px] font-bold text-emerald-300">🟢 Veteran:</span>
             <span id="topVetMarksText" class="text-xs font-black text-white">0</span>
           </div>
 
           <!-- Champion (c:3444) -->
           <div class="flex items-center gap-1.5 bg-blue-950/40 border border-blue-700/50 rounded-xl px-2.5 py-1" title="Champion-Nebelwappen (c:3444, bis iLvl 308)">
-            <span class="text-[11px] font-bold text-blue-300">🔵 Champ:</span>
+            <span class="text-[11px] font-bold text-blue-300">🔵 Champion:</span>
             <input type="number" id="topChampMarksInput" min="0" step="5" oninput="updateMarksFromTopBar()" class="w-12 bg-wow-bg border border-blue-700/60 rounded px-1 py-0.5 text-xs text-white font-black text-center" />
-            <span id="topChampSubsBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-900/70 text-blue-200">0 St.</span>
+            <span id="topChampSubsBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-900/70 text-blue-200">0 Stufen</span>
           </div>
 
           <!-- Hero (c:3445) -->
           <div class="flex items-center gap-1.5 bg-purple-950/50 border border-purple-600/60 rounded-xl px-2.5 py-1" title="Helden-Nebelwappen / Hero-Marken (c:3445, bis iLvl 321)">
             <span class="text-[11px] font-bold text-purple-300">🟣 Hero (321):</span>
             <input type="number" id="topHeroMarksInput" min="0" step="5" oninput="updateMarksFromTopBar()" class="w-12 bg-wow-bg border border-purple-600/70 rounded px-1 py-0.5 text-xs text-white font-black text-center" />
-            <span id="topHeroSubsBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-900/80 text-purple-100">0 St.</span>
+            <span id="topHeroSubsBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-900/80 text-purple-100">0 Stufen</span>
           </div>
 
           <!-- Mythisch (c:3446) -->
           <div class="flex items-center gap-1.5 bg-amber-950/50 border border-amber-500/60 rounded-xl px-2.5 py-1" title="Mythos-Nebelwappen / Mythisch-Marken (c:3446, bis iLvl 334)">
-            <span class="text-[11px] font-bold text-wow-gold">🟠 Myth (334):</span>
+            <span class="text-[11px] font-bold text-wow-gold">🟠 Mythisch (334):</span>
             <input type="number" id="topMythMarksInput" min="0" step="5" oninput="updateMarksFromTopBar()" class="w-12 bg-wow-bg border border-amber-500/70 rounded px-1 py-0.5 text-xs text-amber-300 font-black text-center" />
-            <span id="topMythSubsBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-900/80 text-amber-100">0 St.</span>
+            <span id="topMythSubsBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-900/80 text-amber-100">0 Stufen</span>
           </div>
         </div>
       </div>
@@ -635,7 +635,6 @@
     const HERO_BONUS_IDS = { 12841: 'Held 1/6', 12842: 'Held 2/6', 12843: 'Held 3/6', 12844: 'Held 4/6', 12845: 'Held 5/6', 12846: 'Held 6/6 (Max)' };
     const MYTH_BONUS_IDS = { 12849: 'Mythos 1/6', 12850: 'Mythos 2/6', 12851: 'Mythos 3/6', 12852: 'Mythos 4/6', 12853: 'Mythos 5/6', 12854: 'Mythos 6/6 (Max)' };
 
-    // Dein echter Charakter Lexinê (EU-Blackmoore) aus deinem SimC-Export
     const INITIAL_LEXINE_CHAR = {
       name: 'Lexinê',
       realm: 'Blackmoore',
@@ -1439,14 +1438,14 @@
             <div class="mt-1.5 flex items-center justify-between text-[11px]">
               <span class="text-slate-400">Ø: <strong class="text-white">${r.startAvg.toFixed(2)}</strong> &rarr; <strong class="text-emerald-300">${r.reachableAvgNow.toFixed(2)}</strong></span>
               <span class="${r.totalMissingMarks === 0 ? 'text-emerald-400 font-bold' : 'text-amber-300'}">
-                ${r.totalMissingMarks === 0 ? '✔️ Genug M.' : `Fehlt: ${r.totalMissingMarks} M.`}
+                ${r.totalMissingMarks === 0 ? '✔️ Genug Marken' : `Fehlt: ${r.totalMissingMarks}`}
               </span>
             </div>
 
             <div class="mt-1 flex items-center gap-2 text-[10px] text-slate-400">
-              <span>🟣 ${r.availableHeroMarks} (${r.buyableHeroSubs} St.)</span>
+              <span>🟣 ${r.availableHeroMarks} (${r.buyableHeroSubs} Stufen)</span>
               <span>•</span>
-              <span>🟠 ${r.availableMythMarks} (${r.buyableMythSubs} St.)</span>
+              <span>🟠 ${r.availableMythMarks} (${r.buyableMythSubs} Stufen)</span>
             </div>
 
             <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden mt-1.5">
@@ -1519,9 +1518,9 @@
             </div>
 
             <div class="flex items-center justify-between text-xs text-slate-300">
-              <span>Kaufbar: <strong class="text-purple-300">${r.buyableHeroSubs} Hero-St.</strong> / <strong class="text-wow-gold">${r.buyableMythSubs} Myth-St.</strong></span>
+              <span>Kaufbar: <strong class="text-purple-300">${r.buyableHeroSubs} Hero-Stufen</strong> / <strong class="text-wow-gold">${r.buyableMythSubs} Myth-Stufen</strong></span>
               <span class="font-bold ${r.totalMissingMarks === 0 ? 'text-emerald-400' : 'text-amber-300'}">
-                Noch ${r.missingMythMarks} Myth-M. nötig
+                Noch ${r.missingMythMarks} Mythisch-Marken nötig
               </span>
             </div>
           </div>
@@ -1543,18 +1542,18 @@
         </div>
 
         <div class="bg-wow-panel border border-purple-700/40 rounded-xl p-4">
-          <div class="text-xs text-purple-300">🟣 Hero-Marken (c:3445, bis 321)</div>
-          <div class="text-2xl font-black text-purple-200 mt-1">${activeSim.availableHeroMarks} M. <span class="text-sm font-bold text-purple-400">(${activeSim.buyableHeroSubs} Stufen)</span></div>
+          <div class="text-xs text-purple-300">🟣 Hero-Marken (bis 321)</div>
+          <div class="text-2xl font-black text-purple-200 mt-1">${activeSim.availableHeroMarks} <span class="text-sm font-bold text-purple-400">(${activeSim.buyableHeroSubs} Stufen)</span></div>
           <div class="text-xs ${activeSim.missingHeroMarks === 0 ? 'text-emerald-400' : 'text-red-300'} mt-1">
-            ${activeSim.usedHeroMarks === 0 ? '✔️ Alle Slots bereits ≥ 321!' : `Benötigt: ${activeSim.usedHeroMarks} M.`}
+            ${activeSim.usedHeroMarks === 0 ? '✔️ Alle Slots bereits ≥ 321!' : `Benötigt: ${activeSim.usedHeroMarks} Marken`}
           </div>
         </div>
 
         <div class="bg-wow-panel border border-amber-600/40 rounded-xl p-4">
-          <div class="text-xs text-wow-gold">🟠 Mythisch-Marken (c:3446, bis 334)</div>
-          <div class="text-2xl font-black text-amber-300 mt-1">${activeSim.availableMythMarks} M. <span class="text-sm font-bold text-amber-400">(${activeSim.buyableMythSubs} Stufen)</span></div>
+          <div class="text-xs text-wow-gold">🟠 Mythisch-Marken (bis 334)</div>
+          <div class="text-2xl font-black text-amber-300 mt-1">${activeSim.availableMythMarks} <span class="text-sm font-bold text-amber-400">(${activeSim.buyableMythSubs} Stufen)</span></div>
           <div class="text-xs ${activeSim.missingMythMarks === 0 ? 'text-emerald-400' : 'text-amber-300'} mt-1">
-            Benötigt für ${activeSim.targetAvg}: ${activeSim.usedMythMarks} M. (Fehlen: ${activeSim.missingMythMarks} M.)
+            Benötigt für ${activeSim.targetAvg}: ${activeSim.usedMythMarks} (Fehlen: ${activeSim.missingMythMarks})
           </div>
         </div>
       `;
