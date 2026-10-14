@@ -54,14 +54,17 @@
               ⚠️ API nicht verbunden
             </span>
           </h1>
-          <p class="text-xs text-slate-400">Accountweiter Item-Level-Benchmark & Twink-Rabatt-Rechner</p>
+          <p class="text-xs text-slate-400">Accountweiter Item-Level-Benchmark, SimCraft Taschen-Scanner & Twink-Rabatt-Rechner</p>
         </div>
       </div>
 
       <!-- ACTION BUTTONS -->
       <div class="flex flex-wrap items-center gap-2">
-        <button onclick="startBattleNetLogin()" class="px-3.5 py-2 rounded-lg bg-wow-bnet hover:bg-blue-600 text-white text-xs font-semibold flex items-center gap-2 shadow transition">
+        <button onclick="startBattleNetLogin()" class="px-3.5 py-2 rounded-lg bg-wow-bnet hover:bg-blue-600 text-white text-xs font-semibold flex items-center gap-1.5 shadow transition">
           <span>🌐</span> Mit Battle.net scannen
+        </button>
+        <button onclick="openSimcModal()" class="px-3.5 py-2 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-xs font-semibold flex items-center gap-1.5 shadow transition">
+          <span>📋</span> SimCraft (/simc) Import
         </button>
         <button onclick="openAddCharModal()" class="px-3 py-2 rounded-lg bg-wow-card hover:bg-slate-700 text-slate-200 border border-wow-border text-xs font-medium transition">
           + Charakter einzeln
@@ -82,7 +85,7 @@
   <!-- MAIN CONTENT AREA -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
 
-    <!-- EMPTY STATE / ONBOARDING (Wird nur angezeigt, solange noch keine eigenen Charaktere geladen sind) -->
+    <!-- EMPTY STATE / ONBOARDING (Nur sichtbar, solange keine eigenen Charaktere geladen sind) -->
     <section id="emptyStateSection" class="hidden bg-wow-panel border border-wow-border rounded-2xl p-8 max-w-2xl mx-auto my-8 shadow-xl">
       <div class="text-center space-y-3">
         <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-wow-gold flex items-center justify-center text-2xl mx-auto">
@@ -90,15 +93,15 @@
         </div>
         <h2 class="text-xl font-bold text-white">Bereit für deine Kriegsmeute</h2>
         <p class="text-sm text-slate-400">
-          Es sind keine Demo- oder Füller-Daten geladen. Verbinde jetzt deinen Blizzard API-Zugang, um deine eigenen Charaktere direkt aus Battle.net zu laden.
+          Es sind keine Demo- oder Füller-Daten geladen. Lade deine Charaktere direkt über Battle.net oder füge deinen <strong>/simc</strong>-String aus dem Spiel ein.
         </p>
       </div>
 
       <div class="mt-6 space-y-4">
-        <!-- Schritt 1 -->
+        <!-- Option 1: API Setup -->
         <div class="p-4 rounded-xl bg-wow-card border border-wow-border flex items-center justify-between gap-4">
           <div>
-            <div class="text-xs font-bold uppercase tracking-wider text-wow-gold">Schritt 1</div>
+            <div class="text-xs font-bold uppercase tracking-wider text-wow-gold">Schritt 1 (Für Battle.net-Scan)</div>
             <div class="text-sm font-semibold text-white">Blizzard Client ID & Secret hinterlegen</div>
             <div id="onboardingApiHint" class="text-xs text-slate-400 mt-0.5">Noch keine Zugangsdaten im Browser gespeichert.</div>
           </div>
@@ -107,10 +110,10 @@
           </button>
         </div>
 
-        <!-- Schritt 2 -->
+        <!-- Option 2: Battle.net Account Scan -->
         <div class="p-4 rounded-xl bg-wow-card border border-wow-border flex items-center justify-between gap-4">
           <div>
-            <div class="text-xs font-bold uppercase tracking-wider text-blue-400">Schritt 2 (Empfohlen)</div>
+            <div class="text-xs font-bold uppercase tracking-wider text-blue-400">Schritt 2 (Account-Übersicht)</div>
             <div class="text-sm font-semibold text-white">Alle Charaktere über Battle.net suchen</div>
             <div class="text-xs text-slate-400 mt-0.5">Loggt dich bei Blizzard ein und zeigt eine Auswahlliste aller Charaktere deines Accounts.</div>
           </div>
@@ -119,26 +122,26 @@
           </button>
         </div>
 
-        <!-- Alternative -->
-        <div class="p-4 rounded-xl bg-wow-card/60 border border-wow-border/60 flex items-center justify-between gap-4">
+        <!-- Option 3: SimCraft Import -->
+        <div class="p-4 rounded-xl bg-purple-950/30 border border-purple-700/50 flex items-center justify-between gap-4">
           <div>
-            <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Alternativ</div>
-            <div class="text-sm font-semibold text-slate-200">Charaktere einzeln per Name & Server abrufen</div>
-            <div class="text-xs text-slate-400 mt-0.5">Funktioniert über die Blizzard API oder komplett ohne Key über Raider.IO.</div>
+            <div class="text-xs font-bold uppercase tracking-wider text-purple-300">Direkt aus dem Spiel (inkl. Taschen!)</div>
+            <div class="text-sm font-semibold text-white">SimCraft (/simc) String einfügen</div>
+            <div class="text-xs text-slate-400 mt-0.5">Liest angelegte Items <strong>und</strong> das höchste Item-Level in deinen Taschen separat aus.</div>
           </div>
-          <button onclick="openAddCharModal()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-wow-border text-xs font-semibold shrink-0 transition">
-            + Einzeln hinzufügen
+          <button onclick="openSimcModal()" class="px-4 py-2 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-xs font-semibold shrink-0 transition">
+            📋 /simc einfügen
           </button>
         </div>
       </div>
     </section>
 
-    <!-- DASHBOARD CONTENT (Sichtbar, sobald mindestens 1 eigener Charakter vorhanden ist) -->
+    <!-- DASHBOARD CONTENT -->
     <div id="dashboardContent" class="hidden space-y-6">
 
       <!-- TOP KPI CARDS & RULES -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div class="bg-wow-panel border border-wow-border rounded-xl p-4">
             <div class="text-xs text-slate-400">Erfasste Charaktere</div>
             <div id="kpiCharCount" class="text-2xl font-bold text-white mt-1">0</div>
@@ -157,7 +160,7 @@
         </div>
 
         <!-- REGEL-SCHALTER -->
-        <div class="lg:col-span-4 bg-wow-panel border border-wow-border rounded-xl p-4 flex flex-col justify-center space-y-3">
+        <div class="lg:col-span-5 bg-wow-panel border border-wow-border rounded-xl p-4 flex flex-col justify-center space-y-2.5">
           <div class="text-xs font-semibold text-slate-300 uppercase tracking-wider">WoW Berechnungs-Regeln</div>
           <label class="flex items-center justify-between text-xs text-slate-300 cursor-pointer">
             <span>Strenge Ring/Schmuck-Regel (2-Slot-Minimum)</span>
@@ -166,6 +169,10 @@
           <label class="flex items-center justify-between text-xs text-slate-300 cursor-pointer">
             <span>2H-Waffe zählt automatisch für Nebenhand</span>
             <input type="checkbox" id="twoHandToggle" onchange="toggleRules()" class="w-4 h-4 accent-amber-500 rounded cursor-pointer" checked />
+          </label>
+          <label class="flex items-center justify-between text-xs text-cyan-300 cursor-pointer">
+            <span>🎒 Taschen-Items (SimC) zählen für Kriegsmeuten-Max</span>
+            <input type="checkbox" id="includeBagsToggle" onchange="toggleRules()" class="w-4 h-4 accent-cyan-400 rounded cursor-pointer" checked />
           </label>
         </div>
       </div>
@@ -184,8 +191,10 @@
           </button>
         </div>
 
-        <div class="text-xs text-slate-400">
-          💡 Tipp: Klicke auf einen Item-Level-Wert in der Tabelle, um Taschen-/Bank-Items manuell anzupassen.
+        <div class="flex items-center gap-3 text-xs text-slate-400">
+          <span class="inline-flex items-center gap-1"><span class="px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-700/60 text-[10px] font-bold">🎒 626</span> = Höheres Item in Tasche</span>
+          <span class="hidden sm:inline">|</span>
+          <span class="hidden sm:inline">Klick auf Zelle = Manuell bearbeiten</span>
         </div>
       </div>
 
@@ -240,7 +249,74 @@
     </div>
   </main>
 
-  <!-- MODAL 1: BLIZZARD API SETTINGS -->
+  <!-- MODAL 1: SIMCRAFT (/simc) IMPORT -->
+  <div id="simcModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-wow-panel border border-wow-border rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <span>📋</span> SimulationCraft (/simc) Import
+          </h3>
+          <p class="text-xs text-slate-400">
+            Liest sowohl deine <strong>angezogene Ausrüstung</strong> als auch das <strong>höchste Item-Level in deinen Taschen</strong> (`Gear from Bags`) aus.
+          </p>
+        </div>
+        <button onclick="closeModal('simcModal')" class="text-slate-400 hover:text-white text-lg">&times;</button>
+      </div>
+
+      <div class="bg-wow-card border border-wow-border rounded-xl p-3 text-xs text-slate-300 space-y-1">
+        <div class="font-semibold text-purple-300">So funktioniert's in 10 Sekunden:</div>
+        <div>1. Tippe in WoW im Chat <code class="px-1.5 py-0.5 rounded bg-black/50 text-amber-300 font-mono">/simc</code> ein und drücke <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-600">Strg + C</kbd>.</div>
+        <div>2. Füge den gesamten Text hier unten mit <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-600">Strg + V</kbd> ein.</div>
+      </div>
+
+      <textarea
+        id="simcTextarea"
+        oninput="previewSimcInput()"
+        rows="8"
+        placeholder="# Charakter - Spec - 2026-10-14 ...&#10;warrior=&quot;DeinName&quot;&#10;server=blackhand&#10;...&#10;### Gear from Bags"
+        class="w-full bg-wow-bg border border-wow-border rounded-xl p-3 text-xs text-slate-200 font-mono focus:outline-none focus:border-purple-500"
+      ></textarea>
+
+      <!-- Live-Vorschau des erkannten SimC-Strings -->
+      <div id="simcPreviewBox" class="hidden p-3.5 rounded-xl bg-purple-950/30 border border-purple-700/50 text-xs space-y-1.5">
+        <!-- Dynamisch per JS gefüllt -->
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button onclick="closeModal('simcModal')" class="px-4 py-2 rounded-lg bg-wow-card hover:bg-slate-700 text-xs text-slate-300">Abbrechen</button>
+        <button onclick="importSimcProfile()" class="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow">
+          📥 Angelegte & Taschen-Items speichern
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: SLOT MANUELL BEARBEITEN (ANGELEGT & TASCHE) -->
+  <div id="editSlotModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-wow-panel border border-wow-border rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h3 id="editSlotTitle" class="text-base font-bold text-white">Slot bearbeiten</h3>
+        <button onclick="closeModal('editSlotModal')" class="text-slate-400 hover:text-white text-lg">&times;</button>
+      </div>
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Angelegtes Item-Level (Angezogen)</label>
+          <input type="number" id="editSlotEquippedInput" class="w-full bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-white font-bold" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-cyan-300 mb-1">🎒 Max. Item-Level in der Tasche (0 = keins)</label>
+          <input type="number" id="editSlotBagInput" class="w-full bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-cyan-300 font-bold" />
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button onclick="closeModal('editSlotModal')" class="px-4 py-2 rounded-lg bg-wow-card hover:bg-slate-700 text-xs text-slate-300">Abbrechen</button>
+        <button onclick="saveManualSlotEdit()" class="px-4 py-2 rounded-lg bg-wow-gold hover:bg-amber-400 text-slate-950 font-bold text-xs">Speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: BLIZZARD API SETTINGS -->
   <div id="apiModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-wow-panel border border-wow-border rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between">
@@ -280,7 +356,7 @@
     </div>
   </div>
 
-  <!-- MODAL 2: BATTLE.NET ACCOUNT CHARACTER SELECTOR -->
+  <!-- MODAL 4: BATTLE.NET ACCOUNT CHARACTER SELECTOR -->
   <div id="bnetCharsModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-wow-panel border border-wow-border rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl flex flex-col max-h-[85vh]">
       <div class="flex items-center justify-between">
@@ -291,7 +367,6 @@
         <button onclick="closeModal('bnetCharsModal')" class="text-slate-400 hover:text-white text-lg">&times;</button>
       </div>
 
-      <!-- Filter Bar -->
       <div class="flex flex-wrap items-center justify-between gap-2 bg-wow-card p-3 rounded-xl border border-wow-border">
         <div class="flex items-center gap-3">
           <label class="text-xs text-slate-300 flex items-center gap-1.5 cursor-pointer">
@@ -307,10 +382,8 @@
         </div>
       </div>
 
-      <!-- Scrollable List -->
       <div id="bnetCharsListContainer" class="flex-1 overflow-y-auto space-y-2 pr-1"></div>
 
-      <!-- Progress / Action Footer -->
       <div class="pt-2 border-t border-wow-border flex items-center justify-between gap-3">
         <div id="bnetScanProgressText" class="text-xs text-slate-400"></div>
         <div class="flex items-center gap-2">
@@ -323,7 +396,7 @@
     </div>
   </div>
 
-  <!-- MODAL 3: SINGLE CHARACTER ADD -->
+  <!-- MODAL 5: SINGLE CHARACTER ADD -->
   <div id="addCharModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-wow-panel border border-wow-border rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between">
@@ -356,7 +429,7 @@
     </div>
   </div>
 
-  <!-- MODAL 4: BACKUP / RESTORE -->
+  <!-- MODAL 6: BACKUP / RESTORE -->
   <div id="backupModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-wow-panel border border-wow-border rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between">
@@ -393,28 +466,28 @@
     const STORAGE_KEY_RULES = 'wow_warband_rules_v2';
 
     const SLOTS = [
-      { key: 'head',     label: 'Kopf',          blizz: ['HEAD'] },
-      { key: 'neck',     label: 'Hals',          blizz: ['NECK'] },
-      { key: 'shoulder', label: 'Schultern',     blizz: ['SHOULDER'] },
-      { key: 'back',     label: 'Rücken',        blizz: ['BACK', 'CLOAK'] },
-      { key: 'chest',    label: 'Brust',         blizz: ['CHEST', 'ROBE'] },
-      { key: 'wrist',    label: 'Handgelenke',   blizz: ['WRIST'] },
-      { key: 'hands',    label: 'Hände',         blizz: ['HANDS'] },
-      { key: 'waist',    label: 'Taille',        blizz: ['WAIST'] },
-      { key: 'legs',     label: 'Beine',         blizz: ['LEGS'] },
-      { key: 'feet',     label: 'Füße',          blizz: ['FEET'] },
-      { key: 'finger1',  label: 'Ring 1',        blizz: ['FINGER_1'], pairGroup: 'rings' },
-      { key: 'finger2',  label: 'Ring 2',        blizz: ['FINGER_2'], pairGroup: 'rings' },
-      { key: 'trinket1', label: 'Schmuck 1',     blizz: ['TRINKET_1'], pairGroup: 'trinkets' },
-      { key: 'trinket2', label: 'Schmuck 2',     blizz: ['TRINKET_2'], pairGroup: 'trinkets' },
-      { key: 'mainhand', label: 'Haupthand',     blizz: ['MAIN_HAND'] },
-      { key: 'offhand',  label: 'Nebenhand',     blizz: ['OFF_HAND'] }
+      { key: 'head',     label: 'Kopf',          blizz: ['HEAD'],          simc: 'head' },
+      { key: 'neck',     label: 'Hals',          blizz: ['NECK'],          simc: 'neck' },
+      { key: 'shoulder', label: 'Schultern',     blizz: ['SHOULDER'],      simc: 'shoulder' },
+      { key: 'back',     label: 'Rücken',        blizz: ['BACK', 'CLOAK'], simc: 'back' },
+      { key: 'chest',    label: 'Brust',         blizz: ['CHEST', 'ROBE'], simc: 'chest' },
+      { key: 'wrist',    label: 'Handgelenke',   blizz: ['WRIST'],         simc: 'wrist' },
+      { key: 'hands',    label: 'Hände',         blizz: ['HANDS'],         simc: 'hands' },
+      { key: 'waist',    label: 'Taille',        blizz: ['WAIST'],         simc: 'waist' },
+      { key: 'legs',     label: 'Beine',         blizz: ['LEGS'],          simc: 'legs' },
+      { key: 'feet',     label: 'Füße',          blizz: ['FEET'],          simc: 'feet' },
+      { key: 'finger1',  label: 'Ring 1',        blizz: ['FINGER_1'],      simc: 'finger1',  pairGroup: 'rings' },
+      { key: 'finger2',  label: 'Ring 2',        blizz: ['FINGER_2'],      simc: 'finger2',  pairGroup: 'rings' },
+      { key: 'trinket1', label: 'Schmuck 1',     blizz: ['TRINKET_1'],     simc: 'trinket1', pairGroup: 'trinkets' },
+      { key: 'trinket2', label: 'Schmuck 2',     blizz: ['TRINKET_2'],     simc: 'trinket2', pairGroup: 'trinkets' },
+      { key: 'mainhand', label: 'Haupthand',     blizz: ['MAIN_HAND'],     simc: 'main_hand' },
+      { key: 'offhand',  label: 'Nebenhand',     blizz: ['OFF_HAND'],      simc: 'off_hand' }
     ];
 
     const TWO_HAND_INVENTORY_TYPES = ['TWOHWEAPON', 'RANGED', 'RANGEDRIGHT', 'THROWN'];
 
     // =========================================================================
-    // 2. STATE (OHNE DEMO- ODER FÜLLER-DATEN!)
+    // 2. STATE (OHNE DEMO- ODER FÜLLER-DATEN)
     // =========================================================================
     let characters = [];
     let apiConfig = {
@@ -425,9 +498,11 @@
     };
     let rules = {
       strictPairs: true,
-      twoHandMirror: true
+      twoHandMirror: true,
+      includeBags: true
     };
     let discoveredBnetChars = [];
+    let currentEditingCell = null;
 
     // =========================================================================
     // 3. INITIALISIERUNG & OAUTH CALLBACK CHECK
@@ -437,11 +512,9 @@
       updateApiBadge();
       renderAll();
 
-      // Prüfen, ob wir gerade vom Battle.net-Login zurückgeleitet wurden (?code=...)
       const params = new URLSearchParams(window.location.search);
       const authCode = params.get('code');
       if (authCode) {
-        // URL oben im Browser sofort säubern
         window.history.replaceState({}, document.title, window.location.pathname);
         await handleBattleNetCallback(authCode);
       }
@@ -468,6 +541,7 @@
         }
         document.getElementById('strictPairsToggle').checked = rules.strictPairs;
         document.getElementById('twoHandToggle').checked = rules.twoHandMirror;
+        document.getElementById('includeBagsToggle').checked = rules.includeBags !== false;
       } catch (e) {
         console.error('Fehler beim Laden aus dem Browser-Speicher:', e);
       }
@@ -478,9 +552,10 @@
     }
 
     // =========================================================================
-    // 4. BERECHNUNGS-LOGIK (KRIEGSMEUTEN-MAX & RABATTE)
+    // 4. BERECHNUNGS-LOGIK (ANGELEGT + TASCHE + KRIEGSMEUTEN-MAX)
     // =========================================================================
-    function getEffectiveSlotIlvl(char, slotKey) {
+    // Gibt das angelegte Item-Level zurück (inkl. 2H-Spiegelung auf Nebenhand)
+    function getEquippedSlotIlvl(char, slotKey) {
       const raw = Number(char.slots?.[slotKey] || 0);
       if (slotKey === 'offhand' && rules.twoHandMirror) {
         const mh = Number(char.slots?.mainhand || 0);
@@ -491,6 +566,18 @@
       return raw;
     }
 
+    // Gibt das maximale Taschen-Item-Level für diesen Slot zurück (aus SimCraft)
+    function getBagSlotIlvl(char, slotKey) {
+      return Number(char.bagSlots?.[slotKey] || 0);
+    }
+
+    // Gibt den effektiven Wert des Charakters zurück (entweder inkl. Tasche oder nur angelegt)
+    function getEffectiveSlotIlvl(char, slotKey) {
+      const eq = getEquippedSlotIlvl(char, slotKey);
+      const bag = getBagSlotIlvl(char, slotKey);
+      return rules.includeBags ? Math.max(eq, bag) : eq;
+    }
+
     function calculateWarbandBenchmarks() {
       const benchmarks = {};
       if (characters.length === 0) {
@@ -498,7 +585,6 @@
         return benchmarks;
       }
 
-      // Standard-Maximum je Slot
       SLOTS.forEach(slot => {
         let max = 0;
         characters.forEach(c => {
@@ -508,7 +594,7 @@
         benchmarks[slot.key] = max;
       });
 
-      // Strenge Ring- & Schmuck-Regel (in WoW zählt für Ringe/Schmuck der zweithöchste angelegte Wert)
+      // Strenge Ring- & Schmuck-Regel
       if (rules.strictPairs) {
         let bestRingPair = 0;
         let bestTrinketPair = 0;
@@ -534,14 +620,266 @@
       return benchmarks;
     }
 
-    function getCharAverageIlvl(char) {
+    function getCharAverageEquippedIlvl(char) {
       let sum = 0;
-      SLOTS.forEach(s => { sum += getEffectiveSlotIlvl(char, s.key); });
+      SLOTS.forEach(s => { sum += getEquippedSlotIlvl(char, s.key); });
       return (sum / SLOTS.length).toFixed(1);
     }
 
     // =========================================================================
-    // 5. DARSTELLUNG / RENDERING
+    // 5. SIMCRAFT (/simc) PARSER (ANGELEGT & GEAR FROM BAGS)
+    // =========================================================================
+    function parseSimcString(rawText) {
+      const lines = (rawText || '').split(/\r?\n/);
+      let charName = '';
+      let realm = '';
+      let region = apiConfig.region || 'eu';
+      let className = '';
+
+      const equippedSlots = {};
+      const bagSlots = {};
+      SLOTS.forEach(s => {
+        equippedSlots[s.key] = 0;
+        bagSlots[s.key] = 0;
+      });
+
+      const bagRingsList = [];
+      const bagTrinketsList = [];
+
+      let inBagsSection = false;
+      let lastCommentIlvl = 0;
+
+      const simcToSlotKey = {
+        head: 'head',
+        neck: 'neck',
+        shoulder: 'shoulder',
+        back: 'back',
+        chest: 'chest',
+        wrist: 'wrist',
+        hands: 'hands',
+        waist: 'waist',
+        legs: 'legs',
+        feet: 'feet',
+        finger1: 'finger1',
+        finger2: 'finger2',
+        trinket1: 'trinket1',
+        trinket2: 'trinket2',
+        main_hand: 'mainhand',
+        off_hand: 'offhand'
+      };
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+
+        // 1. Erste Kommentarzeile prüfen: "# Name - Spec - Date - EU/Realm"
+        if (i === 0 && line.startsWith('#')) {
+          const headerParts = line.replace(/^#\s*/, '').split(' - ');
+          if (headerParts.length >= 4) {
+            if (!charName) charName = headerParts[0].trim();
+            const regRealm = headerParts[headerParts.length - 1].trim();
+            if (regRealm.includes('/')) {
+              const [rReg, rName] = regRealm.split('/');
+              if (rReg) region = rReg.toLowerCase().trim();
+              if (rName) realm = rName.trim();
+            }
+          }
+        }
+
+        // 2. Sektions-Wechsel prüfen (### Gear from Bags usw.)
+        if (line.startsWith('###')) {
+          const lowerHeader = line.toLowerCase();
+          if (lowerHeader.includes('gear from bags')) {
+            inBagsSection = true;
+          } else {
+            inBagsSection = false;
+          }
+          lastCommentIlvl = 0;
+          continue;
+        }
+
+        // 3. Außerhalb der Taschen-Sektion: Charakter-Metadaten & angelegte Items
+        if (!inBagsSection) {
+          // Klassen-Zeile z.B. warrior="Thrall"
+          const classMatch = line.match(/^(warrior|paladin|hunter|rogue|priest|deathknight|shaman|mage|warlock|monk|druid|demonhunter|evoker)="?([^"\n]+)"?/i);
+          if (classMatch) {
+            className = classMatch[1].toLowerCase();
+            charName = classMatch[2].trim();
+            continue;
+          }
+
+          const serverMatch = line.match(/^server=(.+)$/i);
+          if (serverMatch && !realm) {
+            realm = serverMatch[1].trim().replace(/_/g, ' ');
+            continue;
+          }
+
+          const regionMatch = line.match(/^region=(.+)$/i);
+          if (regionMatch) {
+            region = regionMatch[1].trim().toLowerCase();
+            continue;
+          }
+
+          // Kommentarzeile vor einem angelegten Item: "# Itemname (626)"
+          if (line.startsWith('#')) {
+            const ilvlMatch = line.match(/\((\d+)\)\s*$/);
+            if (ilvlMatch) {
+              lastCommentIlvl = parseInt(ilvlMatch[1], 10);
+            }
+            continue;
+          }
+
+          // Angelegte Slot-Zeile: "head=,id=..."
+          const slotMatch = line.match(/^(head|neck|shoulder|back|chest|wrist|hands|waist|legs|feet|finger1|finger2|trinket1|trinket2|main_hand|off_hand)=/i);
+          if (slotMatch) {
+            const rawSlot = slotMatch[1].toLowerCase();
+            const slotKey = simcToSlotKey[rawSlot];
+            const inlineIlvl = line.match(/ilevel=(\d+)/i);
+            const finalIlvl = inlineIlvl ? parseInt(inlineIlvl[1], 10) : lastCommentIlvl;
+
+            if (slotKey && finalIlvl > 0) {
+              equippedSlots[slotKey] = finalIlvl;
+            }
+            lastCommentIlvl = 0;
+          }
+        } else {
+          // 4. Innerhalb von "### Gear from Bags" (alle Zeilen beginnen mit #)
+          const stripped = line.replace(/^#\s*/, '');
+          if (!stripped) continue;
+
+          const bagSlotMatch = stripped.match(/^(head|neck|shoulder|back|chest|wrist|hands|waist|legs|feet|finger1|finger2|trinket1|trinket2|main_hand|off_hand)=/i);
+          if (bagSlotMatch) {
+            const rawSlot = bagSlotMatch[1].toLowerCase();
+            const slotKey = simcToSlotKey[rawSlot];
+            const inlineIlvl = stripped.match(/ilevel=(\d+)/i);
+            const finalIlvl = inlineIlvl ? parseInt(inlineIlvl[1], 10) : lastCommentIlvl;
+
+            if (slotKey && finalIlvl > 0) {
+              if (rawSlot === 'finger1' || rawSlot === 'finger2') {
+                bagRingsList.push(finalIlvl);
+              } else if (rawSlot === 'trinket1' || rawSlot === 'trinket2') {
+                bagTrinketsList.push(finalIlvl);
+              } else {
+                bagSlots[slotKey] = Math.max(bagSlots[slotKey] || 0, finalIlvl);
+              }
+            }
+            lastCommentIlvl = 0;
+          } else {
+            // Kommentarzeile über dem Taschen-Item: "# Itemname (639)"
+            const ilvlMatch = stripped.match(/\((\d+)\)\s*$/);
+            if (ilvlMatch) {
+              lastCommentIlvl = parseInt(ilvlMatch[1], 10);
+            }
+          }
+        }
+      }
+
+      // Ringe & Schmuckstücke in den Taschen auf beide Ring-/Schmuck-Slots verteilen
+      if (bagRingsList.length > 0) {
+        bagRingsList.sort((a, b) => b - a);
+        const maxRing = bagRingsList[0];
+        bagSlots.finger1 = maxRing;
+        bagSlots.finger2 = bagRingsList.length > 1 ? bagRingsList[1] : maxRing;
+      }
+
+      if (bagTrinketsList.length > 0) {
+        bagTrinketsList.sort((a, b) => b - a);
+        const maxTrinket = bagTrinketsList[0];
+        bagSlots.trinket1 = maxTrinket;
+        bagSlots.trinket2 = bagTrinketsList.length > 1 ? bagTrinketsList[1] : maxTrinket;
+      }
+
+      const equippedCount = Object.values(equippedSlots).filter(v => v > 0).length;
+      const bagCount = Object.values(bagSlots).filter(v => v > 0).length;
+
+      return {
+        charName,
+        realm: realm || 'Unbekannt',
+        region,
+        className,
+        equippedSlots,
+        bagSlots,
+        equippedCount,
+        bagCount,
+        hasTwoHand: equippedSlots.mainhand > 0 && equippedSlots.offhand === 0
+      };
+    }
+
+    function openSimcModal() {
+      document.getElementById('simcTextarea').value = '';
+      document.getElementById('simcPreviewBox').classList.add('hidden');
+      openModal('simcModal');
+    }
+
+    function previewSimcInput() {
+      const raw = document.getElementById('simcTextarea').value;
+      const preview = document.getElementById('simcPreviewBox');
+      if (!raw.trim()) {
+        preview.classList.add('hidden');
+        return;
+      }
+
+      const parsed = parseSimcString(raw);
+      preview.classList.remove('hidden');
+
+      if (!parsed.charName && parsed.equippedCount === 0) {
+        preview.innerHTML = `<span class="text-red-300">⚠️ Noch kein gültiger SimCraft-Text erkannt. Bitte kompletten /simc Export einfügen.</span>`;
+        return;
+      }
+
+      let higherBagCount = 0;
+      SLOTS.forEach(s => {
+        if (parsed.bagSlots[s.key] > parsed.equippedSlots[s.key]) higherBagCount++;
+      });
+
+      preview.innerHTML = `
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <span class="text-purple-300 font-bold">✔️ Erkannt:</span>
+            <strong class="text-white">${escapeHtml(parsed.charName || 'Unbekannt')}</strong>
+            <span class="text-slate-400">(${escapeHtml(parsed.realm)})</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-emerald-300 font-semibold">${parsed.equippedCount} angelegte Slots</span>
+            <span class="text-cyan-300 font-semibold">🎒 ${parsed.bagCount} Slots in Tasche (${higherBagCount} höher als angelegt)</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function importSimcProfile() {
+      const raw = document.getElementById('simcTextarea').value;
+      if (!raw.trim()) {
+        showToast('Bitte zuerst deinen /simc Text einfügen.', 'error');
+        return;
+      }
+
+      const parsed = parseSimcString(raw);
+      if (!parsed.charName || parsed.equippedCount === 0) {
+        showToast('Konnte keinen Charakter oder Ausrüstung im SimC-Text finden.', 'error');
+        return;
+      }
+
+      const charObj = {
+        name: parsed.charName,
+        realm: parsed.realm,
+        realmSlug: toRealmSlug(parsed.realm),
+        source: 'simc',
+        hasTwoHand: parsed.hasTwoHand,
+        slots: parsed.equippedSlots,
+        bagSlots: parsed.bagSlots,
+        updatedAt: new Date().toISOString()
+      };
+
+      upsertCharacter(charObj);
+      saveCharsToStorage();
+      renderAll();
+      closeModal('simcModal');
+      showToast(`SimCraft-Daten für ${charObj.name} (inkl. Taschen) gespeichert!`, 'success');
+    }
+
+    // =========================================================================
+    // 6. DARSTELLUNG / RENDERING
     // =========================================================================
     function renderAll() {
       const emptySection = document.getElementById('emptyStateSection');
@@ -570,26 +908,23 @@
       const benchmarks = calculateWarbandBenchmarks();
       document.getElementById('kpiCharCount').textContent = characters.length;
 
-      // Höchster Charakter
       let bestChar = null;
       let bestAvg = -1;
       characters.forEach(c => {
-        const avg = parseFloat(getCharAverageIlvl(c));
+        const avg = parseFloat(getCharAverageEquippedIlvl(c));
         if (avg > bestAvg) {
           bestAvg = avg;
           bestChar = c;
         }
       });
       document.getElementById('kpiHighestChar').textContent = bestChar
-        ? `Höchster: ${bestChar.name} (${bestAvg} Ø)`
+        ? `Höchster: ${bestChar.name} (${bestAvg} Ø angelegt)`
         : '–';
 
-      // Kriegsmeuten-Durchschnitt
       const slotVals = SLOTS.map(s => benchmarks[s.key]);
       const wbAvg = (slotVals.reduce((a, b) => a + b, 0) / SLOTS.length).toFixed(1);
       document.getElementById('kpiWarbandAvg').textContent = `${wbAvg} iLvl`;
 
-      // Flaschenhals-Slot
       const minVal = Math.min(...slotVals);
       const minSlots = SLOTS.filter(s => benchmarks[s.key] === minVal).map(s => s.label);
       document.getElementById('kpiBottleneck').textContent = `${minVal} iLvl`;
@@ -609,13 +944,17 @@
       `;
 
       characters.forEach((char, idx) => {
-        const avg = getCharAverageIlvl(char);
+        const avg = getCharAverageEquippedIlvl(char);
+        const hasAnyBags = Object.values(char.bagSlots || {}).some(v => v > 0);
         headerHtml += `
-          <th class="py-3 px-4 min-w-[165px]">
+          <th class="py-3 px-4 min-w-[205px]">
             <div class="flex items-center justify-between gap-1">
-              <span class="font-bold text-white text-sm truncate">${escapeHtml(char.name)}</span>
+              <span class="font-bold text-white text-sm truncate flex items-center gap-1.5">
+                ${escapeHtml(char.name)}
+                ${hasAnyBags ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-700/50 font-normal" title="SimCraft Taschen-Daten vorhanden">SimC</span>' : ''}
+              </span>
               <div class="flex items-center gap-1">
-                <button onclick="refreshSingleCharacter(${idx})" title="Über API aktualisieren" class="p-1 rounded hover:bg-slate-700 text-slate-400 hover:text-white transition">🔄</button>
+                <button onclick="refreshSingleCharacter(${idx})" title="Angelegte Items über API aktualisieren" class="p-1 rounded hover:bg-slate-700 text-slate-400 hover:text-white transition">🔄</button>
                 <button onclick="removeCharacter(${idx})" title="Charakter entfernen" class="p-1 rounded hover:bg-red-900/50 text-slate-400 hover:text-red-300 transition">🗑️</button>
               </div>
             </div>
@@ -637,31 +976,47 @@
         `;
 
         characters.forEach((char, cIdx) => {
-          const val = getEffectiveSlotIlvl(char, slot.key);
-          const diff = maxIlvl - val;
-          const isMirrored2H = slot.key === 'offhand' && rules.twoHandMirror && Number(char.slots?.offhand || 0) === 0 && val > 0;
+          const equippedVal = getEquippedSlotIlvl(char, slot.key);
+          const bagVal = getBagSlotIlvl(char, slot.key);
+          const effectiveVal = getEffectiveSlotIlvl(char, slot.key);
+          const diff = maxIlvl - equippedVal;
+          const isMirrored2H = slot.key === 'offhand' && rules.twoHandMirror && Number(char.slots?.offhand || 0) === 0 && equippedVal > 0;
 
-          let badgeHtml = '';
-          let cellClass = 'text-slate-300';
+          // Kleine Taschen-Nummer direkt neben dem angelegten Item-Level
+          let bagBadgeHtml = '';
+          if (bagVal > 0) {
+            if (bagVal > equippedVal) {
+              bagBadgeHtml = `<span class="text-[11px] font-bold text-cyan-300 bg-cyan-950/90 border border-cyan-600/60 px-1.5 py-0.5 rounded ml-1.5" title="Höheres Item in der Tasche: ${bagVal} iLvl">🎒 ${bagVal}</span>`;
+            } else {
+              bagBadgeHtml = `<span class="text-[11px] font-medium text-slate-400 bg-slate-800/80 border border-slate-700 px-1.5 py-0.5 rounded ml-1.5" title="Max. Item in der Tasche: ${bagVal} iLvl">🎒 ${bagVal}</span>`;
+            }
+          }
 
-          if (val === 0) {
-            badgeHtml = `<span class="text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-400">Leer</span>`;
+          // Rechtsbündiges Status-Badge (Rabatt vs. Max)
+          let statusBadgeHtml = '';
+          let cellClass = 'text-slate-200 font-semibold';
+
+          if (equippedVal === 0 && bagVal === 0) {
+            statusBadgeHtml = `<span class="text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-400">Leer</span>`;
           } else if (diff > 0) {
-            cellClass = 'text-emerald-300 font-semibold';
-            badgeHtml = `<span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-950/90 text-emerald-300 border border-emerald-700/50 font-semibold">🟢 +${diff} Rabatt</span>`;
-          } else {
-            cellClass = 'text-amber-300 font-semibold';
-            badgeHtml = `<span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-950/70 text-amber-300 border border-amber-700/40">👑 Max</span>`;
+            cellClass = 'text-emerald-300 font-bold';
+            statusBadgeHtml = `<span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-950/90 text-emerald-300 border border-emerald-700/50 font-semibold shrink-0">🟢 +${diff} Rabatt</span>`;
+          } else if (effectiveVal >= maxIlvl && maxIlvl > 0) {
+            cellClass = 'text-amber-300 font-bold';
+            statusBadgeHtml = `<span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-950/70 text-amber-300 border border-amber-700/40 shrink-0">👑 Max</span>`;
           }
 
           bodyHtml += `
-            <td onclick="promptManualSlotEdit(${cIdx}, '${slot.key}', '${slot.label}')" class="py-2.5 px-4 cursor-pointer hover:bg-slate-800/60 transition" title="Klicken, um Item-Level manuell anzupassen">
+            <td onclick="openEditSlotModal(${cIdx}, '${slot.key}', '${slot.label}')" class="py-2.5 px-4 cursor-pointer hover:bg-slate-800/60 transition" title="Klicken, um Angelegt & Tasche manuell zu bearbeiten">
               <div class="flex items-center justify-between gap-2">
-                <span class="${cellClass}">
-                  ${val > 0 ? val : '–'}
-                  ${isMirrored2H ? '<span class="text-[10px] text-slate-400 font-normal">(2H)</span>' : ''}
-                </span>
-                ${badgeHtml}
+                <div class="flex items-center">
+                  <span class="${cellClass}">
+                    ${equippedVal > 0 ? equippedVal : '–'}
+                    ${isMirrored2H ? '<span class="text-[10px] text-slate-400 font-normal">(2H)</span>' : ''}
+                  </span>
+                  ${bagBadgeHtml}
+                </div>
+                ${statusBadgeHtml}
               </div>
             </td>
           `;
@@ -677,7 +1032,7 @@
       const sel = document.getElementById('plannerCharSelect');
       const currentVal = sel.value;
       sel.innerHTML = characters.map((c, idx) =>
-        `<option value="${idx}">${escapeHtml(c.name)} (${escapeHtml(c.realm)}) – ${getCharAverageIlvl(c)} Ø</option>`
+        `<option value="${idx}">${escapeHtml(c.name)} (${escapeHtml(c.realm)}) – ${getCharAverageEquippedIlvl(c)} Ø</option>`
       ).join('');
       if (currentVal && characters[currentVal]) sel.value = currentVal;
     }
@@ -698,19 +1053,20 @@
       const upgrades = [];
 
       SLOTS.forEach(slot => {
-        const current = getEffectiveSlotIlvl(char, slot.key);
+        const equipped = getEquippedSlotIlvl(char, slot.key);
+        const bag = getBagSlotIlvl(char, slot.key);
         const target = benchmarks[slot.key];
-        const diff = target - current;
+        const diff = target - equipped;
         if (diff > 0) {
-          upgrades.push({ slot, current, target, diff });
+          upgrades.push({ slot, equipped, bag, target, diff });
         }
       });
 
       upgrades.sort((a, b) => b.diff - a.diff);
 
       summary.innerHTML = upgrades.length > 0
-        ? `<span class="text-emerald-400 font-semibold">${upgrades.length} Slots</span> können bei <strong>${escapeHtml(char.name)}</strong> sofort mit Kriegsmeuten-Rabatt aufgewertet werden.`
-        : `🎉 <strong>${escapeHtml(char.name)}</strong> hat auf allen Slots bereits das maximale Item-Level deiner Kriegsmeute erreicht!`;
+        ? `<span class="text-emerald-400 font-semibold">${upgrades.length} Slots</span> können bei <strong>${escapeHtml(char.name)}</strong> aktuell vergünstigt aufgewertet werden.`
+        : `🎉 <strong>${escapeHtml(char.name)}</strong> hat auf allen angelegten Slots bereits das maximale Item-Level deiner Kriegsmeute erreicht!`;
 
       if (upgrades.length === 0) {
         grid.innerHTML = `
@@ -724,8 +1080,11 @@
       grid.innerHTML = upgrades.map(u => `
         <div class="bg-wow-panel border border-wow-border rounded-xl p-4 flex items-center justify-between">
           <div>
-            <div class="text-xs text-slate-400">${u.slot.label}</div>
-            <div class="text-base font-bold text-white mt-0.5">${u.current} <span class="text-slate-500">&rarr;</span> <span class="text-wow-gold">${u.target} iLvl</span></div>
+            <div class="text-xs text-slate-400 flex items-center gap-2">
+              <span>${u.slot.label}</span>
+              ${u.bag > 0 ? `<span class="text-[11px] text-cyan-300 font-semibold">(🎒 In Tasche: ${u.bag})</span>` : ''}
+            </div>
+            <div class="text-base font-bold text-white mt-0.5">${u.equipped} <span class="text-slate-500">&rarr;</span> <span class="text-wow-gold">${u.target} iLvl</span></div>
           </div>
           <div class="px-3 py-1 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-700/50 text-xs font-bold">
             +${u.diff} iLvl Rabatt
@@ -766,7 +1125,7 @@
     }
 
     // =========================================================================
-    // 6. BLIZZARD API & BATTLE.NET OAUTH2 ACCOUNT SCANNER
+    // 7. BLIZZARD API & BATTLE.NET OAUTH2 ACCOUNT SCANNER
     // =========================================================================
     function updateApiBadge() {
       const badge = document.getElementById('apiStatusBadge');
@@ -828,7 +1187,6 @@
       return data.access_token;
     }
 
-    // Startet den Battle.net OAuth2 Login, um alle Charaktere des Accounts aufzulisten
     function startBattleNetLogin() {
       if (!apiConfig.clientId || !apiConfig.clientSecret) {
         showToast('Bitte trage zuerst deine Blizzard Client ID und dein Secret ein.', 'info');
@@ -841,7 +1199,6 @@
       window.location.href = authUrl;
     }
 
-    // Wird automatisch ausgeführt, wenn man von Battle.net zurück auf die Seite geleitet wird
     async function handleBattleNetCallback(code) {
       try {
         showToast('Verbinde mit Battle.net und suche deine Charaktere...', 'info');
@@ -975,10 +1332,10 @@
     }
 
     // =========================================================================
-    // 7. AUSRÜSTUNGS-ABFRAGE (BLIZZARD API & RAIDER.IO)
+    // 8. AUSRÜSTUNGS-ABFRAGE (BLIZZARD API & RAIDER.IO)
     // =========================================================================
     function toRealmSlug(realm) {
-      return realm
+      return String(realm || '')
         .toLowerCase()
         .trim()
         .replace(/ä/g, 'a')
@@ -986,7 +1343,7 @@
         .replace(/ü/g, 'u')
         .replace(/ß/g, 'ss')
         .replace(/['’]/g, '')
-        .replace(/\s+/g, '-');
+        .replace(/[\s_]+/g, '-');
     }
 
     async function fetchCharacterFromBlizzard(name, realm) {
@@ -1072,15 +1429,27 @@
       };
     }
 
+    // Wichtig: Bewahrt vorhandene Taschen-Items (bagSlots), wenn ein Charakter über die Blizzard API aktualisiert wird!
     function upsertCharacter(newChar) {
       const existingIdx = characters.findIndex(
         c => c.name.toLowerCase() === newChar.name.toLowerCase() &&
-             toRealmSlug(c.realm) === toRealmSlug(newChar.realm)
+             (toRealmSlug(c.realmSlug || c.realm) === toRealmSlug(newChar.realmSlug || newChar.realm) ||
+              c.realm === 'Unbekannt' || newChar.realm === 'Unbekannt')
       );
+
       if (existingIdx >= 0) {
-        characters[existingIdx] = newChar;
+        const existing = characters[existingIdx];
+        characters[existingIdx] = {
+          ...existing,
+          ...newChar,
+          realm: newChar.realm !== 'Unbekannt' ? newChar.realm : existing.realm,
+          bagSlots: newChar.bagSlots ? newChar.bagSlots : (existing.bagSlots || {})
+        };
       } else {
-        characters.push(newChar);
+        characters.push({
+          ...newChar,
+          bagSlots: newChar.bagSlots || {}
+        });
       }
     }
 
@@ -1125,7 +1494,7 @@
         const updated = (apiConfig.clientId && apiConfig.clientSecret)
           ? await fetchCharacterFromBlizzard(char.name, char.realmSlug || char.realm)
           : await fetchCharacterFromRaiderIO(char.name, char.realm);
-        characters[idx] = updated;
+        upsertCharacter(updated);
         saveCharsToStorage();
         renderAll();
         showToast(`${char.name} wurde aktualisiert!`, 'success');
@@ -1143,7 +1512,7 @@
           const updated = (apiConfig.clientId && apiConfig.clientSecret)
             ? await fetchCharacterFromBlizzard(c.name, c.realmSlug || c.realm)
             : await fetchCharacterFromRaiderIO(c.name, c.realm);
-          characters[i] = updated;
+          upsertCharacter(updated);
         } catch (e) {
           console.warn(`Fehler bei ${c.name}:`, e);
         }
@@ -1162,26 +1531,47 @@
       renderAll();
     }
 
-    function promptManualSlotEdit(charIdx, slotKey, slotLabel) {
+    // =========================================================================
+    // 9. MANUELLE SLOT-BEARBEITUNG (ANGELEGT & TASCHE)
+    // =========================================================================
+    function openEditSlotModal(charIdx, slotKey, slotLabel) {
       const char = characters[charIdx];
       if (!char) return;
-      const current = char.slots?.[slotKey] || 0;
-      const input = prompt(`Manuelles Item-Level für ${char.name} – Slot "${slotLabel}" (z. B. für ein höheres Item im Rucksack):`, current);
-      if (input === null) return;
-      const parsed = parseInt(input, 10);
-      if (!isNaN(parsed) && parsed >= 0) {
-        char.slots[slotKey] = parsed;
-        saveCharsToStorage();
-        renderAll();
-      }
+      currentEditingCell = { charIdx, slotKey };
+      document.getElementById('editSlotTitle').textContent = `${char.name} – ${slotLabel}`;
+      document.getElementById('editSlotEquippedInput').value = char.slots?.[slotKey] || 0;
+      document.getElementById('editSlotBagInput').value = char.bagSlots?.[slotKey] || 0;
+      openModal('editSlotModal');
+    }
+
+    function saveManualSlotEdit() {
+      if (!currentEditingCell) return;
+      const { charIdx, slotKey } = currentEditingCell;
+      const char = characters[charIdx];
+      if (!char) return;
+
+      const eqVal = parseInt(document.getElementById('editSlotEquippedInput').value || '0', 10);
+      const bagVal = parseInt(document.getElementById('editSlotBagInput').value || '0', 10);
+
+      if (!char.slots) char.slots = {};
+      if (!char.bagSlots) char.bagSlots = {};
+
+      char.slots[slotKey] = Math.max(0, isNaN(eqVal) ? 0 : eqVal);
+      char.bagSlots[slotKey] = Math.max(0, isNaN(bagVal) ? 0 : bagVal);
+
+      saveCharsToStorage();
+      renderAll();
+      closeModal('editSlotModal');
+      showToast('Slot-Werte gespeichert!', 'success');
     }
 
     // =========================================================================
-    // 8. UI HELFER, TABS & BACKUP
+    // 10. UI HELFER, TABS & BACKUP
     // =========================================================================
     function toggleRules() {
       rules.strictPairs = document.getElementById('strictPairsToggle').checked;
       rules.twoHandMirror = document.getElementById('twoHandToggle').checked;
+      rules.includeBags = document.getElementById('includeBagsToggle').checked;
       localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules));
       renderAll();
     }
