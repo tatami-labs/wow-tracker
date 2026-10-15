@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>WoW Kriegsmeuten-Tracker v12.1</title>
+  <title>WoW Kriegsmeuten-Tracker v12.2</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -47,7 +47,7 @@
         <div>
           <h1 class="text-sm font-bold text-white flex items-center gap-2">
             Kriegsmeuten-Upgrade-Tracker
-            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v12.1</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v12.2</span>
           </h1>
         </div>
       </div>
@@ -96,7 +96,7 @@
             <span class="text-base">🎯</span>
             <div>
               <div class="text-xs font-bold leading-tight">Upgrade-Plan & Slots</div>
-              <div class="text-[11px] opacity-80 font-semibold">Fahrplan, Ampel & Item-Namen</div>
+              <div class="text-[11px] opacity-80 font-semibold">Fahrplan, Ampel & Strategie</div>
             </div>
           </button>
 
@@ -178,10 +178,13 @@
       </aside>
 
       <!-- RECHTER HAUPTBEREICH -->
-      <div class="flex-1 min-w-0 w-full space-y-5">
+      <div class="flex-1 min-w-0 w-full space-y-4">
 
         <!-- OBEN IM COCKPIT: 4 KOMPAKTE KACHELN -->
         <div id="topKpiGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5"></div>
+
+        <!-- NEU: ETAPPEN-FORTSCHRITTSBALKEN + KRIEGSMEUTEN-HEBEL + HANDWERK/KATALYSATOR-KOMPASS -->
+        <div id="strategyOverviewBar" class="grid grid-cols-1 xl:grid-cols-12 gap-3.5"></div>
 
         <!-- ANSICHT 1: UPGRADE-PLAN & 3-ZONEN-AMPEL -->
         <section id="tab-plan" class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
@@ -226,7 +229,7 @@
       <div class="flex items-center justify-between">
         <div>
           <h3 class="text-base font-bold text-white">📋 WoW ➔ SimCraft Import (/simc)</h3>
-          <p class="text-xs text-slate-400">Aktualisiert Ausrüstung, echte Item-Namen, Taschen-Schätze und Beutel-Wappen (manuell angepasste Cap-Stände bleiben erhalten).</p>
+          <p class="text-xs text-slate-400">Aktualisiert Ausrüstung, echte Item-Namen, Taschen-Schätze, Katalysator-Aufladungen und Beutel-Wappen.</p>
         </div>
         <button onclick="closeModal('simcModal')" class="text-slate-400 hover:text-white text-lg">&times;</button>
       </div>
@@ -329,22 +332,22 @@
     };
 
     const SLOTS = [
-      { key: 'head',     label: 'Kopf',        redundancyId: 0 },
-      { key: 'neck',     label: 'Hals',        redundancyId: 1 },
-      { key: 'shoulder', label: 'Schultern',   redundancyId: 2 },
-      { key: 'back',     label: 'Rücken',      redundancyId: 11 },
-      { key: 'chest',    label: 'Brust',       redundancyId: 3 },
-      { key: 'wrist',    label: 'Handgelenke', redundancyId: 7 },
-      { key: 'hands',    label: 'Hände',       redundancyId: 8 },
-      { key: 'waist',    label: 'Taille',      redundancyId: 4 },
-      { key: 'legs',     label: 'Beine',       redundancyId: 5 },
-      { key: 'feet',     label: 'Füße',        redundancyId: 6 },
-      { key: 'finger1',  label: 'Ring 1',      redundancyId: 9 },
-      { key: 'finger2',  label: 'Ring 2',      redundancyId: 9 },
-      { key: 'trinket1', label: 'Schmuck 1',   redundancyId: 10 },
-      { key: 'trinket2', label: 'Schmuck 2',   redundancyId: 10 },
-      { key: 'mainhand', label: 'Haupthand',   redundancyId: 13 },
-      { key: 'offhand',  label: 'Nebenhand',   redundancyId: 14 }
+      { key: 'head',     label: 'Kopf',        redundancyId: 0,  isTierSlot: true },
+      { key: 'neck',     label: 'Hals',        redundancyId: 1,  isTierSlot: false },
+      { key: 'shoulder', label: 'Schultern',   redundancyId: 2,  isTierSlot: true },
+      { key: 'back',     label: 'Rücken',      redundancyId: 11, isTierSlot: false },
+      { key: 'chest',    label: 'Brust',       redundancyId: 3,  isTierSlot: true },
+      { key: 'wrist',    label: 'Handgelenke', redundancyId: 7,  isTierSlot: false },
+      { key: 'hands',    label: 'Hände',       redundancyId: 8,  isTierSlot: true },
+      { key: 'waist',    label: 'Taille',      redundancyId: 4,  isTierSlot: false },
+      { key: 'legs',     label: 'Beine',       redundancyId: 5,  isTierSlot: true },
+      { key: 'feet',     label: 'Füße',        redundancyId: 6,  isTierSlot: false },
+      { key: 'finger1',  label: 'Ring 1',      redundancyId: 9,  isTierSlot: false },
+      { key: 'finger2',  label: 'Ring 2',      redundancyId: 9,  isTierSlot: false },
+      { key: 'trinket1', label: 'Schmuck 1',   redundancyId: 10, isTierSlot: false },
+      { key: 'trinket2', label: 'Schmuck 2',   redundancyId: 10, isTierSlot: false },
+      { key: 'mainhand', label: 'Haupthand',   redundancyId: 13, isTierSlot: false },
+      { key: 'offhand',  label: 'Nebenhand',   redundancyId: 14, isTierSlot: false }
     ];
 
     const CREST_TIERS_META = [
@@ -376,6 +379,7 @@
         name: 'Lexinê', realm: 'Blackmoore', region: 'eu', className: 'demonhunter', hasTwoHand: false,
         advMarks: 135, vetMarks: 205, champMarks: 297, heroMarks: 120, mythMarks: 40,
         advSpent: 0,   vetSpent: 0,   champSpent: 160, heroSpent: 480, mythSpent: 392,
+        catalystCharges: 6,
         mythSpentNote: '3× Handwerk (331) + 6× Mythos 6/6 (334)',
         heroSpentNote: 'Held-Upgrades bis 321',
         champSpentNote: 'Champion-Upgrades bis 308',
@@ -406,6 +410,7 @@
         name: 'Tatami', realm: 'Aegwynn', region: 'eu', className: 'priest', hasTwoHand: false,
         advMarks: 65,  vetMarks: 45,  champMarks: 59,  heroMarks: 320, mythMarks: 212,
         advSpent: 0,   vetSpent: 0,   champSpent: 120, heroSpent: 360, mythSpent: 160,
+        catalystCharges: 7,
         mythSpentNote: '1× Handwerk (331 Laterne = 80) + 1× Mythos 6/6 (334 Waffe = 80)',
         heroSpentNote: 'Held-Upgrades bis 321 (50%-Rabatt aktiv)',
         champSpentNote: 'Champion-Upgrades bis 308',
@@ -515,6 +520,9 @@
     function migrateCharacterObject(c) {
       if (!c.slotMeta) c.slotMeta = {};
       if (!Array.isArray(c.completedHistory)) c.completedHistory = [];
+      if (c.catalystCharges === undefined) {
+        c.catalystCharges = c.name.toLowerCase() === 'tatami' ? 7 : 6;
+      }
       SLOTS.forEach(s => {
         const m = c.slotMeta[s.key] || {};
         if (!m.eqMaxUpgradable) {
@@ -603,6 +611,7 @@
         localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules));
       } catch (e) {}
       renderAll();
+      showToast(rules.showCompletedSteps ? '👁️ Abgehakte Schritte eingeblendet' : '🙈 Abgehakte Schritte ausgeblendet', 'info');
     }
 
     function hardResetStorage() {
@@ -703,6 +712,7 @@
 
       return {
         ownedMythItemsCount,
+        ownedMythSteps,
         blockedHeroCount,
         ownedMissing: Math.max(0, ownedCost - walletMyth),
         allMissing: Math.max(0, allCost - walletMyth)
@@ -749,7 +759,8 @@
         }
       });
 
-      const avgWithBagsOnly = getSum() / 16;
+      const pointsWithBagsOnly = getSum();
+      const avgWithBagsOnly = pointsWithBagsOnly / 16;
 
       // Phase 2: Eigener Charakter-Watermark (0 Wappen)
       SLOTS.forEach(s => {
@@ -868,15 +879,15 @@
       const missingMyth = Math.max(0, usedMyth - mythCap.wallet);
       return {
         char, charIdx, targetAvg, targetTotalPoints, mythStepCost,
-        startPoints, startAvg, avgWithBagsOnly,
-        reachableAvgWithWallet: reachableWalletPts / 16,
+        startPoints, startAvg, pointsWithBagsOnly, avgWithBagsOnly,
+        reachableWalletPts, reachableAvgWithWallet: reachableWalletPts / 16,
         mythCap, heroCap, max334,
         usedMyth, missingMyth, planSteps
       };
     }
 
     // =========================================================================
-    // 4. DARSTELLUNG (INKL. EIN-/AUSBLENDEN & ZURÜCKHOLEN FÜR ERLEDIGTE ITEMS!)
+    // 4. DARSTELLUNG (INKL. NEUER STRATEGIE-LEISTE & FUNKTIONIERENDEM TOGGLE!)
     // =========================================================================
     function renderAll() {
       if (!isValidCharacterArray(characters)) {
@@ -890,6 +901,7 @@
 
       renderCharSelectorBar(ranked);
       renderTopKpiCards(activeSim);
+      renderStrategyOverviewBar(activeSim, ranked);
       renderPlanAndAmpelView(activeSim);
       renderCapsTableView(activeSim);
       renderMilestoneView();
@@ -1033,6 +1045,94 @@
       `;
     }
 
+    // NEU: DIE FEHLENDE ÜBERSICHT (ETAPPEN-FORTSCHRITTSBALKEN + KRIEGSMEUTEN-SPAR-HEBEL + HANDWERK/KATALYSATOR-KOMPASS)
+    function renderStrategyOverviewBar(sim, ranked) {
+      const char = sim.char;
+      const topCharSim = ranked[0];
+      const keyLvl = rules.selectedKeyLevel;
+      const cPerKey = getKeyCrestsPerRun();
+
+      // 1. Etappen-Fortschrittsbalken (von 318.0 = 5088 Pkt bis Ziel 331.0 = 5296 Pkt)
+      const baseFloor = 318 * 16; // 5088
+      const totalSpan = Math.max(1, sim.targetTotalPoints - baseFloor);
+      const pctStart  = Math.min(100, Math.max(5, Math.round(((sim.startPoints - baseFloor) / totalSpan) * 100)));
+      const pctWallet = Math.min(100, Math.max(pctStart, Math.round(((sim.reachableWalletPts - baseFloor) / totalSpan) * 100)));
+      const ptsLeftAfterWallet = Math.max(0, sim.targetTotalPoints - sim.reachableWalletPts);
+
+      // 2. Kriegsmeuten-Rabatt-Hebel (Wie viel spart man durch den 331er-Erfolg?)
+      const discountSavingsOn334 = (sim.max334.ownedMythSteps + sim.max334.blockedHeroCount * 4) * 10;
+      const runsSaved = Math.ceil(discountSavingsOn334 / cPerKey);
+      let warbandTipHtml = '';
+      if (topCharSim && topCharSim.charIdx !== sim.charIdx && !is331MilestoneUnlocked()) {
+        const mainRuns = Math.ceil(topCharSim.missingMyth / cPerKey);
+        warbandTipHtml = `
+          <div class="text-xs text-slate-200 leading-relaxed">
+            💡 <strong>Main-Zuerst-Hebel:</strong> Ziehe zuerst <strong class="text-emerald-300">${escapeHtml(topCharSim.char.name)}</strong> auf Ø 331 (fehlen nur <strong>${topCharSim.missingMyth} Wappen ≈ ${mainRuns}× M+${keyLvl}</strong>). Dadurch halbiert sich der Mythisch-Preis für <strong>${escapeHtml(char.name)}</strong> von 20 auf 10 Wappen ➔ <strong class="text-wow-gold">Du sparst hier sofort ${discountSavingsOn334} Wappen (≈ ${runsSaved}× M+${keyLvl} Runs)!</strong>
+          </div>
+        `;
+      } else if (!is331MilestoneUnlocked()) {
+        warbandTipHtml = `
+          <div class="text-xs text-slate-200 leading-relaxed">
+            👑 <strong>Dein schnellster 331-Kandidat!</strong> Sobald <strong>${escapeHtml(char.name)}</strong> Ø 331 erreicht (noch <strong>${sim.missingMyth} Wappen</strong>), zahlen alle deine Twinks nur noch <strong>10 statt 20 Mythisch-Wappen</strong> pro Upgrade!
+          </div>
+        `;
+      } else {
+        warbandTipHtml = `<div class="text-xs text-emerald-300 font-bold">✅ 331er Kriegsmeuten-Rabatt ist aktiv (Alle Mythisch-Upgrades kosten 50% weniger = 10 Wappen)!</div>`;
+      }
+
+      // 3. Handwerks- & Katalysator-Kompass (Welche blockierten Held-Slots lassen sich ohne Drop-Glück per Handwerk lösen?)
+      let craftedCount = 0;
+      const craftableBlockedSlots = [];
+      SLOTS.forEach(s => {
+        const meta = char.slotMeta?.[s.key] || {};
+        const eq = getEquippedSlotIlvl(char, s.key);
+        if (meta.track === 'crafted' && eq >= 331) craftedCount++;
+        const maxUp = getEffectiveSlotMaxUpgradable(char, s.key);
+        if (maxUp <= 321 && !s.isTierSlot) {
+          craftableBlockedSlots.push(s.label);
+        }
+      });
+      const catCharges = char.catalystCharges ?? 6;
+
+      document.getElementById('strategyOverviewBar').innerHTML = `
+        <!-- LINKS (7 SPALTEN): ETAPPEN-BALKEN & KRIEGSMEUTEN-SPAR-HEBEL -->
+        <div class="xl:col-span-7 bg-wow-panel border border-wow-border rounded-2xl p-4 space-y-2.5 shadow">
+          <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
+            <span class="font-bold text-white">📊 Etappen-Fortschritt bis Ø ${sim.targetAvg.toFixed(1)} (${sim.targetTotalPoints} Gesamtpunkte)</span>
+            <span class="text-amber-300 font-bold">Nach Beutel-Upgrades fehlen noch: +${ptsLeftAfterWallet} iLvl-Punkte</span>
+          </div>
+
+          <!-- Zweifarbiger Fortschrittsbalken: Aktuell (Weiß/Gold) + Sofort mit Tasche/Beutel (Cyan) -->
+          <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden flex p-0.5 border border-wow-border">
+            <div class="h-full bg-wow-gold rounded-l-full transition-all" style="width: ${pctStart}%" title="Aktuell angelegt: ${sim.startAvg.toFixed(2)} Ø"></div>
+            <div class="h-full bg-cyan-400 rounded-r-full transition-all" style="width: ${Math.max(0, pctWallet - pctStart)}%" title="Sofort mit Tasche & Beutel: ${sim.reachableAvgWithWallet.toFixed(2)} Ø"></div>
+          </div>
+
+          <div class="pt-1 border-t border-wow-border/60">
+            ${warbandTipHtml}
+          </div>
+        </div>
+
+        <!-- RECHTS (5 SPALTEN): HANDWERKS- & KATALYSATOR-KOMPASS -->
+        <div class="xl:col-span-5 bg-wow-panel border border-wow-border rounded-2xl p-4 space-y-2 shadow flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-white">🔨 Handwerks- & ✨ Katalysator-Kompass</span>
+            <div class="flex items-center gap-1.5">
+              <span class="px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-700/50 text-[11px] font-bold">🔨 ${craftedCount}× 331 Handwerk</span>
+              <span class="px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-700/50 text-[11px] font-bold">✨ ${catCharges} Katalysator</span>
+            </div>
+          </div>
+
+          <div class="text-xs text-slate-300 leading-relaxed">
+            ${craftableBlockedSlots.length > 0
+              ? `🎯 <strong>Beste Handwerks-Kandidaten (321 ➔ 331 = +10 Pkt ohne Drop-Glück):</strong> <span class="text-amber-300 font-semibold">${craftableBlockedSlots.join(', ')}</span> (stecken aktuell auf Held 6/6 fest & sind keine Set-Slots).`
+              : `✔️ Alle Nicht-Set-Slots sind bereits auf Mythos-Spur oder 331er Handwerk!`
+            }
+          </div>
+        </div>
+      `;
+    }
+
     function renderPlanAndAmpelView(sim) {
       const char = sim.char;
       const charIdx = sim.charIdx;
@@ -1040,7 +1140,7 @@
       const completedList = Array.isArray(char.completedHistory) ? char.completedHistory : [];
       const completedCount = completedList.length;
 
-      // 1. Links: Gruppierte Upgrade-Schritte
+      // 1. Links: Gruppierte Upgrade-Schritte (OHNE unescaped Strings im onclick!)
       const grouped = [];
       sim.planSteps.forEach(st => {
         const last = grouped[grouped.length - 1];
@@ -1088,7 +1188,7 @@
                 ${costBadge}
                 ${statusText}
               </div>
-              <button onclick="completeUpgradeStep(${charIdx}, '${g.slotKey}', ${g.toIlvl}, '${g.markType}', ${g.markCost}, '${g.availability}', '${escapeHtml(g.itemName || '')}')"
+              <button onclick="completeUpgradeStep(${charIdx}, '${g.slotKey}', ${g.toIlvl}, '${g.markType}', ${g.markCost}, '${g.availability}')"
                       class="px-2.5 py-1.5 rounded-lg ${isCapped ? 'bg-slate-700 hover:bg-slate-600 text-slate-300' : 'bg-emerald-600 hover:bg-emerald-500 text-slate-950'} font-black text-xs transition"
                       title="Im Spiel erledigt? Klicke hier, um Slot & Wappen zu aktualisieren">
                 ✅
@@ -1098,45 +1198,55 @@
         `;
       }).join('');
 
-      // NEU: Ein-/ausblendbare Liste der bereits abgehakten Schritte inkl. "↩️ Zurückholen"-Button!
+      // EIN-/AUSBLENDBARE VERLAUFS-BOX (Reagiert jetzt IMMER sichtbar auf den Button!)
       let completedSectionHtml = '';
-      if (rules.showCompletedSteps && completedCount > 0) {
-        const historyItemsHtml = completedList.map((h, hIdx) => {
-          const costText = h.markCost > 0 ? `${h.markCost} Wappen verbucht` : '0 Wappen (Tasche)';
-          return `
-            <div class="p-2.5 rounded-xl bg-emerald-950/20 border border-emerald-700/40 flex items-center justify-between gap-3">
-              <div class="flex items-center gap-2.5 min-w-0">
-                <span class="px-1.5 py-0.5 rounded bg-emerald-700/60 text-emerald-100 text-[10px] font-bold shrink-0">✔️ Erledigt</span>
-                <div class="min-w-0">
-                  <div class="text-xs font-bold text-emerald-200 truncate">
-                    <span class="line-through opacity-80">${escapeHtml(h.slotLabel)} ${h.itemName ? `„${escapeHtml(h.itemName)}“` : ''}: ${h.fromIlvl} &rarr; ${h.toIlvl}</span>
-                    <span class="text-emerald-400 ml-1">(+${h.pointGain} Pkt)</span>
+      if (rules.showCompletedSteps) {
+        if (completedCount > 0) {
+          const historyItemsHtml = completedList.map((h, hIdx) => {
+            const costText = h.markCost > 0 ? `${h.markCost} Wappen verbucht` : '0 Wappen (Tasche)';
+            return `
+              <div class="p-2.5 rounded-xl bg-emerald-950/25 border border-emerald-600/50 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <span class="px-1.5 py-0.5 rounded bg-emerald-600 text-slate-950 text-[10px] font-black shrink-0">✔️ Erledigt</span>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-emerald-200 truncate">
+                      <span class="line-through opacity-80">${escapeHtml(h.slotLabel)} ${h.itemName ? `„${escapeHtml(h.itemName)}“` : ''}: ${h.fromIlvl} &rarr; ${h.toIlvl}</span>
+                      <span class="text-emerald-400 ml-1">(+${h.pointGain} Pkt)</span>
+                    </div>
+                    <div class="text-[11px] text-slate-400">${costText} ${h.timestamp ? `• ${h.timestamp} Uhr` : ''}</div>
                   </div>
-                  <div class="text-[11px] text-slate-400">${costText} ${h.timestamp ? `• ${h.timestamp} Uhr` : ''}</div>
                 </div>
+                <button onclick="undoCompletedStep(${charIdx}, ${hIdx})"
+                        class="px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black shrink-0 shadow transition flex items-center gap-1"
+                        title="Diesen Schritt rückgängig machen (stellt altes Item-Level & Wappen wieder her)">
+                  ↩️ Zurückholen
+                </button>
               </div>
-              <button onclick="undoCompletedStep(${charIdx}, ${hIdx})"
-                      class="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-950 border border-amber-500/50 text-xs font-bold shrink-0 transition flex items-center gap-1"
-                      title="Diesen Schritt rückgängig machen (stellt altes Item-Level & Wappen wieder her)">
-                ↩️ Zurückholen
-              </button>
+            `;
+          }).join('');
+
+          completedSectionHtml = `
+            <div class="pt-3 mt-3 border-t border-wow-border space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                  ✔️ Abgehakte Schritte (${completedCount}) – Jederzeit rückgängig machbar:
+                </span>
+                <button onclick="clearCompletedHistory(${charIdx})" class="text-[11px] text-slate-400 hover:text-red-300 transition">
+                  🗑️ Verlauf leeren
+                </button>
+              </div>
+              <div class="space-y-1.5">${historyItemsHtml}</div>
             </div>
           `;
-        }).join('');
-
-        completedSectionHtml = `
-          <div class="pt-3 mt-3 border-t border-wow-border space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">
-                ✔️ Bereits abgehakte Schritte (${completedCount})
-              </span>
-              <button onclick="clearCompletedHistory(${charIdx})" class="text-[11px] text-slate-400 hover:text-red-300 transition">
-                🗑️ Verlauf leeren
-              </button>
+        } else {
+          completedSectionHtml = `
+            <div class="pt-3 mt-3 border-t border-wow-border">
+              <div class="p-3 rounded-xl bg-wow-card/40 border border-wow-border/70 text-xs text-slate-400 flex items-center justify-between">
+                <span>📋 <strong>Abgehakte Schritte (0):</strong> Sobald du oben bei einem Schritt auf <strong>✅</strong> klickst, landet er hier und kann mit <strong>↩️ Zurückholen</strong> jederzeit rückgängig gemacht werden.</span>
+              </div>
             </div>
-            <div class="space-y-1.5">${historyItemsHtml}</div>
-          </div>
-        `;
+          `;
+        }
       }
 
       document.getElementById('planLeftColumn').innerHTML = `
@@ -1146,7 +1256,6 @@
             <p class="text-xs text-slate-400">Klicke rechts auf <strong>✅</strong>, sobald du einen Schritt im Spiel ausgeführt hast.</p>
           </div>
 
-          <!-- NEU DIREKT NEBEN DER ÜBERSCHRIFT: EIN-/AUSBLENDEN & LETZTEN SCHRITT ZURÜCKHOLEN -->
           <div class="flex flex-wrap items-center gap-1.5">
             ${completedCount > 0 ? `
               <button onclick="undoCompletedStep(${charIdx}, 0)"
@@ -1157,8 +1266,8 @@
             ` : ''}
             <button onclick="toggleShowCompletedSteps()"
                     class="px-2.5 py-1.5 rounded-lg border text-xs font-bold transition flex items-center gap-1.5 ${
-                      rules.showCompletedSteps && completedCount > 0
-                        ? 'bg-emerald-950/80 text-emerald-300 border-emerald-600/60'
+                      rules.showCompletedSteps
+                        ? 'bg-emerald-950/90 text-emerald-300 border-emerald-500/70 shadow'
                         : 'bg-wow-card hover:bg-slate-700 text-slate-300 border-wow-border'
                     }">
               <span>${rules.showCompletedSteps ? '👁️' : '🙈'}</span>
@@ -1203,7 +1312,7 @@
           }
         } else if (type === 'blocked') {
           border = 'border-amber-700/50 bg-amber-950/10';
-          sub = `<div class="text-[11px] text-red-300">🔒 Limit (${maxUpgradable} Max): „${escapeHtml(meta.eqName || slot.label)}“</div>`;
+          sub = `<div class="text-[11px] text-red-300">🔒 Limit (${maxUpgradable} Max): „${escapeHtml(meta.eqName || slot.label)}“ ${!slot.isTierSlot ? '<span class="text-amber-300 font-semibold">(🔨 Handwerk-Kandidat)</span>' : '<span class="text-purple-300">(Set-Slot)</span>'}</div>`;
         } else {
           sub = `<div class="text-[11px] text-emerald-300">✔️ ${escapeHtml(meta.eqName || meta.label || 'Fertig')}</div>`;
         }
@@ -1225,7 +1334,7 @@
       document.getElementById('planRightColumn').innerHTML = `
         <div class="border-b border-wow-border pb-2.5">
           <h3 class="text-sm font-bold text-white">🚦 3-Zonen-Slot-Ampel (Klick = Slot anpassen)</h3>
-          <p class="text-xs text-slate-400">Mit echten Item-Namen aus deinem SimCraft-Export.</p>
+          <p class="text-xs text-slate-400">Mit echten Item-Namen & Handwerks-Markierung.</p>
         </div>
 
         <div class="space-y-2">
@@ -1238,7 +1347,7 @@
           <div class="space-y-1.5">${zone2.map(x => renderSlotCard(x, 'blocked')).join('')}</div>
         </div>
 
-        <details class="pt-2 border-t border-wow-border/60">
+        <details class="pt-2 border-t border-wow-border/60" open>
           <summary class="cursor-pointer list-none flex items-center justify-between text-xs font-bold uppercase text-slate-400 hover:text-white">
             <span>✔️ Zone 3: Bereits ≥ ${sim.targetAvg} iLvl (${zone3.length} Slots erledigt)</span>
             <span>▼</span>
@@ -1352,11 +1461,12 @@
     // =========================================================================
     // 5. AKTIONEN: ABHAKEN, ZURÜCKHOLEN (UNDO), SIMC & RAIDER.IO
     // =========================================================================
-    function completeUpgradeStep(charIdx, slotKey, toIlvl, markType, markCost, availability, stepItemName = '') {
+    function completeUpgradeStep(charIdx, slotKey, toIlvl, markType, markCost, availability) {
       const char = characters[charIdx];
       if (!char) return;
       if (!char.slotMeta) char.slotMeta = {};
       const meta = char.slotMeta[slotKey] || {};
+      const stepItemName = (markType === 'bag' ? (meta.bagMythName || meta.bagName) : (meta.bagMythName || meta.eqName)) || '';
 
       if (availability === 'capped') {
         showToast('⚠️ Dieser Schritt liegt über deinem aktuellen Wochen-Cap und kann erst nächste ID erledigt werden.', 'error');
@@ -1378,7 +1488,6 @@
         }
       }
 
-      // SNAPSHOT SPEICHERN, DAMIT MAN DAS ITEM JEDERZEIT ZURÜCKHOLEN KANN!
       const prevEqIlvl = Number(char.slots?.[slotKey] || 0);
       const slotLabel = SLOTS.find(s => s.key === slotKey)?.label || slotKey;
       if (!Array.isArray(char.completedHistory)) char.completedHistory = [];
@@ -1387,7 +1496,7 @@
         timestamp: new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }),
         slotKey,
         slotLabel,
-        itemName: stepItemName || meta.eqName || '',
+        itemName: stepItemName,
         fromIlvl: prevEqIlvl,
         toIlvl,
         pointGain: toIlvl - prevEqIlvl,
@@ -1396,12 +1505,7 @@
         prevSlotEq: prevEqIlvl,
         prevSlotBag: Number(char.bagSlots?.[slotKey] || 0),
         prevSlotMeta: JSON.parse(JSON.stringify(meta)),
-        prevWatermark: Number(char.charWatermarks?.[slotKey] || 0),
-        prevCurrencies: {
-          mythMarks: char.mythMarks, mythSpent: char.mythSpent,
-          heroMarks: char.heroMarks, heroSpent: char.heroSpent,
-          champMarks: char.champMarks, champSpent: char.champSpent
-        }
+        prevWatermark: Number(char.charWatermarks?.[slotKey] || 0)
       });
 
       char.slots[slotKey] = toIlvl;
@@ -1430,12 +1534,13 @@
         }
       }
 
+      // Automatisch die Verlaufs-Box einblenden, damit man das abgehakte Item sofort sieht!
+      rules.showCompletedSteps = true;
       saveCharsToStorage();
       renderAll();
-      showToast(`✅ ${char.name}: ${slotLabel} auf ${toIlvl} abgehakt! (Über „↩️ Zurückholen“ jederzeit umkehrbar)`, 'success');
+      showToast(`✅ ${char.name}: ${slotLabel} auf ${toIlvl} abgehakt! (Unten in der Liste jederzeit mit „↩️ Zurückholen“ umkehrbar)`, 'success');
     }
 
-    // Stellt einen abgehakten Schritt zu 100% wieder her (inkl. Item-Level, Rucksack & Wappen)
     function undoCompletedStep(charIdx, historyIdx) {
       const char = characters[charIdx];
       if (!char || !Array.isArray(char.completedHistory) || !char.completedHistory[historyIdx]) return;
@@ -1451,7 +1556,6 @@
       if (!char.charWatermarks) char.charWatermarks = {};
       char.charWatermarks[slotKey] = entry.prevWatermark;
 
-      // Wappen exakt zurückbuchen
       if (entry.markCost > 0) {
         const tier = CREST_TIERS_META.find(t => t.key === entry.markType);
         if (tier) {
@@ -1524,7 +1628,7 @@
 
     function parseSimcString(rawText) {
       const lines = (rawText || '').split(/\r?\n/);
-      let charName = '', realm = 'Unbekannt', region = 'eu', className = '', has331Achievement = false;
+      let charName = '', realm = 'Unbekannt', region = 'eu', className = '', has331Achievement = false, catalystCharges = 6;
       let advMarks = 0, vetMarks = 0, champMarks = 0, heroMarks = 0, mythMarks = 0;
 
       const equippedSlots = {}, bagSlots = {}, slotMeta = {}, charWatermarks = {};
@@ -1560,6 +1664,12 @@
         if (line.startsWith('###')) {
           section = line.toLowerCase().includes('gear from bags') ? 'bags' : 'other';
           lastIlvl = 0; lastName = '';
+          continue;
+        }
+
+        if (/^#\s*catalyst_currencies=/i.test(line)) {
+          const catMatch = line.match(/\b3465:(\d+)/);
+          if (catMatch) catalystCharges = parseInt(catMatch[1], 10);
           continue;
         }
 
@@ -1683,7 +1793,7 @@
       }
 
       return {
-        name: charName, realm, region, className, has331Achievement,
+        name: charName, realm, region, className, has331Achievement, catalystCharges,
         hasTwoHand: equippedSlots.mainhand > 0 && equippedSlots.offhand === 0,
         slots: equippedSlots, bagSlots, slotMeta, charWatermarks,
         advMarks, vetMarks, champMarks, heroMarks, mythMarks,
@@ -1710,7 +1820,7 @@
       if (!raw.trim()) { box.classList.add('hidden'); return; }
       const p = parseSimcString(raw);
       box.classList.remove('hidden');
-      box.innerHTML = `<div class="font-bold text-purple-300">✔️ ${escapeHtml(p.name || 'Unbekannt')} (${escapeHtml(p.realm)} - ${p.region.toUpperCase()})</div><div>🟠 Beutel: ${p.mythMarks} | 🟣 Held: ${p.heroMarks} | 🔨 Geschätzt verbraucht: ${p.mythSpent} Mythisch</div>`;
+      box.innerHTML = `<div class="font-bold text-purple-300">✔️ ${escapeHtml(p.name || 'Unbekannt')} (${escapeHtml(p.realm)} - ${p.region.toUpperCase()})</div><div>🟠 Beutel: ${p.mythMarks} | 🟣 Held: ${p.heroMarks} | ✨ Katalysator: ${p.catalystCharges} | 🔨 Verbraucht: ${p.mythSpent} Mythisch</div>`;
     }
 
     function importSimcProfile() {
@@ -1776,7 +1886,7 @@
         characters.push({
           name: c.name, realm: c.realm, region: c.region, className: c.className,
           slots: c.slots, bagSlots: {}, slotMeta: c.eqMeta, charWatermarks: { ...c.slots },
-          completedHistory: [],
+          completedHistory: [], catalystCharges: 6,
           mythMarks: 0, heroMarks: 0, champMarks: 0, vetMarks: 0, advMarks: 0,
           mythSpent: 0, heroSpent: 0, champSpent: 0, vetSpent: 0, advSpent: 0
         });
@@ -1906,7 +2016,12 @@
     }
 
     function escapeHtml(str) {
-      return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
     }
   </script>
 </body>
