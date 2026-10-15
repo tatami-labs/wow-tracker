@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>WoW Kriegsmeuten-Tracker v12.2</title>
+  <title>WoW Kriegsmeuten-Tracker v12.3</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -47,7 +47,7 @@
         <div>
           <h1 class="text-sm font-bold text-white flex items-center gap-2">
             Kriegsmeuten-Upgrade-Tracker
-            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v12.2</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v12.3</span>
           </h1>
         </div>
       </div>
@@ -183,7 +183,7 @@
         <!-- OBEN IM COCKPIT: 4 KOMPAKTE KACHELN -->
         <div id="topKpiGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5"></div>
 
-        <!-- NEU: ETAPPEN-FORTSCHRITTSBALKEN + KRIEGSMEUTEN-HEBEL + HANDWERK/KATALYSATOR-KOMPASS -->
+        <!-- ETAPPEN-FORTSCHRITTSBALKEN + KRIEGSMEUTEN-HEBEL + HANDWERK/KATALYSATOR-KOMPASS -->
         <div id="strategyOverviewBar" class="grid grid-cols-1 xl:grid-cols-12 gap-3.5"></div>
 
         <!-- ANSICHT 1: UPGRADE-PLAN & 3-ZONEN-AMPEL -->
@@ -606,12 +606,12 @@
     }
 
     function toggleShowCompletedSteps() {
-      rules.showCompletedSteps = !rules.showCompletedSteps;
+      rules.showCompletedSteps = !Boolean(rules.showCompletedSteps);
       try {
         localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules));
       } catch (e) {}
       renderAll();
-      showToast(rules.showCompletedSteps ? '👁️ Abgehakte Schritte eingeblendet' : '🙈 Abgehakte Schritte ausgeblendet', 'info');
+      showToast(rules.showCompletedSteps ? '👁️ Abgehakte Items oben eingeblendet' : '🙈 Abgehakte Items ausgeblendet', 'info');
     }
 
     function hardResetStorage() {
@@ -887,7 +887,7 @@
     }
 
     // =========================================================================
-    // 4. DARSTELLUNG (INKL. NEUER STRATEGIE-LEISTE & FUNKTIONIERENDEM TOGGLE!)
+    // 4. DARSTELLUNG (ABGEHAKTE ITEMS DIREKT OBEN UNTER DEM BUTTON!)
     // =========================================================================
     function renderAll() {
       if (!isValidCharacterArray(characters)) {
@@ -1045,21 +1045,18 @@
       `;
     }
 
-    // NEU: DIE FEHLENDE ÜBERSICHT (ETAPPEN-FORTSCHRITTSBALKEN + KRIEGSMEUTEN-SPAR-HEBEL + HANDWERK/KATALYSATOR-KOMPASS)
     function renderStrategyOverviewBar(sim, ranked) {
       const char = sim.char;
       const topCharSim = ranked[0];
       const keyLvl = rules.selectedKeyLevel;
       const cPerKey = getKeyCrestsPerRun();
 
-      // 1. Etappen-Fortschrittsbalken (von 318.0 = 5088 Pkt bis Ziel 331.0 = 5296 Pkt)
-      const baseFloor = 318 * 16; // 5088
+      const baseFloor = 318 * 16;
       const totalSpan = Math.max(1, sim.targetTotalPoints - baseFloor);
       const pctStart  = Math.min(100, Math.max(5, Math.round(((sim.startPoints - baseFloor) / totalSpan) * 100)));
       const pctWallet = Math.min(100, Math.max(pctStart, Math.round(((sim.reachableWalletPts - baseFloor) / totalSpan) * 100)));
       const ptsLeftAfterWallet = Math.max(0, sim.targetTotalPoints - sim.reachableWalletPts);
 
-      // 2. Kriegsmeuten-Rabatt-Hebel (Wie viel spart man durch den 331er-Erfolg?)
       const discountSavingsOn334 = (sim.max334.ownedMythSteps + sim.max334.blockedHeroCount * 4) * 10;
       const runsSaved = Math.ceil(discountSavingsOn334 / cPerKey);
       let warbandTipHtml = '';
@@ -1080,7 +1077,6 @@
         warbandTipHtml = `<div class="text-xs text-emerald-300 font-bold">✅ 331er Kriegsmeuten-Rabatt ist aktiv (Alle Mythisch-Upgrades kosten 50% weniger = 10 Wappen)!</div>`;
       }
 
-      // 3. Handwerks- & Katalysator-Kompass (Welche blockierten Held-Slots lassen sich ohne Drop-Glück per Handwerk lösen?)
       let craftedCount = 0;
       const craftableBlockedSlots = [];
       SLOTS.forEach(s => {
@@ -1095,14 +1091,12 @@
       const catCharges = char.catalystCharges ?? 6;
 
       document.getElementById('strategyOverviewBar').innerHTML = `
-        <!-- LINKS (7 SPALTEN): ETAPPEN-BALKEN & KRIEGSMEUTEN-SPAR-HEBEL -->
         <div class="xl:col-span-7 bg-wow-panel border border-wow-border rounded-2xl p-4 space-y-2.5 shadow">
           <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
             <span class="font-bold text-white">📊 Etappen-Fortschritt bis Ø ${sim.targetAvg.toFixed(1)} (${sim.targetTotalPoints} Gesamtpunkte)</span>
             <span class="text-amber-300 font-bold">Nach Beutel-Upgrades fehlen noch: +${ptsLeftAfterWallet} iLvl-Punkte</span>
           </div>
 
-          <!-- Zweifarbiger Fortschrittsbalken: Aktuell (Weiß/Gold) + Sofort mit Tasche/Beutel (Cyan) -->
           <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden flex p-0.5 border border-wow-border">
             <div class="h-full bg-wow-gold rounded-l-full transition-all" style="width: ${pctStart}%" title="Aktuell angelegt: ${sim.startAvg.toFixed(2)} Ø"></div>
             <div class="h-full bg-cyan-400 rounded-r-full transition-all" style="width: ${Math.max(0, pctWallet - pctStart)}%" title="Sofort mit Tasche & Beutel: ${sim.reachableAvgWithWallet.toFixed(2)} Ø"></div>
@@ -1113,7 +1107,6 @@
           </div>
         </div>
 
-        <!-- RECHTS (5 SPALTEN): HANDWERKS- & KATALYSATOR-KOMPASS -->
         <div class="xl:col-span-5 bg-wow-panel border border-wow-border rounded-2xl p-4 space-y-2 shadow flex flex-col justify-between">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold text-white">🔨 Handwerks- & ✨ Katalysator-Kompass</span>
@@ -1140,7 +1133,65 @@
       const completedList = Array.isArray(char.completedHistory) ? char.completedHistory : [];
       const completedCount = completedList.length;
 
-      // 1. Links: Gruppierte Upgrade-Schritte (OHNE unescaped Strings im onclick!)
+      // 1. OBEN UNTER DER ÜBERSCHRIFT: ABGEHAKTE ITEMS (SOFORT SICHTBAR BEIM EIN-/AUSBLENDEN!)
+      let completedTopSectionHtml = '';
+      if (completedCount > 0) {
+        if (rules.showCompletedSteps) {
+          const historyItemsHtml = completedList.map((h, hIdx) => {
+            const costText = h.markCost > 0 ? `${h.markCost} Wappen verbucht` : '0 Wappen (Tasche)';
+            return `
+              <div class="p-3 rounded-xl bg-emerald-950/35 border-2 border-emerald-500/60 flex items-center justify-between gap-3 shadow">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <button onclick="undoCompletedStep(${charIdx}, ${hIdx})"
+                          class="w-6 h-6 rounded-lg bg-emerald-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center justify-center shrink-0 transition"
+                          title="Klicken, um das Häkchen wieder rauszunehmen">
+                    ✓
+                  </button>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-emerald-200 truncate">
+                      <span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] mr-1">ABGEHAKT</span>
+                      <span>${escapeHtml(h.slotLabel)} ${h.itemName ? `„${escapeHtml(h.itemName)}“` : ''}</span>
+                      <span class="text-wow-gold ml-1">${h.fromIlvl} &rarr; ${h.toIlvl}</span>
+                      <span class="text-emerald-400 ml-1">(+${h.pointGain} Pkt)</span>
+                    </div>
+                    <div class="text-[11px] text-slate-300">${costText} ${h.timestamp ? `• Erledigt um ${h.timestamp} Uhr` : ''}</div>
+                  </div>
+                </div>
+                <button onclick="undoCompletedStep(${charIdx}, ${hIdx})"
+                        class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black shrink-0 shadow transition flex items-center gap-1"
+                        title="Diesen Schritt rückgängig machen (stellt altes Item-Level & Wappen wieder her)">
+                  ↩️ Zurückholen
+                </button>
+              </div>
+            `;
+          }).join('');
+
+          completedTopSectionHtml = `
+            <div class="p-3.5 rounded-2xl bg-emerald-950/20 border border-emerald-500/50 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-black uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                  <span>☑️</span> Deine abgehakten Items (${completedCount}) – Direkt hier oben sichtbar:
+                </span>
+                <button onclick="clearCompletedHistory(${charIdx})" class="text-[11px] text-slate-400 hover:text-red-300 transition">
+                  🗑️ Verlauf leeren
+                </button>
+              </div>
+              <div class="space-y-2">${historyItemsHtml}</div>
+            </div>
+          `;
+        } else {
+          // Wenn ausgeblendet: Kompakter Hinweisbalken direkt oben, den man anklicken kann, um sie wieder anzusehen!
+          completedTopSectionHtml = `
+            <div onclick="toggleShowCompletedSteps()"
+                 class="p-2.5 rounded-xl bg-wow-card/70 hover:bg-wow-card border border-emerald-600/40 cursor-pointer transition flex items-center justify-between text-xs text-emerald-300">
+              <span>🙈 <strong>${completedCount} abgehaktes Item${completedCount > 1 ? 's' : ''} ausgeblendet</strong> (${completedList.map(h => h.slotLabel).join(', ')})</span>
+              <span class="px-2.5 py-0.5 rounded bg-emerald-600 text-slate-950 font-black text-[11px]">👁️ Jetzt wieder ansehen</span>
+            </div>
+          `;
+        }
+      }
+
+      // 2. DARUNTER: DIE NOCH OFFENEN SCHRITTE
       const grouped = [];
       sim.planSteps.forEach(st => {
         const last = grouped[grouped.length - 1];
@@ -1190,70 +1241,19 @@
               </div>
               <button onclick="completeUpgradeStep(${charIdx}, '${g.slotKey}', ${g.toIlvl}, '${g.markType}', ${g.markCost}, '${g.availability}')"
                       class="px-2.5 py-1.5 rounded-lg ${isCapped ? 'bg-slate-700 hover:bg-slate-600 text-slate-300' : 'bg-emerald-600 hover:bg-emerald-500 text-slate-950'} font-black text-xs transition"
-                      title="Im Spiel erledigt? Klicke hier, um Slot & Wappen zu aktualisieren">
-                ✅
+                      title="Im Spiel erledigt? Klicke hier, um das Item abzuhaken">
+                ✅ Abhaken
               </button>
             </div>
           </div>
         `;
       }).join('');
 
-      // EIN-/AUSBLENDBARE VERLAUFS-BOX (Reagiert jetzt IMMER sichtbar auf den Button!)
-      let completedSectionHtml = '';
-      if (rules.showCompletedSteps) {
-        if (completedCount > 0) {
-          const historyItemsHtml = completedList.map((h, hIdx) => {
-            const costText = h.markCost > 0 ? `${h.markCost} Wappen verbucht` : '0 Wappen (Tasche)';
-            return `
-              <div class="p-2.5 rounded-xl bg-emerald-950/25 border border-emerald-600/50 flex items-center justify-between gap-3">
-                <div class="flex items-center gap-2.5 min-w-0">
-                  <span class="px-1.5 py-0.5 rounded bg-emerald-600 text-slate-950 text-[10px] font-black shrink-0">✔️ Erledigt</span>
-                  <div class="min-w-0">
-                    <div class="text-xs font-bold text-emerald-200 truncate">
-                      <span class="line-through opacity-80">${escapeHtml(h.slotLabel)} ${h.itemName ? `„${escapeHtml(h.itemName)}“` : ''}: ${h.fromIlvl} &rarr; ${h.toIlvl}</span>
-                      <span class="text-emerald-400 ml-1">(+${h.pointGain} Pkt)</span>
-                    </div>
-                    <div class="text-[11px] text-slate-400">${costText} ${h.timestamp ? `• ${h.timestamp} Uhr` : ''}</div>
-                  </div>
-                </div>
-                <button onclick="undoCompletedStep(${charIdx}, ${hIdx})"
-                        class="px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black shrink-0 shadow transition flex items-center gap-1"
-                        title="Diesen Schritt rückgängig machen (stellt altes Item-Level & Wappen wieder her)">
-                  ↩️ Zurückholen
-                </button>
-              </div>
-            `;
-          }).join('');
-
-          completedSectionHtml = `
-            <div class="pt-3 mt-3 border-t border-wow-border space-y-2">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">
-                  ✔️ Abgehakte Schritte (${completedCount}) – Jederzeit rückgängig machbar:
-                </span>
-                <button onclick="clearCompletedHistory(${charIdx})" class="text-[11px] text-slate-400 hover:text-red-300 transition">
-                  🗑️ Verlauf leeren
-                </button>
-              </div>
-              <div class="space-y-1.5">${historyItemsHtml}</div>
-            </div>
-          `;
-        } else {
-          completedSectionHtml = `
-            <div class="pt-3 mt-3 border-t border-wow-border">
-              <div class="p-3 rounded-xl bg-wow-card/40 border border-wow-border/70 text-xs text-slate-400 flex items-center justify-between">
-                <span>📋 <strong>Abgehakte Schritte (0):</strong> Sobald du oben bei einem Schritt auf <strong>✅</strong> klickst, landet er hier und kann mit <strong>↩️ Zurückholen</strong> jederzeit rückgängig gemacht werden.</span>
-              </div>
-            </div>
-          `;
-        }
-      }
-
       document.getElementById('planLeftColumn').innerHTML = `
         <div class="flex flex-wrap items-center justify-between gap-2 border-b border-wow-border pb-2.5">
           <div>
             <h3 class="text-sm font-bold text-white">🎯 Schritt-für-Schritt auf Ø ${sim.targetAvg}</h3>
-            <p class="text-xs text-slate-400">Klicke rechts auf <strong>✅</strong>, sobald du einen Schritt im Spiel ausgeführt hast.</p>
+            <p class="text-xs text-slate-400">Abgehakte Items stehen direkt hier oben und können jederzeit ein-/ausgeblendet oder zurückgeholt werden.</p>
           </div>
 
           <div class="flex flex-wrap items-center gap-1.5">
@@ -1265,22 +1265,24 @@
               </button>
             ` : ''}
             <button onclick="toggleShowCompletedSteps()"
-                    class="px-2.5 py-1.5 rounded-lg border text-xs font-bold transition flex items-center gap-1.5 ${
+                    class="px-3 py-1.5 rounded-lg border text-xs font-bold transition flex items-center gap-1.5 ${
                       rules.showCompletedSteps
-                        ? 'bg-emerald-950/90 text-emerald-300 border-emerald-500/70 shadow'
-                        : 'bg-wow-card hover:bg-slate-700 text-slate-300 border-wow-border'
+                        ? 'bg-emerald-600 text-slate-950 border-emerald-400 shadow'
+                        : 'bg-wow-card hover:bg-slate-700 text-emerald-300 border-emerald-600/60'
                     }">
-              <span>${rules.showCompletedSteps ? '👁️' : '🙈'}</span>
-              <span>Abgehakte (${completedCount}) ${rules.showCompletedSteps ? 'ausblenden' : 'einblenden'}</span>
+              <span>${rules.showCompletedSteps ? '🙈' : '👁️'}</span>
+              <span>Abgehakte (${completedCount}) ${rules.showCompletedSteps ? 'ausblenden' : 'ansehen'}</span>
             </button>
           </div>
         </div>
 
+        <!-- WICHTIG: ABGEHAKTE ITEMS DIREKT HIER OBEN VOR DEN OFFENEN SCHRITTEN! -->
+        ${completedTopSectionHtml}
+
         <div class="space-y-2">${stepsHtml || '<div class="text-xs text-emerald-400 py-2">🎉 Alle Schritte für dieses Ziel sind bereits erledigt!</div>'}</div>
-        ${completedSectionHtml}
       `;
 
-      // 2. Rechts: 3-Zonen-Ampel
+      // 3. Rechts: 3-Zonen-Ampel
       const zone1 = [], zone2 = [], zone3 = [];
       SLOTS.forEach(s => {
         const eq = getEquippedSlotIlvl(char, s.key);
@@ -1534,11 +1536,11 @@
         }
       }
 
-      // Automatisch die Verlaufs-Box einblenden, damit man das abgehakte Item sofort sieht!
+      // Automatisch die abgehakten Items oben sichtbar lassen!
       rules.showCompletedSteps = true;
       saveCharsToStorage();
       renderAll();
-      showToast(`✅ ${char.name}: ${slotLabel} auf ${toIlvl} abgehakt! (Unten in der Liste jederzeit mit „↩️ Zurückholen“ umkehrbar)`, 'success');
+      showToast(`✅ ${char.name}: ${slotLabel} auf ${toIlvl} abgehakt!`, 'success');
     }
 
     function undoCompletedStep(charIdx, historyIdx) {
