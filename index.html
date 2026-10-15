@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>WoW Kriegsmeuten-Upgrade-Tracker v8.0</title>
+  <title>WoW Kriegsmeuten-Upgrade-Tracker v8.1</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -50,12 +50,12 @@
         <div>
           <h1 class="text-base font-bold text-white tracking-tight flex items-center gap-2">
             Kriegsmeuten-Upgrade-Tracker
-            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v8.0 AKTIV</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v8.1 AKTIV</span>
             <span id="apiStatusBadge" onclick="openApiModal()" class="cursor-pointer text-[11px] px-2.5 py-0.5 rounded-full bg-red-950/80 text-red-300 border border-red-700/50 font-medium">
               ⚠️ API nicht verbunden
             </span>
           </h1>
-          <p class="text-[11px] text-slate-400">Exakte Twink-Rabatt-Erkennung (10 statt 20 Wappen durch Main-Watermark) • Held 6/6 Sperre • Cap-Tracker</p>
+          <p class="text-[11px] text-slate-400">Exakte WoW-Regel: Wappen-Rabatt bis 321 aktiv (10 W.) • Mythisch (325–334) kostet 20 Wappen bis zum 331er-Erfolg!</p>
         </div>
       </div>
 
@@ -79,7 +79,7 @@
         <button onclick="openBackupModal()" class="px-2.5 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 text-slate-300 border border-wow-border text-xs font-medium transition">
           💾 Backup
         </button>
-        <button onclick="hardResetStorage()" class="px-2.5 py-1.5 rounded-lg bg-red-950/70 hover:bg-red-900 text-red-200 border border-red-700/50 text-xs font-bold transition" title="Lädt Lexinê & Tatami mit korrigierten Daten neu">
+        <button onclick="hardResetStorage()" class="px-2.5 py-1.5 rounded-lg bg-red-950/70 hover:bg-red-900 text-red-200 border border-red-700/50 text-xs font-bold transition" title="Lädt Lexinê & Tatami mit den korrigierten 20-Wappen-Preisen neu">
           🧹 Reset
         </button>
       </div>
@@ -95,7 +95,7 @@
         <div class="flex items-center gap-2">
           <span class="text-base">👤</span>
           <h2 class="text-xs font-black uppercase tracking-wider text-wow-gold">
-            Deine Charaktere (Klicke oben auf einen Charakter ➔ Unten siehst du seine exakten Werte & Caps):
+            Deine Charaktere (Oben Charakter anklicken ➔ Unten siehst du seine exakten Werte & Caps):
           </h2>
         </div>
         <div class="flex items-center gap-2 text-xs">
@@ -152,7 +152,7 @@
 
         <!-- EINSTELLUNGEN -->
         <div class="bg-wow-panel border border-wow-border rounded-2xl p-3.5 space-y-2.5 shadow-lg">
-          <div class="text-[11px] font-bold text-slate-300 uppercase tracking-wider">Cap-Einstellungen</div>
+          <div class="text-[11px] font-bold text-slate-300 uppercase tracking-wider">Offizielle WoW-Regeln</div>
           <div class="flex items-center justify-between text-xs text-slate-300">
             <span>Wochen-Cap:</span>
             <select id="seasonWeekSelect" onchange="onSeasonCapConfigChange()" class="bg-wow-card border border-wow-border rounded px-2 py-1 text-amber-300 font-bold text-xs">
@@ -165,10 +165,10 @@
             </select>
           </div>
           <div class="flex items-center justify-between text-xs text-slate-300">
-            <span>Basis-Preis:</span>
+            <span>Mythisch-Preis:</span>
             <select id="crestStepCostSelect" onchange="onStepCostChange()" class="bg-wow-card border border-wow-border rounded px-2 py-1 text-white font-bold text-xs">
-              <option value="20" selected>20 Wappen (10 mit Rabatt)</option>
-              <option value="10">Alles 10 Wappen (Erfolg)</option>
+              <option value="20" selected>20 Wappen (Kein 331-Erfolg)</option>
+              <option value="10">10 Wappen (331-Erfolg aktiv)</option>
             </select>
           </div>
           <label class="flex items-center justify-between text-xs text-slate-300 cursor-pointer gap-2 pt-1">
@@ -196,7 +196,7 @@
           <div class="bg-wow-panel border border-wow-border rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3">
             <label class="flex items-center gap-2.5 text-xs font-semibold text-emerald-300 cursor-pointer select-none">
               <input type="checkbox" id="hideCompletedMatrixToggle" onchange="toggleMatrixFilter()" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer" />
-              <span>🔍 Fertige Slots ausblenden (Nur Slots mit offenem Rabatt oder höherem Taschen-Item zeigen)</span>
+              <span>🔍 Fertige Slots ausblenden (Nur Slots unter dem Kriegsmeuten-Maximum zeigen)</span>
             </label>
           </div>
           <div class="bg-wow-panel border border-wow-border rounded-xl overflow-hidden shadow-lg">
@@ -214,19 +214,23 @@
         <section id="tab-crests" class="hidden space-y-6">
           <div class="bg-wow-panel border border-wow-border rounded-xl p-5 space-y-4">
             <div class="flex flex-wrap items-center justify-between gap-4">
-              <h3 class="text-base font-bold text-white">🏆 Offizielle Wappen-Rabatt-Stufen (50 % Twink-Rabatt: 10 statt 20 Wappen)</h3>
+              <div>
+                <h3 class="text-base font-bold text-white">🏆 Offizielle Wappen-Rabatt-Erfolge (50 % Twink-Rabatt: 10 statt 20 Wappen)</h3>
+                <p class="text-xs text-slate-400">
+                  Den 50%-Wappen-Rabatt für eine Stufe gibt es erst, wenn ein Charakter in <strong>allen 16 Slots</strong> das jeweilige Ziel-Item-Level erreicht hat (321 für Held ist aktiv, 331 für Mythisch fehlt noch!).
+                </p>
+              </div>
               <div class="flex items-center gap-2">
                 <label class="text-xs text-slate-300">Ziel-iLvl:</label>
-                <input type="number" id="crestTargetInput" value="321" onchange="renderCrestsView()" class="w-24 bg-wow-card border border-wow-border rounded-lg px-3 py-1.5 text-sm text-white font-bold text-center" />
+                <input type="number" id="crestTargetInput" value="331" onchange="renderCrestsView()" class="w-24 bg-wow-card border border-wow-border rounded-lg px-3 py-1.5 text-sm text-white font-bold text-center" />
               </div>
             </div>
             <div class="flex flex-wrap items-center gap-2 pt-1">
-              <button onclick="setCrestTarget(282)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-slate-200">Abenteurer 6/6 (282)</button>
-              <button onclick="setCrestTarget(295)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-emerald-300">Veteran 6/6 (295)</button>
-              <button onclick="setCrestTarget(308)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-blue-300">Champion 6/6 (308)</button>
-              <button onclick="setCrestTarget(321)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-purple-300">Held 6/6 (321)</button>
-              <button onclick="setCrestTarget(331)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-wow-gold">Mythos 5/6 (331)</button>
-              <button onclick="setCrestTarget(334)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-amber-400">Mythos 6/6 Max (334)</button>
+              <button onclick="setCrestTarget(282)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-slate-200">✔️ Abenteurer (282)</button>
+              <button onclick="setCrestTarget(295)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-emerald-300">✔️ Veteran (295)</button>
+              <button onclick="setCrestTarget(308)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-blue-300">✔️ Champion (308)</button>
+              <button onclick="setCrestTarget(321)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-purple-300">✔️ Held (321 aktiv!)</button>
+              <button onclick="setCrestTarget(331)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-wow-gold">⏳ Mythos-Rabatt (331)</button>
             </div>
             <div id="crestStatusBanner" class="p-4 rounded-xl border"></div>
             <div id="crestSlotsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3"></div>
@@ -262,7 +266,7 @@
         <div>
           <h3 class="text-base font-bold text-white">📋 WoW ➔ SimCraft Import (/simc Addon)</h3>
           <p class="text-xs text-slate-400">
-            Erkennt automatisch: <strong>1. Beutel-Wappen</strong>, <strong>2. Verbrauchte Wappen (in glatten 20er/80er Schritten)</strong>, <strong>3. Versteckte Mythos-Items in der Tasche</strong> und <strong>4. Twink-Rabatte (`slot_high_watermarks`)</strong>!
+            Erkennt automatisch: <strong>1. Beutel-Wappen</strong>, <strong>2. Verbrauchte Wappen</strong>, <strong>3. Versteckte Mythos-Items in der Tasche</strong> und <strong>4. Freigeschaltete Wappen-Erfolge (`upgrade_achievements`)</strong>!
           </p>
         </div>
         <button onclick="closeModal('simcModal')" class="text-slate-400 hover:text-white text-lg">&times;</button>
@@ -389,11 +393,11 @@
 
   <script>
     // =========================================================================
-    // 1. KONSTANTEN & EXAKTE WATERMARK-TRENNUNG (CHAR-WM VS. ACCOUNT-WM)
+    // 1. KONSTANTEN & EXAKTE WOW WAPPEN-RABATT-REGELN (v8.1)
     // =========================================================================
-    const STORAGE_KEY_CHARS = 'wow_warband_chars_v8';
+    const STORAGE_KEY_CHARS = 'wow_warband_chars_v8_1';
     const STORAGE_KEY_API   = 'wow_warband_api_v2';
-    const STORAGE_KEY_RULES = 'wow_warband_rules_v8';
+    const STORAGE_KEY_RULES = 'wow_warband_rules_v8_1';
 
     const WEEKLY_CAP_PER_WEEK = 100; // +100 pro Woche -> Woche 9 = 900 Cap
 
@@ -448,7 +452,6 @@
     const HERO_BONUS_IDS = { 12841: 'Held 1/6', 12842: 'Held 2/6', 12843: 'Held 3/6', 12844: 'Held 4/6', 12845: 'Held 5/6', 12846: 'Held 6/6 (Max)' };
     const MYTH_BONUS_IDS = { 12849: 'Mythos 1/6', 12850: 'Mythos 2/6', 12851: 'Mythos 3/6', 12852: 'Mythos 4/6', 12853: 'Mythos 5/6', 12854: 'Mythos 6/6 (Max)' };
 
-    // BEIDE DEINER CHARAKTERE (LEXINÊ & TATAMI) KORREKT VORGELADEN:
     const INITIAL_CHARS = [
       {
         name: 'Lexinê',
@@ -460,7 +463,7 @@
         advMarks: 135, vetMarks: 205, champMarks: 297, heroMarks: 120, mythMarks: 40,
         advSpent: 0,   vetSpent: 0,   champSpent: 160, heroSpent: 480, mythSpent: 392,
         mythSpentNote: 'Aus SimC: 3× Handwerk (331) + 6× Mythos 6/6 (334)',
-        heroSpentNote: 'Aus SimC: Held-Upgrades bis 321',
+        heroSpentNote: 'Aus SimC: Held-Upgrades bis 321 (50%-Rabatt-Erfolg 62414 aktiv)',
         champSpentNote: 'Aus SimC: Champion-Upgrades bis 308',
         slots: {
           head: 334, neck: 334, shoulder: 321, back: 321, chest: 331, wrist: 331,
@@ -511,8 +514,8 @@
         advMarks: 65,  vetMarks: 45,  champMarks: 59,  heroMarks: 320, mythMarks: 212,
         advSpent: 0,   vetSpent: 0,   champSpent: 120, heroSpent: 360, mythSpent: 160,
         mythSpentNote: 'Aus SimC: 1× Handwerk (331 Laterne = 80) + 1× Mythos 6/6 (334 Waffe = 80)',
-        heroSpentNote: 'Aus SimC: Held-Upgrades bis 321',
-        champSpentNote: 'Aus SimC: Champion-Upgrades bis 308',
+        heroSpentNote: 'Aus SimC: 50% Wappen-Rabatt bis 321 aktiv (Erfolg 62414)',
+        champSpentNote: 'Aus SimC: 50% Wappen-Rabatt bis 308 aktiv',
         slots: {
           head: 321, neck: 321, shoulder: 321, back: 321, chest: 321, wrist: 321,
           hands: 321, waist: 321, legs: 308, feet: 321, finger1: 321, finger2: 321,
@@ -541,13 +544,11 @@
           mainhand: { track: 'myth', label: 'Mythos 6/6 (Max)', maxUpgradable: 334 },
           offhand:  { track: 'crafted', label: 'Handwerk (331)', maxUpgradable: 331 }
         },
-        // Tatamis eigener Charakter-Watermark (0 Wappen kostenlos nur bis 321!)
         charWatermarks: {
           head: 321, neck: 321, shoulder: 321, back: 321, chest: 321, wrist: 321,
           hands: 321, waist: 321, legs: 321, feet: 321, finger1: 321, finger2: 321,
           trinket1: 321, trinket2: 321, mainhand: 334, offhand: 331
         },
-        // Kriegsmeuten-Watermark von Lexinê (50% Wappen-Rabatt = 10 statt 20 Wappen auf Kopf, Hals, Brust, Handgelenke, Beine, Schmuck!)
         accountWatermarks: {
           head: 334, neck: 334, shoulder: 321, back: 321, chest: 331, wrist: 331,
           hands: 321, waist: 321, legs: 334, feet: 321, finger1: 321, finger2: 321,
@@ -557,7 +558,7 @@
     ];
 
     let characters = JSON.parse(JSON.stringify(INITIAL_CHARS));
-    let activeCharIndex = 1; // Startet direkt mit Tatami ausgewählt, damit du den Unterschied sofort siehst!
+    let activeCharIndex = 1;
     let apiConfig = {
       region: 'eu',
       clientId: '',
@@ -569,15 +570,12 @@
       strictWeapons: true,
       includeBags: true,
       hideCompletedMatrix: false,
-      stepCost: 20,
+      stepCost: 20, // 20 Mythisch-Wappen pro Stufe, solange noch kein Charakter den 331er-Erfolg hat!
       seasonWeek: 9
     };
     let discoveredBnetChars = [];
     let currentEditingCell = null;
 
-    // =========================================================================
-    // 2. INITIALISIERUNG
-    // =========================================================================
     window.addEventListener('DOMContentLoaded', async () => {
       try {
         loadFromStorage();
@@ -611,7 +609,7 @@
       saveCharsToStorage();
       renderAll();
       closeModal('backupModal');
-      showToast('Lexinê & Tatami mit korrigierter Watermark- & Wappen-Logik geladen!', 'success');
+      showToast('Lexinê & Tatami mit korrekten 20-Wappen-Mythisch-Preisen geladen!', 'success');
     }
 
     function loadFromStorage() {
@@ -673,14 +671,13 @@
     }
 
     // =========================================================================
-    // 3. KORRIGIERTE VERBRAUCHS-RECHNUNG (GLATTE 20ER / 80ER WOW-KOSTEN!)
+    // 2. WAPPEN-VERBRAUCH & CAP-RECHNUNG
     // =========================================================================
     function getSeasonMaxCap() {
       const week = parseInt(document.getElementById('seasonWeekSelect')?.value || '9', 10);
-      return week * WEEKLY_CAP_PER_WEEK; // 900 in Woche 9
+      return week * WEEKLY_CAP_PER_WEEK;
     }
 
-    // Berechnet aus der Ausrüstung (Angezogen + Tasche) die verbrauchten Wappen in echten 20er/80er WoW-Schritten
     function calculateSpentFromCharGear(char) {
       let mythCraftedCount = 0;
       let mythUpgradedCount = 0;
@@ -702,7 +699,6 @@
         if (maxSlot >= 311) heroCount++;
       });
 
-      // Jedes 331er Handwerks-Item = 80 Wappen, jede aufgewertete Mythos-Stufe über 321 = 20 Wappen
       const mythSpent = (mythCraftedCount * 80) + (mythTotalStepsAbove321 * 20);
       const heroSpent = heroCount * 20;
       const champSpent = 120;
@@ -713,7 +709,7 @@
         champSpent,
         vetSpent: 0,
         advSpent: 0,
-        mythSpentNote: `Aus SimC: ${mythCraftedCount}× Handwerk (331 à 80) + ${mythUpgradedCount}× Mythos >321 (${mythTotalStepsAbove321} Stufen)`
+        mythSpentNote: `Aus SimC: ${mythCraftedCount}× Handwerk (331 à 80) + ${mythUpgradedCount}× Mythos >321 (${mythTotalStepsAbove321} Stufen à 20)`
       };
     }
 
@@ -772,7 +768,10 @@
     }
 
     // =========================================================================
-    // 4. KORRIGIERTE 331-SIMULATION (OHNE FALSCHE 0-WAPPEN-GESCHENKE & MIT HELD-6/6-SPERRE!)
+    // 3. KORRIGIERTE WOW UPGRADE-LOGIK:
+    // - Bis 321 (Held): 50% Wappen-Rabatt (10 Wappen), da Erfolg 62414 aktiv ist!
+    // - Über 321 (Mythisch 325-334): Volle 20 Wappen pro Stufe (KEIN Einzel-Slot-Rabatt!),
+    //   bis ein Charakter den 331er-Erfolg freigeschaltet hat!
     // =========================================================================
     function isUsingSingleTwoHander(char) {
       const rawOh = Number(char.slots?.offhand || 0);
@@ -849,6 +848,14 @@
       return benchmarks;
     }
 
+    // Prüft, ob die Kriegsmeute den 331er Mythos-Meilenstein-Erfolg in allen 16 Slots erreicht hat
+    function isMythic331AchievementUnlocked() {
+      const manualOverride = parseInt(document.getElementById('crestStepCostSelect')?.value || '20', 10) === 10;
+      if (manualOverride) return true;
+      const benchmarks = calculateWarbandBenchmarks();
+      return SLOTS.every(s => (benchmarks[s.key] || 0) >= 331);
+    }
+
     function getCharAverageEquippedIlvl(char) {
       let sum = 0;
       SLOTS.forEach(s => { sum += getEquippedSlotIlvl(char, s.key); });
@@ -858,7 +865,9 @@
     function simulateCharacterToTarget(char, charIdx) {
       const targetAvg = parseFloat(document.getElementById('avgTargetIlvlInput')?.value || '331');
       const targetTotalPoints = Math.ceil(targetAvg * 16);
-      const baseStepCost = parseInt(document.getElementById('crestStepCostSelect')?.value || '20', 10);
+      const mythDiscountUnlocked = isMythic331AchievementUnlocked();
+      const mythStepCost = mythDiscountUnlocked ? 10 : 20; // Volle 20 Mythisch-Wappen, bis ein Charakter den 331er-Erfolg hat!
+      const heroStepCost = 10; // Bis 321 (Held) kosten Upgrades dank Erfolg 62414 nur 10 Wappen!
 
       const mythCapInfo  = getCharCrestCapNumbers(char, 'myth');
       const heroCapInfo  = getCharCrestCapNumbers(char, 'hero');
@@ -872,7 +881,6 @@
       const farmableHeroMarks  = heroCapInfo.farmable;
       const maxWeekHeroMarks   = heroCapInfo.totalAvailable;
 
-      const benchmarks = calculateWarbandBenchmarks();
       const using2H = isUsingSingleTwoHander(char);
 
       const simSlots = {};
@@ -883,10 +891,7 @@
       const startAvg = startPoints / 16;
       const planSteps = [];
 
-      // -----------------------------------------------------------------------
-      // PHASE 1: HÖHERE ITEMS AUS DER TASCHE ANLEGEN (0 WAPPEN)
-      // (z. B. Tatamis 321er Hose in der Tasche statt 308er Hose, oder Lexinês 334er Hose!)
-      // -----------------------------------------------------------------------
+      // PHASE 1: Höhere Items aus der Tasche anlegen (0 Wappen)
       SLOTS.forEach(s => {
         if (s.key === 'offhand' && using2H) return;
         const bagVal = getBagSlotIlvl(char, s.key);
@@ -912,10 +917,7 @@
       const pointsWithBagsOnly = getSumPoints();
       const avgWithBagsOnly = pointsWithBagsOnly / 16;
 
-      // -----------------------------------------------------------------------
-      // PHASE 2: ECHTER CHARAKTER-WATERMARK RABATT (0 WAPPEN)
-      // WICHTIG: Gilt NUR bis zum EIGENEN charWatermarks[slot] (NICHT Account-Watermark!)
-      // -----------------------------------------------------------------------
+      // PHASE 2: Eigner Charakter-Watermark (0 Wappen – NUR wenn DIESER Charakter den Slot schon höher hatte)
       SLOTS.forEach(s => {
         if (s.key === 'offhand' && using2H) return;
         const meta = char.slotMeta?.[s.key] || {};
@@ -940,12 +942,7 @@
         }
       });
 
-      // -----------------------------------------------------------------------
-      // PHASE 3: WAPPEN-UPGRADES AUF ECHTEN MYTHOS-/HELD-ITEMS
-      // - Stoppt Held 6/6 (maxUpgradable 321) strikt bei 321!
-      // - Nutzt automatisch den 50% Kriegsmeuten-Rabatt (10 statt 20 Wappen),
-      //   wenn Lexinê/Kriegsmeute auf diesem Slot schon ein höheres Item-Level hat!
-      // -----------------------------------------------------------------------
+      // PHASE 3: Wappen-Upgrades (10 Wappen bis 321 | 20 Wappen von 321 auf 334)
       let safety = 0;
       while (getSumPoints() < targetTotalPoints && safety < 250) {
         safety++;
@@ -959,49 +956,48 @@
           const hasMythInBag = Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
           const maxUpgradable = hasMythInBag ? 334 : (meta.maxUpgradable || 321);
 
-          // WICHTIG: Wenn das Item bei 321 (Held 6/6) oder 331 (Handwerk) am Limit ist, KANN man es nicht einfach mit 20 Wappen auf 334 ziehen!
           if (curVal >= maxUpgradable) return;
 
           const is2HWeapon = (s.key === 'mainhand' && using2H);
           let nextIlvl = 0;
           let markType = '';
+          let cost = 20;
 
           if (curVal < 308) {
             nextIlvl = CHAMP_UPGRADE_STEPS.find(st => st > curVal && st <= maxUpgradable) || Math.min(308, maxUpgradable);
             markType = 'champ';
+            cost = 10; // 50% Rabatt bis 308 aktiv
           } else if (curVal < 321) {
             nextIlvl = HERO_UPGRADE_STEPS.find(st => st > curVal && st <= maxUpgradable) || Math.min(321, maxUpgradable);
             markType = 'hero';
+            cost = heroStepCost; // 50% Rabatt bis 321 aktiv (Erfolg 62414)
           } else {
             const step = MYTH_UPGRADE_STEPS.find(st => st > curVal && st <= maxUpgradable);
             if (!step) return;
             nextIlvl = step;
             markType = 'myth';
+            cost = mythStepCost; // Volle 20 Mythisch-Wappen, solange der 331er-Erfolg noch nicht freigeschaltet ist!
           }
 
           const rawGain = nextIlvl - curVal;
           if (rawGain <= 0) return;
           const totalPointGain = is2HWeapon ? rawGain * 2 : rawGain;
 
-          // Prüfen, ob für diesen Schritt der 50% Kriegsmeuten-Rabatt (durch Lexinê / Account-Watermark) gilt!
-          const accWm = Math.max(benchmarks[s.key] || 0, Number(char.accountWatermarks?.[s.key] || 0));
-          const hasWarband50PctDiscount = (accWm >= nextIlvl);
-          const cost = hasWarband50PctDiscount ? Math.min(baseStepCost, 10) : baseStepCost;
-
           let customReason = '';
           if (markType === 'myth') {
             if (hasMythInBag && meta.track === 'hero_max' && curVal === 321) {
-              customReason = `🎒 321er Mythos-Item aus Tasche nehmen & auf ${nextIlvl} ziehen${hasWarband50PctDiscount ? ' (50% Twink-Rabatt = 10 Wappen!)' : ''}`;
+              customReason = `🎒 321er Mythos-Item aus Tasche nehmen & auf ${nextIlvl} ziehen (${cost} Mythisch-Wappen)`;
             } else {
-              customReason = `🟠 Mythos-Upgrade auf ${nextIlvl}${hasWarband50PctDiscount ? ' (50% Twink-Rabatt durch Main = 10 Wappen!)' : ''}`;
+              customReason = rawGain >= 4
+                ? `🟠 Mythos Power-Sprung 321 ➔ 325 (+4 iLvl für ${cost} Mythisch-Wappen!)`
+                : `🟠 Mythos-Upgrade auf ${nextIlvl} (${cost} Mythisch-Wappen)`;
             }
           } else if (markType === 'hero') {
-            customReason = `🟣 Helden-Upgrade auf ${nextIlvl}${hasWarband50PctDiscount ? ' (50% Rabatt = 10 Wappen)' : ''}`;
+            customReason = `🟣 Helden-Upgrade bis 321 (50% Rabatt = 10 Helden-Wappen)`;
           } else {
-            customReason = `🔵 Champion-Upgrade auf ${nextIlvl}`;
+            customReason = `🔵 Champion-Upgrade bis 308 (50% Rabatt = 10 Champion-Wappen)`;
           }
 
-          // Priorität: Höchste Punkte pro Wappen (bevorzugt automatisch 10-Wappen-Rabatt-Slots und den +4 Sprung 321->325!)
           const tierBonus = markType === 'champ' ? 200 : (markType === 'hero' ? 100 : 0);
           const priorityScore = tierBonus + (totalPointGain / cost) * 100 - (curVal * 0.01);
 
@@ -1014,7 +1010,6 @@
               pointGain: totalPointGain,
               markType,
               markCost: cost,
-              hasWarband50PctDiscount,
               is2HWeapon,
               priorityScore,
               reason: customReason
@@ -1031,12 +1026,7 @@
       const maxPointsWithCurrentItems = getSumPoints();
       const maxAvgWithCurrentItems = maxPointsWithCurrentItems / 16;
 
-      // -----------------------------------------------------------------------
-      // PHASE 4: FALLS DIE VORHANDENEN MYTHOS-ITEMS NOCH NICHT FÜR 331 REICHEN
-      // (z. B. bei Tatami: 5 Slots stecken auf Held 6/6 = 321 fest -> max 329.75 Ø):
-      // Zeige exakt an, wie viele blockierte Held-6/6-Slots durch 331er Handwerk (80 Wappen)
-      // oder Mythos-Drops ersetzt werden müssen!
-      // -----------------------------------------------------------------------
+      // PHASE 4: Blockierte Held-6/6-Slots (321), die für 331 noch ein 331er Handwerks-Item (80 Wappen) oder Mythos-Drop brauchen
       while (getSumPoints() < targetTotalPoints && safety < 270) {
         safety++;
         const blockedSlot = SLOTS.find(s => {
@@ -1045,7 +1035,7 @@
         });
         if (!blockedSlot) break;
 
-        const gain = 331 - 321; // +10 iLvl durch 331er Handwerk (oder Mythos 5/6)
+        const gain = 331 - 321;
         simSlots[blockedSlot.key] = 331;
         planSteps.push({
           slotKey: blockedSlot.key,
@@ -1056,11 +1046,10 @@
           markType: 'myth',
           markCost: 80,
           isBlockedHeroReplacement: true,
-          reason: `🔒 Slot steckt auf Held 6/6 (321) fest ➔ 331er Handwerks-Item herstellen (80 Wappen) oder Mythos-Drop holen!`
+          reason: `🔒 Slot steckt auf Held 6/6 (321) fest ➔ 331er Handwerks-Item herstellen (80 Mythisch-Wappen) oder Mythos-Drop holen!`
         });
       }
 
-      // Gegen (1) Beutel-Wappen und (2) Beutel + Noch farmbar (Wochen-Cap) prüfen
       let usedHeroMarks = 0, usedMythMarks = 0;
       let reachablePointsWithWallet = startPoints;
       let reachablePointsThisWeek = startPoints;
@@ -1100,7 +1089,8 @@
       const missingHeroMarks = Math.max(0, usedHeroMarks - availableHeroMarks);
 
       return {
-        char, charIdx, targetAvg, targetTotalPoints, baseStepCost,
+        char, charIdx, targetAvg, targetTotalPoints, baseStepCost: mythStepCost,
+        mythDiscountUnlocked,
         startPoints, startAvg,
         pointsWithBagsOnly, avgWithBagsOnly,
         reachablePointsWithWallet, reachableAvgWithWallet: reachablePointsWithWallet / 16,
@@ -1127,7 +1117,7 @@
     }
 
     // =========================================================================
-    // 5. CHARAKTER-KARTEN OBEN & KORRIGIERTES COCKPIT UNTEN DRUNTER RENDERN
+    // 4. DARSTELLUNG: CHARAKTER-LEISTE OBEN & DETAILS UNTEN DRUNTER
     // =========================================================================
     function buildCharSelectorCardsHtml(rankings) {
       return rankings.map((r, rankIdx) => {
@@ -1186,16 +1176,15 @@
       const charColor = getCharClassColor(char);
       const seasonCap = getSeasonMaxCap();
       const missingPoints = Math.max(0, activeSim.targetTotalPoints - activeSim.startPoints);
-      const stepCost = activeSim.baseStepCost;
+      const stepCost = activeSim.baseStepCost; // 20 Wappen (solange 331er-Erfolg noch nicht aktiv)
 
       const myth = activeSim.mythCapInfo;
       const mythSubsWallet = Math.floor(myth.wallet / stepCost);
       const mythSubsTotal  = Math.floor(myth.totalAvailable / stepCost);
 
-      // BLOCK 1: DIE 4 GLASKLAREN KACHELN (JETZT MIT SAUBERER TRENNUNG: ANGEZOGEN -> NUR TASCHE -> MIT BEUTEL-WAPPEN)
+      // BLOCK 1: 4 ÜBERSICHTS-KACHELN
       const topSummaryHtml = `
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-          <!-- Kachel 1: Saubere 3-Stufen-Item-Level-Anzeige -->
           <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 shadow-lg" style="border-left: 5px solid ${charColor};">
             <div class="text-[11px] font-bold uppercase text-slate-400">1. Item-Level (${escapeHtml(char.name)})</div>
             <div class="grid grid-cols-3 gap-1 text-center mt-2 bg-wow-card p-2 rounded-xl border border-wow-border">
@@ -1213,11 +1202,10 @@
               </div>
             </div>
             <div class="text-[11px] text-slate-400 mt-2">
-              Max. mit aktuellen Mythos-Items: <strong class="text-white">${activeSim.maxAvgWithCurrentItems.toFixed(2)} Ø</strong> (Bis 331: +${missingPoints} Pkt)
+              Bei <strong>${stepCost} Wappen/Stufe</strong> (${mythSubsWallet} Stufen aus Beutel kaufbar)
             </div>
           </div>
 
-          <!-- Kachel 2: In der Tasche + Verbraucht auf Charakter -->
           <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 shadow-lg">
             <div class="text-[11px] font-bold uppercase text-purple-300">2. Aus SimC: Tasche + Verbraucht</div>
             <div class="flex items-baseline gap-2 mt-1.5">
@@ -1231,7 +1219,6 @@
             </div>
           </div>
 
-          <!-- Kachel 3: Noch farmbar diese Woche -->
           <div class="bg-wow-panel border-2 border-emerald-500/70 rounded-2xl p-4 shadow-lg bg-emerald-950/10">
             <div class="text-[11px] font-black uppercase text-emerald-400">3. 🌾 Noch farmbar bis Cap</div>
             <div class="flex items-baseline gap-2 mt-1.5">
@@ -1243,15 +1230,14 @@
             </div>
           </div>
 
-          <!-- Kachel 4: Gesamt ausgibbar diese Woche -->
           <div class="bg-wow-panel border border-amber-500/60 rounded-2xl p-4 shadow-lg">
             <div class="text-[11px] font-bold uppercase text-wow-gold">4. ⚡ Gesamt nutzbar diese ID</div>
             <div class="flex items-baseline gap-2 mt-1.5">
               <span class="text-3xl font-black text-amber-300">${myth.totalAvailable}</span>
-              <span class="text-xs font-bold text-slate-300">Wappen verfügbar</span>
+              <span class="text-xs font-bold text-slate-300">= ${mythSubsTotal} Stufen (à ${stepCost})</span>
             </div>
             <div class="text-[11px] text-slate-300 mt-2 pt-2 border-t border-wow-border/60">
-              Benötigt bis Ø ${activeSim.targetAvg}: <strong class="text-amber-300">${activeSim.usedMythMarks} Mythisch-Wappen</strong> (inkl. 50% Twink-Rabatt!)
+              Bedarf bis Ø ${activeSim.targetAvg}: <strong class="text-amber-300">${activeSim.usedMythMarks} Mythisch-Wappen</strong>
             </div>
           </div>
         </div>
@@ -1260,8 +1246,9 @@
       // BLOCK 2: WAPPEN-CAP-TABELLE
       const crestTableRows = CREST_TIERS_META.map(tier => {
         const cInfo = getCharCrestCapNumbers(char, tier.key);
-        const subsNow = Math.floor(cInfo.wallet / stepCost);
-        const subsTotal = Math.floor(cInfo.totalAvailable / stepCost);
+        const tierCost = tier.key === 'myth' ? stepCost : 10; // Bis 321 (Held/Champ/Vet/Adv) sind 10 Wappen aktiv, Mythisch kostet 20!
+        const subsNow = Math.floor(cInfo.wallet / tierCost);
+        const subsTotal = Math.floor(cInfo.totalAvailable / tierCost);
         const mplusRuns = Math.ceil(cInfo.farmable / 15);
         const pct = Math.min(100, Math.round((cInfo.earned / cInfo.seasonCap) * 100));
 
@@ -1279,7 +1266,7 @@
                 <input type="number" value="${cInfo.wallet}" min="0" step="5"
                        onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'wallet', this.value)"
                        class="w-16 bg-wow-bg border border-wow-border rounded-lg px-2 py-1 text-sm font-black text-white text-center" />
-                <span class="text-[11px] text-slate-400">(${subsNow} St.)</span>
+                <span class="text-[11px] text-slate-400">(${subsNow} St. à ${tierCost})</span>
               </div>
             </td>
             <td class="py-3 px-3 text-center">
@@ -1302,7 +1289,7 @@
             </td>
             <td class="py-3 px-4 text-right">
               <div class="text-sm font-black text-amber-300">${cInfo.totalAvailable} Wappen</div>
-              <div class="text-[11px] text-slate-300 font-semibold">= <strong>${subsTotal} Basis-Stufen</strong> (od. ${Math.floor(cInfo.totalAvailable / 10)} mit 50% Rabatt)</div>
+              <div class="text-[11px] text-slate-300 font-semibold">= <strong>${subsTotal} Stufen</strong> (à ${tierCost} Wappen)</div>
             </td>
           </tr>
         `;
@@ -1314,7 +1301,7 @@
             <div>
               <h3 class="text-sm font-bold text-white">🌾 SimCraft Wappen-Tracker für <span style="color:${charColor}">${escapeHtml(char.name)}</span></h3>
               <p class="text-xs text-slate-400">
-                <strong>🎒 In der Tasche</strong> + <strong>🔨 Verbraucht (in glatten 20er/80er Schritten)</strong> = <strong>📊 Summe</strong> ➔ Abgezogen vom <strong>${seasonCap}er Cap</strong> ergibt das deine <strong>🌾 noch farmbaren Wappen</strong>!
+                <strong>Offizielle Rabatt-Regel:</strong> Bis 321 (Held) ist der 50%-Rabatt (<strong>10 Wappen/Stufe</strong>) aktiv. Für Mythisch-Wappen (321 ➔ 334) gilt der volle Preis (<strong>20 Wappen/Stufe</strong>), bis dein erster Charakter den <strong>331er-Erfolg</strong> geschafft hat!
               </p>
             </div>
             <button onclick="recalculateCharSpentFromSimcGear(${charIdx})" class="px-3 py-1.5 rounded-xl bg-wow-card hover:bg-slate-700 border border-wow-border text-xs font-semibold text-slate-200 transition">
@@ -1341,19 +1328,16 @@
       `;
 
       // BLOCK 3: 2-SPALTEN-LAYOUT UNTEN (LINKS: UPGRADE-FAHRPLAN | RECHTS: 3-ZONEN-AMPEL)
-      const benchmarks = calculateWarbandBenchmarks();
       const targetIlvlGoal = activeSim.targetAvg;
       const zone1ActionNow = [], zone2BlockedHero = [], zone3Completed = [];
 
       SLOTS.forEach(s => {
         const eq = getEquippedSlotIlvl(char, s.key);
         const bag = getBagSlotIlvl(char, s.key);
-        const wbMax = Math.max(benchmarks[s.key] || 0, Number(char.accountWatermarks?.[s.key] || 0));
         const meta = char.slotMeta?.[s.key] || {};
         const hasMythInBag = Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
         const maxUpgradable = hasMythInBag ? 334 : (meta.maxUpgradable || 321);
-        const isStuckHero6 = (maxUpgradable <= 321 && bag <= eq);
-        const itemEntry = { slot: s, eq, bag, wbMax, meta, hasMythInBag, maxUpgradable, isStuckHero6 };
+        const itemEntry = { slot: s, eq, bag, meta, hasMythInBag, maxUpgradable };
 
         if (eq >= targetIlvlGoal && bag <= eq) zone3Completed.push(itemEntry);
         else if (bag > eq || maxUpgradable > 321) zone1ActionNow.push(itemEntry);
@@ -1361,8 +1345,7 @@
       });
 
       const renderZoneSlotCard = (item, zoneType) => {
-        const { slot, eq, bag, wbMax, meta, hasMythInBag } = item;
-        const has50PctDiscount = wbMax > eq;
+        const { slot, eq, bag, meta, hasMythInBag } = item;
         let statusTag = '', borderClass = 'border-wow-border';
 
         if (zoneType === 'action') {
@@ -1370,9 +1353,9 @@
           if (bag > eq) {
             statusTag = `<span class="text-[11px] text-cyan-300 font-bold">🎒 ${bag} in Tasche (+${bag - eq} Pkt für 0 Wappen!)</span>`;
           } else if (hasMythInBag && meta.track === 'hero_max') {
-            statusTag = `<span class="text-[11px] text-amber-300 font-bold">🎒 321 Mythos-2/6 in Tasche! ${has50PctDiscount ? `(50% Rabatt bis ${wbMax}!)` : 'Bis 334 ziehbar'}</span>`;
+            statusTag = `<span class="text-[11px] text-amber-300 font-bold">🎒 321 Mythos-2/6 in Tasche! (Bis 334 ziehbar à ${stepCost} Wappen)</span>`;
           } else {
-            statusTag = `<span class="text-[11px] text-emerald-300 font-bold">⚡ Mythos-Spur (bis 334) ${has50PctDiscount ? `• 50% Twink-Rabatt bis ${wbMax}!` : ''}</span>`;
+            statusTag = `<span class="text-[11px] text-emerald-300 font-bold">⚡ Mythos-Spur (bis 334 ziehbar à ${stepCost} Wappen)</span>`;
           }
         } else if (zoneType === 'blocked') {
           borderClass = 'border-amber-700/50 bg-amber-950/10';
@@ -1417,10 +1400,10 @@
           costLabel = `🔨 80 Mythisch (Handwerk 331)`;
         } else if (g.markType === 'myth') {
           badgeColor = g.availability === 'now' ? 'bg-amber-950 text-amber-200 border-amber-500' : 'bg-emerald-950 text-emerald-200 border-emerald-500';
-          costLabel = `🟠 ${g.markCost} Mythisch (${g.stepCount} St.${g.hasWarband50PctDiscount ? ' à 10' : ' à 20'})`;
+          costLabel = `🟠 ${g.markCost} Mythisch (${g.stepCount} St. à ${stepCost})`;
         } else {
           badgeColor = 'bg-purple-950 text-purple-200 border-purple-500';
-          costLabel = `🟣 ${g.markCost} Held (${g.stepCount} St.)`;
+          costLabel = `🟣 ${g.markCost} Held (${g.stepCount} St. à 10)`;
         }
 
         const availabilityLabel = g.availability === 'now'
@@ -1448,9 +1431,9 @@
         <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
           <div class="xl:col-span-7 bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-3 shadow-lg">
             <div>
-              <h3 class="text-sm font-bold text-white">🎯 Korrigierter 331-Upgrade-Fahrplan für <span style="color:${charColor}">${escapeHtml(char.name)}</span></h3>
+              <h3 class="text-sm font-bold text-white">🎯 Korrigierter 331-Upgrade-Fahrplan für <span style="color:${charColor}">${escapeHtml(char.name)}</span> (${stepCost} Wappen/Stufe)</h3>
               <p class="text-xs text-slate-400">
-                Nutzt zuerst <strong>0-Wappen-Taschen-Items</strong> (➔ <strong>${activeSim.avgWithBagsOnly.toFixed(2)} Ø</strong>), danach deine <strong>50%-Twink-Rabatt-Slots (10 statt 20 Wappen dank Lexinê!)</strong> bis deine <strong>${myth.wallet} Beutel-Wappen</strong> aufgebraucht sind (➔ <strong>${activeSim.reachableAvgWithWallet.toFixed(2)} Ø</strong>) und zeigt dir danach die Schritte aus deinem <strong>${myth.farmable}er Farm-Pool</strong>!
+                1. <strong>Taschen-Items anlegen (0 Wappen)</strong> ➔ <strong>${activeSim.avgWithBagsOnly.toFixed(2)} Ø</strong> • 2. Mit deinen <strong>${myth.wallet} Beutel-Wappen</strong> (${mythSubsWallet} Stufen à ${stepCost}) zuerst alle 321er Mythos-Items auf <strong>325 (+4 iLvl!)</strong> ziehen ➔ <strong>${activeSim.reachableAvgWithWallet.toFixed(2)} Ø</strong>!
               </p>
             </div>
             <div class="space-y-2">${stepsHtml}</div>
@@ -1508,7 +1491,7 @@
     }
 
     // =========================================================================
-    // 6. SIMCRAFT PARSER (INKL. KORREKTER TRINKET-2 & WATERMARK-ERKENNUNG)
+    // 5. SIMCRAFT PARSER
     // =========================================================================
     function classifyItemTrackFromBonusIds(bonusStr, isCrafted) {
       if (isCrafted) return { track: 'crafted', label: 'Handwerk', maxUpgradable: 331 };
@@ -1585,7 +1568,6 @@
           continue;
         }
 
-        // KORRIGIERT: Trennt strikt zwischen parts[1] (Charakter-Watermark = 0 Wappen) und parts[2] (Kriegsmeuten-Watermark = 50% Rabatt)!
         if (/^#\s*slot_high_watermarks=/i.test(line)) {
           const rawWm = line.replace(/^#\s*slot_high_watermarks=/i, '').trim();
           const charMap = {}, accMap = {};
@@ -1688,7 +1670,6 @@
         bagSlots.trinket1 = bagTrinketsList[0];
         bagSlots.trinket2 = bagTrinketsList.length > 1 ? bagTrinketsList[1] : bagTrinketsList[0];
       }
-      // WICHTIG: Wenn 2 Mythos-Schmuckstücke in der Tasche liegen (wie bei Tatami!), werden BEIDE Trinket-Slots für 334 freigeschaltet!
       if (bagMythTrinkets.length > 0) {
         bagMythTrinkets.sort((a, b) => b - a);
         slotMeta.trinket1.bagMythIlvl = bagMythTrinkets[0];
@@ -1828,7 +1809,7 @@
 
       let headerHtml = `
         <th class="py-3 px-4 font-bold text-white sticky left-0 bg-wow-card z-10 w-44">Ausrüstungs-Slot</th>
-        <th class="py-3 px-4 font-bold text-wow-gold bg-amber-950/20 border-x border-wow-border w-48">👑 Kriegsmeuten-Max (50% Rabatt)</th>
+        <th class="py-3 px-4 font-bold text-wow-gold bg-amber-950/20 border-x border-wow-border w-48">👑 Kriegsmeuten-Max</th>
       `;
       characters.forEach((char, idx) => {
         const avg = getCharAverageEquippedIlvl(char);
@@ -1860,7 +1841,7 @@
           const bagVal = getBagSlotIlvl(char, slot.key);
           const diff = maxIlvl - equippedVal;
           const bagBadge = bagVal > 0 ? `<span class="text-[11px] font-bold ${bagVal > equippedVal ? 'text-cyan-300' : 'text-slate-400'} ml-1.5">🎒 ${bagVal}</span>` : '';
-          const statusBadge = diff > 0 ? `<span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300">🟢 50% bis ${maxIlvl}</span>` : `<span class="text-[11px] text-amber-300">👑 Max</span>`;
+          const statusBadge = diff > 0 ? `<span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300">Offen: +${diff}</span>` : `<span class="text-[11px] text-amber-300">👑 Max</span>`;
           bodyHtml += `
             <td onclick="openEditSlotModal(${cIdx}, '${slot.key}', '${slot.label}')" class="py-2.5 px-4 cursor-pointer hover:bg-slate-800/60">
               <div class="flex items-center justify-between">
@@ -1881,13 +1862,15 @@
     }
 
     function renderCrestsView() {
-      const target = parseInt(document.getElementById('crestTargetInput').value || '321', 10);
+      const target = parseInt(document.getElementById('crestTargetInput').value || '331', 10);
       const benchmarks = calculateWarbandBenchmarks();
       const banner = document.getElementById('crestStatusBanner');
       const grid = document.getElementById('crestSlotsGrid');
       const missingSlots = SLOTS.filter(s => benchmarks[s.key] < target);
       banner.className = missingSlots.length === 0 ? 'p-4 rounded-xl bg-emerald-950/50 border border-emerald-700/50 text-emerald-200 text-sm font-semibold' : 'p-4 rounded-xl bg-amber-950/40 border border-amber-700/50 text-amber-200 text-sm';
-      banner.innerHTML = missingSlots.length === 0 ? `✅ Alle 16 Slots sind mindestens auf ${target} (50% Rabatt = 10 statt 20 Wappen aktiv)!` : `⏳ Es fehlen noch ${missingSlots.length} Slots bis ${target}: ${missingSlots.map(s => s.label).join(', ')}`;
+      banner.innerHTML = missingSlots.length === 0
+        ? `✅ Alle 16 Slots sind mindestens auf ${target} ➔ 50% Wappen-Rabatt (10 statt 20 Wappen) für diese Stufe ist freigeschaltet!`
+        : `⏳ Für den ${target}er Wappen-Rabatt-Erfolg fehlen noch ${missingSlots.length} von 16 Slots: ${missingSlots.map(s => s.label).join(', ')}`;
       grid.innerHTML = SLOTS.map(s => {
         const val = benchmarks[s.key];
         const ok = val >= target;
