@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>WoW Kriegsmeuten-Upgrade-Tracker v10.0</title>
+  <title>WoW Kriegsmeuten-Tracker v11.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -17,8 +17,7 @@
               panel: '#131822',
               card: '#1a2130',
               border: '#2a344a',
-              gold: '#f8b700',
-              accent: '#3b82f6'
+              gold: '#f8b700'
             }
           }
         }
@@ -34,45 +33,39 @@
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: #0b0e14; }
     ::-webkit-scrollbar-thumb { background: #2a344a; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #3b4968; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-  <!-- TOP HEADER -->
-  <header class="bg-wow-panel border-b border-wow-border sticky top-0 z-30 shadow-xl">
-    <div class="max-w-[1640px] mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+  <!-- HEADER -->
+  <header class="bg-wow-panel border-b border-wow-border sticky top-0 z-30 shadow-lg">
+    <div class="max-w-[1600px] mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500 to-yellow-700 flex items-center justify-center text-slate-950 font-black text-lg shadow">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-yellow-700 flex items-center justify-center text-slate-950 font-black text-base">
           W
         </div>
         <div>
-          <h1 class="text-base font-bold text-white tracking-tight flex items-center gap-2">
+          <h1 class="text-sm font-bold text-white flex items-center gap-2">
             Kriegsmeuten-Upgrade-Tracker
-            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v10.0 AKTIV</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v11.0 CLEAN</span>
           </h1>
-          <p class="text-[11px] text-slate-400">Echte Item-Namen • 1-Klick-Erledigt im Fahrplan • Exakter M+ Key-Stufen-Rechner (+9 bis +14+)</p>
         </div>
       </div>
 
-      <!-- ACTION BUTTONS -->
       <div class="flex flex-wrap items-center gap-2">
-        <button onclick="openCharPopupModal()" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black flex items-center gap-1.5 shadow transition">
-          <span>🪟</span> Charakter-Popup
+        <button onclick="openSimcModal()" class="px-3.5 py-1.5 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-xs font-bold shadow border border-purple-500/40 transition">
+          📋 WoW ➔ SimCraft Import
         </button>
-        <button onclick="openSimcModal()" class="px-3.5 py-1.5 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-xs font-bold flex items-center gap-1.5 shadow border border-purple-500/40 transition">
-          <span>📋</span> WoW ➔ SimCraft Import
+        <button onclick="openModal('addCharModal')" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 text-slate-200 border border-wow-border text-xs font-semibold transition">
+          🌐 + Raider.IO
         </button>
-        <button onclick="openAddCharModal()" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 text-slate-200 border border-wow-border text-xs font-semibold transition">
-          <span>🌐</span> + Raider.IO Charakter
-        </button>
-        <button onclick="refreshActiveCharRaiderIO()" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 text-cyan-300 border border-wow-border text-xs font-semibold transition" title="Aktualisiert den ausgewählten Charakter über Raider.IO">
+        <button onclick="refreshActiveCharRaiderIO()" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 text-cyan-300 border border-wow-border text-xs font-semibold transition">
           🔄 Raider.IO Update
         </button>
-        <button onclick="openBackupModal()" class="px-2.5 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 text-slate-300 border border-wow-border text-xs font-medium transition">
+        <button onclick="openModal('backupModal')" class="px-2.5 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 text-slate-300 border border-wow-border text-xs font-medium transition">
           💾 Backup
         </button>
-        <button onclick="hardResetStorage()" class="px-2.5 py-1.5 rounded-lg bg-red-950/70 hover:bg-red-900 text-red-200 border border-red-700/50 text-xs font-bold transition" title="Lädt Lexinê & Tatami auf Original-SimC zurück">
+        <button onclick="hardResetStorage()" class="px-2.5 py-1.5 rounded-lg bg-red-950/70 hover:bg-red-900 text-red-200 border border-red-700/50 text-xs font-bold transition">
           🧹 Reset
         </button>
       </div>
@@ -80,95 +73,67 @@
   </header>
 
   <!-- MAIN CONTENT -->
-  <main class="flex-1 max-w-[1640px] w-full mx-auto px-4 py-5 space-y-5">
+  <main class="flex-1 max-w-[1600px] w-full mx-auto px-4 py-4 space-y-4">
 
-    <!-- OBEN IN EINER REIHE: ALLE CHARAKTERE ZUM ANKLICKEN -->
-    <section class="bg-wow-panel border-2 border-wow-gold/50 rounded-2xl p-4 shadow-2xl space-y-3">
-      <div class="flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-2">
-          <span class="text-base">👤</span>
-          <h2 class="text-xs font-black uppercase tracking-wider text-wow-gold">
-            Deine Charaktere (Oben Charakter anklicken ➔ Unten alle Werte, Item-Namen, M+ Key-Rechner & 334-Max-Bedarf):
-          </h2>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-2 text-xs">
-          <span class="text-slate-400 font-semibold">Fahrplan-Ziel:</span>
-          <button onclick="setTargetIlvlQuick(331)" id="quickTarget331Btn" class="px-2.5 py-1 rounded-lg bg-wow-gold text-slate-950 font-black text-xs transition">
-            🎯 Ø 331 (Rabatt-Erfolg)
-          </button>
-          <button onclick="setTargetIlvlQuick(334)" id="quickTarget334Btn" class="px-2.5 py-1 rounded-lg bg-wow-card hover:bg-slate-700 text-amber-300 border border-wow-border font-bold text-xs transition">
-            🔥 Ø 334 (Max-iLvl)
-          </button>
-          <input type="number" id="avgTargetIlvlInput" value="331" step="0.5" onchange="renderAll()" class="w-16 bg-wow-card border border-wow-border rounded-lg px-2 py-1 text-xs text-wow-gold font-black text-center" />
-        </div>
-      </div>
-
-      <div id="charHubTopSelectorBar" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
+    <!-- 1. OBEN: CHARAKTER-AUSWAHLLEISTE -->
+    <section class="bg-wow-panel border border-wow-border rounded-2xl p-3.5 shadow-lg">
+      <div id="charSelectorBar" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
     </section>
 
-    <!-- HAUPTBEREICH MIT SEITENLEISTE LINKS & COCKPIT RECHTS -->
-    <div id="dashboardContent" class="flex flex-col lg:flex-row gap-5 items-start">
+    <!-- 2. UNTEN: SEITENMENÜ LINKS + AKTIVE ANSICHT RECHTS -->
+    <div class="flex flex-col lg:flex-row gap-5 items-start">
 
-      <!-- LINKES MENÜ (w-72: Alle Einstellungen sauber in einer Ebene!) -->
+      <!-- LINKES MENÜ & GLOBALE PARAMETER (Alles an einem Ort, nichts doppelt!) -->
       <aside class="w-full lg:w-72 shrink-0 space-y-4 lg:sticky lg:top-16">
-        <div class="bg-wow-panel border border-wow-border rounded-2xl p-3.5 space-y-2 shadow-lg">
+
+        <!-- ANSICHTEN-UMSCHALTER -->
+        <div class="bg-wow-panel border border-wow-border rounded-2xl p-3 space-y-1.5 shadow-lg">
           <div class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-            Ansichten
+            1-Klick Ansichten
           </div>
 
-          <button onclick="switchTab('charhub')" id="tabBtn-charhub" class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-start gap-2.5 bg-wow-gold text-slate-950 font-bold shadow">
-            <span class="text-base leading-none mt-0.5">👤</span>
-            <div class="flex-1 min-w-0">
-              <div class="text-xs font-bold leading-tight">Charakter-Cockpit</div>
-              <div class="text-[10px] opacity-85 font-semibold mt-0.5 truncate">Item-Namen, M+ Keys & Caps</div>
+          <button onclick="switchTab('plan')" id="tabBtn-plan" class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-3 bg-wow-gold text-slate-950 font-bold shadow">
+            <span class="text-base">🎯</span>
+            <div>
+              <div class="text-xs font-bold leading-tight">Upgrade-Plan & Slots</div>
+              <div class="text-[10px] opacity-80 font-semibold">Fahrplan, Ampel & Item-Namen</div>
             </div>
           </button>
 
-          <button onclick="openCharPopupModal()" class="w-full text-left px-3.5 py-2 rounded-xl transition flex items-center justify-between bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold">
-            <span>🪟 Als großes Popup-Fenster</span>
-            <span>&nearr;</span>
+          <button onclick="switchTab('caps')" id="tabBtn-caps" class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-3 bg-wow-card/60 hover:bg-wow-card text-slate-200">
+            <span class="text-base">🌾</span>
+            <div>
+              <div class="text-xs font-bold leading-tight">Alle 5 Wappen-Caps</div>
+              <div class="text-[10px] text-slate-400">Beutel, Verbraucht & Cap-Werte</div>
+            </div>
           </button>
 
-          <button onclick="switchTab('crests')" id="tabBtn-crests" class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-start gap-2.5 bg-wow-card/60 hover:bg-wow-card text-slate-200 border border-transparent">
-            <span class="text-base leading-none mt-0.5">🏆</span>
+          <button onclick="switchTab('milestone')" id="tabBtn-milestone" class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-3 bg-wow-card/60 hover:bg-wow-card text-slate-200">
+            <span class="text-base">🏆</span>
             <div>
-              <div class="text-xs font-bold leading-tight">Wappen-Meilensteine</div>
-              <div class="text-[10px] text-slate-400 mt-0.5">50% Twink-Rabatt-Prüfung</div>
+              <div class="text-xs font-bold leading-tight">331-Rabatt-Meilenstein</div>
+              <div class="text-[10px] text-slate-400">16-Slot Kriegsmeuten-Check</div>
             </div>
           </button>
         </div>
 
-        <!-- OFFIZIELLE WOW-REGELN (Sauber einzeilig in einer Ebene!) -->
+        <!-- EINSTELLUNGEN (Einzige Steuerung für Ziel, Cap, Preis & M+ Key) -->
         <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 space-y-3 shadow-lg">
           <div class="text-[11px] font-bold text-slate-300 uppercase tracking-wider border-b border-wow-border pb-2">
-            Offizielle WoW-Regeln
+            Rechner-Einstellungen
           </div>
 
           <div class="flex items-center justify-between gap-2">
-            <span class="text-xs text-slate-300 whitespace-nowrap font-medium">Wochen-Cap:</span>
-            <select id="seasonWeekSelect" onchange="onSeasonCapConfigChange()" class="w-40 bg-wow-card border border-wow-border rounded-lg px-2.5 py-1.5 text-amber-300 font-bold text-xs focus:outline-none">
-              <option value="5">Woche 5 (500 Cap)</option>
-              <option value="6">Woche 6 (600 Cap)</option>
-              <option value="7">Woche 7 (700 Cap)</option>
-              <option value="8">Woche 8 (800 Cap)</option>
-              <option value="9" selected>Woche 9 (900 Cap)</option>
-              <option value="10">Woche 10 (1000 Cap)</option>
+            <span class="text-xs text-slate-300 whitespace-nowrap font-medium">🎯 Ziel-Schnitt:</span>
+            <select id="targetIlvlSelect" onchange="onSettingsChange()" class="w-40 bg-wow-card border border-wow-border rounded-lg px-2.5 py-1.5 text-wow-gold font-bold text-xs focus:outline-none">
+              <option value="331" selected>Ø 331.0 (Rabatt-Erfolg)</option>
+              <option value="334">Ø 334.0 (Max-iLvl)</option>
             </select>
           </div>
 
-          <div class="flex items-center justify-between gap-2">
-            <span class="text-xs text-slate-300 whitespace-nowrap font-medium">Mythisch-Preis:</span>
-            <select id="crestStepCostSelect" onchange="onStepCostChange()" class="w-40 bg-wow-card border border-wow-border rounded-lg px-2.5 py-1.5 text-white font-bold text-xs focus:outline-none">
-              <option value="20" selected>20 Wappen (Standard)</option>
-              <option value="10">10 Wappen (331-Rabatt)</option>
-            </select>
-          </div>
-
-          <!-- Standard M+ Key-Höhe für Schnell-Anzeige -->
           <div class="flex items-center justify-between gap-2">
             <span class="text-xs text-cyan-300 whitespace-nowrap font-medium">🗝️ Dein M+ Key:</span>
-            <select id="selectedKeyLevelSelect" onchange="onKeyConfigChange()" class="w-40 bg-wow-card border border-cyan-700/60 rounded-lg px-2.5 py-1.5 text-cyan-300 font-bold text-xs focus:outline-none">
+            <select id="selectedKeyLevelSelect" onchange="onSettingsChange()" class="w-40 bg-wow-card border border-cyan-700/60 rounded-lg px-2.5 py-1.5 text-cyan-300 font-bold text-xs focus:outline-none">
               <option value="9">M+ 9 (10 Wappen)</option>
               <option value="10" selected>M+ 10 (12 Wappen)</option>
               <option value="11">M+ 11 (14 Wappen)</option>
@@ -178,96 +143,89 @@
             </select>
           </div>
 
-          <div class="space-y-2 pt-1 border-t border-wow-border/60">
-            <label class="flex items-center justify-between text-xs text-slate-300 cursor-pointer gap-2">
-              <span class="whitespace-nowrap">Ring/Schmuck 2-Slot-Min</span>
-              <input type="checkbox" id="strictPairsToggle" onchange="toggleRules()" class="w-4 h-4 accent-amber-500 rounded cursor-pointer shrink-0" checked />
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs text-slate-300 whitespace-nowrap font-medium">📅 Wochen-Cap:</span>
+            <select id="seasonWeekSelect" onchange="onSettingsChange()" class="w-40 bg-wow-card border border-wow-border rounded-lg px-2.5 py-1.5 text-amber-300 font-bold text-xs focus:outline-none">
+              <option value="7">Woche 7 (700 Cap)</option>
+              <option value="8">Woche 8 (800 Cap)</option>
+              <option value="9" selected>Woche 9 (900 Cap)</option>
+              <option value="10">Woche 10 (1000 Cap)</option>
+            </select>
+          </div>
+
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs text-slate-300 whitespace-nowrap font-medium">🟠 Myth-Preis:</span>
+            <select id="crestStepCostSelect" onchange="onSettingsChange()" class="w-40 bg-wow-card border border-wow-border rounded-lg px-2.5 py-1.5 text-white font-bold text-xs focus:outline-none">
+              <option value="20" selected>20 Wappen (Standard)</option>
+              <option value="10">10 Wappen (331-Rabatt)</option>
+            </select>
+          </div>
+
+          <div class="pt-2 border-t border-wow-border/60 space-y-2">
+            <label class="flex items-center justify-between text-xs text-emerald-300 cursor-pointer">
+              <span>⏱️ M+ Keys Intime (+4 W.)</span>
+              <input type="checkbox" id="keyTimedToggle" onchange="onSettingsChange()" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer" checked />
             </label>
-            <label class="flex items-center justify-between text-xs text-amber-200 cursor-pointer gap-2">
-              <span class="whitespace-nowrap">⚔️ Waffen-Regel (2H/1H)</span>
-              <input type="checkbox" id="strictWeaponsToggle" onchange="toggleRules()" class="w-4 h-4 accent-amber-500 rounded cursor-pointer shrink-0" checked />
-            </label>
-            <label class="flex items-center justify-between text-xs text-cyan-300 cursor-pointer gap-2">
-              <span class="whitespace-nowrap">🎒 Taschen zählen mit</span>
-              <input type="checkbox" id="includeBagsToggle" onchange="toggleRules()" class="w-4 h-4 accent-cyan-400 rounded cursor-pointer shrink-0" checked />
+            <label class="flex items-center justify-between text-xs text-cyan-300 cursor-pointer">
+              <span>🎒 Taschen-Items nutzen</span>
+              <input type="checkbox" id="includeBagsToggle" onchange="onSettingsChange()" class="w-4 h-4 accent-cyan-400 rounded cursor-pointer" checked />
             </label>
           </div>
         </div>
       </aside>
 
-      <!-- RECHTER DETAILBEREICH -->
-      <div class="flex-1 min-w-0 w-full">
-        <!-- TAB 1: CHARAKTER-COCKPIT -->
-        <section id="tab-charhub" class="space-y-5">
-          <div id="charHubDetailContainer" class="space-y-5"></div>
+      <!-- RECHTER HAUPTBEREICH -->
+      <div class="flex-1 min-w-0 w-full space-y-5">
+
+        <!-- OBEN IM COCKPIT: 4 KOMPAKTE KACHELN (Immer sichtbar für den gewählten Charakter) -->
+        <div id="topKpiGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5"></div>
+
+        <!-- ANSICHT 1: UPGRADE-PLAN & 3-ZONEN-AMPEL (Standard) -->
+        <section id="tab-plan" class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
+          <div id="planLeftColumn" class="xl:col-span-7 bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-3 shadow-lg"></div>
+          <div id="planRightColumn" class="xl:col-span-5 bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-4 shadow-lg"></div>
         </section>
 
-        <!-- TAB 2: WAPPEN-MEILENSTEINE -->
-        <section id="tab-crests" class="hidden space-y-6">
-          <div class="bg-wow-panel border border-wow-border rounded-xl p-5 space-y-4">
-            <div class="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <h3 class="text-base font-bold text-white">🏆 Offizielle Wappen-Rabatt-Erfolge (50 % Twink-Rabatt: 10 statt 20 Wappen)</h3>
-                <p class="text-xs text-slate-400">
-                  Den 50%-Wappen-Rabatt für eine Stufe gibt es erst, wenn ein Charakter in <strong>allen 16 Slots</strong> das jeweilige Ziel-Item-Level erreicht hat.
-                </p>
-              </div>
-              <div class="flex items-center gap-2">
-                <label class="text-xs text-slate-300">Ziel-iLvl:</label>
-                <input type="number" id="crestTargetInput" value="331" onchange="renderCrestsView()" class="w-24 bg-wow-card border border-wow-border rounded-lg px-3 py-1.5 text-sm text-white font-bold text-center" />
-              </div>
-            </div>
-            <div class="flex flex-wrap items-center gap-2 pt-1">
-              <button onclick="setCrestTarget(282)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-slate-200">✔️ Abenteurer (282)</button>
-              <button onclick="setCrestTarget(295)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-emerald-300">✔️ Veteran (295)</button>
-              <button onclick="setCrestTarget(308)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-blue-300">✔️ Champion (308)</button>
-              <button onclick="setCrestTarget(321)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-purple-300">✔️ Held (321 aktiv!)</button>
-              <button onclick="setCrestTarget(331)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-wow-gold">⏳ Mythos-Rabatt (331)</button>
-            </div>
-            <div id="crestStatusBanner" class="p-4 rounded-xl border"></div>
-            <div id="crestSlotsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3"></div>
-          </div>
+        <!-- ANSICHT 2: ALLE 5 WAPPEN-CAPS (Separat & aufgeräumt) -->
+        <section id="tab-caps" class="hidden bg-wow-panel border border-wow-border rounded-2xl overflow-hidden shadow-lg">
+          <div id="capsContainer"></div>
         </section>
+
+        <!-- ANSICHT 3: 331-RABATT-MEILENSTEIN (Separat & aufgeräumt) -->
+        <section id="tab-milestone" class="hidden bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-4 shadow-lg">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h3 class="text-sm font-bold text-white">🏆 Kriegsmeuten-Meilenstein (50 % Wappen-Rabatt: 10 statt 20 Wappen)</h3>
+              <p class="text-xs text-slate-400">Sobald alle 16 Slots auf mindestens 331 sind, kosten Mythisch-Upgrades für alle Twinks nur noch 10 Wappen.</p>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button onclick="setMilestoneTarget(321)" class="px-3 py-1 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-purple-300 font-bold">Held (321)</button>
+              <button onclick="setMilestoneTarget(331)" class="px-3 py-1 rounded-lg bg-wow-gold text-slate-950 text-xs font-black">Mythos (331)</button>
+            </div>
+          </div>
+          <div id="crestStatusBanner" class="p-3.5 rounded-xl border text-xs"></div>
+          <div id="crestSlotsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3"></div>
+        </section>
+
       </div>
     </div>
   </main>
 
-  <!-- POPUP-FENSTER -->
-  <div id="charPopupModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-3 sm:p-6">
-    <div class="bg-wow-bg border-2 border-wow-gold rounded-2xl max-w-6xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
-      <div class="bg-wow-panel border-b border-wow-border p-4 space-y-3">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="text-lg">👤</span>
-            <h3 class="text-base font-black text-white">Charakter-Cockpit (Oben Charakter anklicken ➔ Unten alle Infos, Item-Namen & M+ Rechner)</h3>
-          </div>
-          <button onclick="closeModal('charPopupModal')" class="px-3 py-1 rounded-lg bg-wow-card hover:bg-red-900/60 text-slate-300 hover:text-white text-xs font-bold transition">
-            ✕ Schließen
-          </button>
-        </div>
-        <div id="popupCharSelectorBar" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5"></div>
-      </div>
-      <div id="popupCharDetailBody" class="flex-1 overflow-y-auto p-5 space-y-5"></div>
-    </div>
-  </div>
-
   <!-- MODAL: SIMCRAFT IMPORT -->
   <div id="simcModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-    <div class="bg-wow-panel border border-wow-border rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl flex flex-col max-h-[94vh] overflow-y-auto">
+    <div class="bg-wow-panel border border-wow-border rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between">
         <div>
-          <h3 class="text-base font-bold text-white">📋 WoW ➔ SimCraft Import (/simc Addon)</h3>
-          <p class="text-xs text-slate-400">
-            Liest automatisch: <strong>1. Echte deutsche Item-Namen</strong>, <strong>2. Beutel-Wappen</strong>, <strong>3. Verbrauchte Wappen</strong> und <strong>4. Versteckte Mythos-Items in der Tasche</strong>!
-          </p>
+          <h3 class="text-base font-bold text-white">📋 WoW ➔ SimCraft Import (/simc)</h3>
+          <p class="text-xs text-slate-400">Liest automatisch Ausrüstung, echte Item-Namen, Taschen-Schätze und Wappen aus.</p>
         </div>
         <button onclick="closeModal('simcModal')" class="text-slate-400 hover:text-white text-lg">&times;</button>
       </div>
-      <textarea id="simcTextarea" oninput="previewSimcInput()" rows="8" placeholder="Füge hier deinen kompletten /simc Text aus WoW ein..." class="w-full bg-wow-bg border border-wow-border rounded-xl p-3 text-xs text-slate-200 font-mono"></textarea>
-      <div id="simcPreviewBox" class="hidden p-3.5 rounded-xl bg-purple-950/30 border border-purple-700/50 text-xs space-y-1.5"></div>
-      <div class="flex items-center justify-end gap-2 pt-2">
+      <textarea id="simcTextarea" oninput="previewSimcInput()" rows="8" placeholder="Füge hier deinen /simc Text ein..." class="w-full bg-wow-bg border border-wow-border rounded-xl p-3 text-xs text-slate-200 font-mono"></textarea>
+      <div id="simcPreviewBox" class="hidden p-3.5 rounded-xl bg-purple-950/30 border border-purple-700/50 text-xs space-y-1"></div>
+      <div class="flex items-center justify-end gap-2">
         <button onclick="closeModal('simcModal')" class="px-4 py-2 rounded-lg bg-wow-card text-xs text-slate-300">Abbrechen</button>
-        <button onclick="importSimcProfile()" class="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs">📥 SimCraft importieren & berechnen</button>
+        <button onclick="importSimcProfile()" class="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs">📥 Importieren</button>
       </div>
     </div>
   </div>
@@ -289,14 +247,14 @@
           <input type="number" id="editSlotBagInput" class="w-full bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-cyan-300 font-bold" />
         </div>
       </div>
-      <div class="flex items-center justify-end gap-2 pt-2">
+      <div class="flex items-center justify-end gap-2">
         <button onclick="closeModal('editSlotModal')" class="px-4 py-2 rounded-lg bg-wow-card text-xs text-slate-300">Abbrechen</button>
         <button onclick="saveManualSlotEdit()" class="px-4 py-2 rounded-lg bg-wow-gold text-slate-950 font-bold text-xs">Speichern</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: ADD SINGLE CHAR VIA RAIDER.IO -->
+  <!-- MODAL: RAIDER.IO ADD -->
   <div id="addCharModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-wow-panel border border-wow-border rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between">
@@ -304,25 +262,16 @@
         <button onclick="closeModal('addCharModal')" class="text-slate-400 hover:text-white text-lg">&times;</button>
       </div>
       <div class="space-y-3">
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Region</label>
-          <select id="rioRegionInput" class="w-full bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-white">
-            <option value="eu" selected>Europa (EU)</option>
-            <option value="us">Amerika (US)</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Charaktername</label>
-          <input type="text" id="singleCharName" placeholder="z. B. Tatami oder Lexinê" class="w-full bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-white" />
-        </div>
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Server (Realm)</label>
-          <input type="text" id="singleCharRealm" placeholder="z. B. Aegwynn oder Blackmoore" class="w-full bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-white" />
-        </div>
+        <select id="rioRegionInput" class="w-full bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-white">
+          <option value="eu" selected>Europa (EU)</option>
+          <option value="us">Amerika (US)</option>
+        </select>
+        <input type="text" id="singleCharName" placeholder="Charaktername (z. B. Tatami)" class="w-full bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-white" />
+        <input type="text" id="singleCharRealm" placeholder="Server (z. B. Aegwynn)" class="w-full bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-white" />
       </div>
-      <div class="flex items-center justify-end gap-2 pt-2">
+      <div class="flex items-center justify-end gap-2">
         <button onclick="closeModal('addCharModal')" class="px-4 py-2 rounded-lg bg-wow-card text-xs text-slate-300">Abbrechen</button>
-        <button id="singleCharSubmitBtn" onclick="addSingleCharacterRaiderIO()" class="px-4 py-2 rounded-lg bg-wow-gold text-slate-950 font-bold text-xs">Über Raider.IO laden</button>
+        <button onclick="addSingleCharacterRaiderIO()" class="px-4 py-2 rounded-lg bg-wow-gold text-slate-950 font-bold text-xs">Laden</button>
       </div>
     </div>
   </div>
@@ -349,64 +298,52 @@
 
   <script>
     // =========================================================================
-    // 1. KONSTANTEN, M+ KEY-SKALIERUNG & CHARAKTER-DATEN MIT ECHTEN ITEM-NAMEN
+    // 1. KONSTANTEN & DATENSTRUKTUREN
     // =========================================================================
-    const STORAGE_KEY_CHARS = 'wow_warband_chars_v10';
-    const STORAGE_KEY_RULES = 'wow_warband_rules_v10';
+    const STORAGE_KEY_CHARS = 'wow_warband_chars_v11';
+    const STORAGE_KEY_RULES = 'wow_warband_rules_v11';
+    const WEEKLY_CAP_PER_WEEK = 100;
 
-    const WEEKLY_CAP_PER_WEEK = 100; // +100 pro Woche -> Woche 9 = 900 Cap
-
-    // Offizielle Midnight Season 2 Mythic+ Wappen-Skalierung je Key-Stufe
-    const MPLUS_MYTH_KEY_TABLE = [
-      { level: 9,  label: 'M+ 9',   timed: 10, untimed: 6,  vaultInfo: '315 (Held 4/6)',  note: 'Start Mythisch-Wappen' },
-      { level: 10, label: 'M+ 10',  timed: 12, untimed: 8,  vaultInfo: '318 (Mythos 1/6)', note: '★ Beste Vault-Stufe + Portal' },
-      { level: 11, label: 'M+ 11',  timed: 14, untimed: 10, vaultInfo: '318 (Mythos 1/6)', note: '+2 Wappen mehr pro Run' },
-      { level: 12, label: 'M+ 12',  timed: 16, untimed: 12, vaultInfo: '318 (Mythos 1/6)', note: 'Speed-Farm Optimum (16 W.)' },
-      { level: 13, label: 'M+ 13',  timed: 18, untimed: 14, vaultInfo: '318 (Mythos 1/6)', note: 'High-Key Bonus (18 W.)' },
-      { level: 14, label: 'M+ 14+', timed: 20, untimed: 16, vaultInfo: '318 (Mythos 1/6)', note: '1 komplettes Upgrade pro Key!' }
-    ];
+    const MPLUS_KEY_REWARDS = {
+      9:  { timed: 10, untimed: 6 },
+      10: { timed: 12, untimed: 8 },
+      11: { timed: 14, untimed: 10 },
+      12: { timed: 16, untimed: 12 },
+      13: { timed: 18, untimed: 14 },
+      14: { timed: 20, untimed: 16 }
+    };
 
     const SLOTS = [
-      { key: 'head',     label: 'Kopf',          simc: 'head',      redundancyId: 0 },
-      { key: 'neck',     label: 'Hals',          simc: 'neck',      redundancyId: 1 },
-      { key: 'shoulder', label: 'Schultern',     simc: 'shoulder',  redundancyId: 2 },
-      { key: 'back',     label: 'Rücken',        simc: 'back',      redundancyId: 11 },
-      { key: 'chest',    label: 'Brust',         simc: 'chest',     redundancyId: 3 },
-      { key: 'wrist',    label: 'Handgelenke',   simc: 'wrist',     redundancyId: 7 },
-      { key: 'hands',    label: 'Hände',         simc: 'hands',     redundancyId: 8 },
-      { key: 'waist',    label: 'Taille',        simc: 'waist',     redundancyId: 4 },
-      { key: 'legs',     label: 'Beine',         simc: 'legs',      redundancyId: 5 },
-      { key: 'feet',     label: 'Füße',          simc: 'feet',      redundancyId: 6 },
-      { key: 'finger1',  label: 'Ring 1',        simc: 'finger1',   redundancyId: 9,  pairGroup: 'rings' },
-      { key: 'finger2',  label: 'Ring 2',        simc: 'finger2',   redundancyId: 9,  pairGroup: 'rings' },
-      { key: 'trinket1', label: 'Schmuck 1',     simc: 'trinket1',  redundancyId: 10, pairGroup: 'trinkets' },
-      { key: 'trinket2', label: 'Schmuck 2',     simc: 'trinket2',  redundancyId: 10, pairGroup: 'trinkets' },
-      { key: 'mainhand', label: 'Haupthand',     simc: 'main_hand', redundancyId: 13, pairGroup: 'weapons' },
-      { key: 'offhand',  label: 'Nebenhand',     simc: 'off_hand',  redundancyId: 14, pairGroup: 'weapons' }
+      { key: 'head',     label: 'Kopf',        redundancyId: 0 },
+      { key: 'neck',     label: 'Hals',        redundancyId: 1 },
+      { key: 'shoulder', label: 'Schultern',   redundancyId: 2 },
+      { key: 'back',     label: 'Rücken',      redundancyId: 11 },
+      { key: 'chest',    label: 'Brust',       redundancyId: 3 },
+      { key: 'wrist',    label: 'Handgelenke', redundancyId: 7 },
+      { key: 'hands',    label: 'Hände',       redundancyId: 8 },
+      { key: 'waist',    label: 'Taille',      redundancyId: 4 },
+      { key: 'legs',     label: 'Beine',       redundancyId: 5 },
+      { key: 'feet',     label: 'Füße',        redundancyId: 6 },
+      { key: 'finger1',  label: 'Ring 1',      redundancyId: 9 },
+      { key: 'finger2',  label: 'Ring 2',      redundancyId: 9 },
+      { key: 'trinket1', label: 'Schmuck 1',   redundancyId: 10 },
+      { key: 'trinket2', label: 'Schmuck 2',   redundancyId: 10 },
+      { key: 'mainhand', label: 'Haupthand',   redundancyId: 13 },
+      { key: 'offhand',  label: 'Nebenhand',   redundancyId: 14 }
     ];
 
     const CREST_TIERS_META = [
-      { key: 'myth',  id: 3446, name: '🟠 Mythisch-Wappen (c:3446)',   shortName: 'Mythisch',   walletField: 'mythMarks',  spentField: 'mythSpent',  noteField: 'mythSpentNote',  colorText: 'text-wow-gold',    barClass: 'bg-amber-500' },
-      { key: 'hero',  id: 3445, name: '🟣 Helden-Wappen (c:3445)',     shortName: 'Held',       walletField: 'heroMarks',  spentField: 'heroSpent',  noteField: 'heroSpentNote',  colorText: 'text-purple-300',  barClass: 'bg-purple-500' },
-      { key: 'champ', id: 3444, name: '🔵 Champion-Wappen (c:3444)',   shortName: 'Champion',   walletField: 'champMarks', spentField: 'champSpent', noteField: 'champSpentNote', colorText: 'text-blue-300',    barClass: 'bg-blue-500' },
-      { key: 'vet',   id: 3443, name: '🟢 Veteranen-Wappen (c:3443)',  shortName: 'Veteran',    walletField: 'vetMarks',   spentField: 'vetSpent',   noteField: 'vetSpentNote',   colorText: 'text-emerald-300', barClass: 'bg-emerald-500' },
-      { key: 'adv',   id: 3442, name: '⚪ Abenteurer-Wappen (c:3442)', shortName: 'Abenteurer', walletField: 'advMarks',   spentField: 'advSpent',   noteField: 'advSpentNote',   colorText: 'text-slate-200',   barClass: 'bg-slate-400' }
+      { key: 'myth',  name: '🟠 Mythisch-Wappen (c:3446)',   walletField: 'mythMarks',  spentField: 'mythSpent',  noteField: 'mythSpentNote',  colorText: 'text-wow-gold',    barClass: 'bg-amber-500' },
+      { key: 'hero',  name: '🟣 Helden-Wappen (c:3445)',     walletField: 'heroMarks',  spentField: 'heroSpent',  noteField: 'heroSpentNote',  colorText: 'text-purple-300',  barClass: 'bg-purple-500' },
+      { key: 'champ', name: '🔵 Champion-Wappen (c:3444)',   walletField: 'champMarks', spentField: 'champSpent', noteField: 'champSpentNote', colorText: 'text-blue-300',    barClass: 'bg-blue-500' },
+      { key: 'vet',   name: '🟢 Veteranen-Wappen (c:3443)',  walletField: 'vetMarks',   spentField: 'vetSpent',   noteField: 'vetSpentNote',   colorText: 'text-emerald-300', barClass: 'bg-emerald-500' },
+      { key: 'adv',   name: '⚪ Abenteurer-Wappen (c:3442)', walletField: 'advMarks',   spentField: 'advSpent',   noteField: 'advSpentNote',   colorText: 'text-slate-200',   barClass: 'bg-slate-400' }
     ];
 
-    const WOW_CLASS_META = {
-      warrior:     { color: '#C79C6E', label: 'Krieger' },
-      paladin:     { color: '#F58CBA', label: 'Paladin' },
-      hunter:      { color: '#ABD473', label: 'Jäger' },
-      rogue:       { color: '#FFF569', label: 'Schurke' },
-      priest:      { color: '#FFFFFF', label: 'Priester' },
-      deathknight: { color: '#C41F3B', label: 'Todesritter' },
-      shaman:      { color: '#0070DE', label: 'Schamane' },
-      mage:        { color: '#3FC7EB', label: 'Magier' },
-      warlock:     { color: '#8788EE', label: 'Hexenmeister' },
-      monk:        { color: '#00FF96', label: 'Mönch' },
-      druid:       { color: '#FF7D0A', label: 'Druide' },
-      demonhunter: { color: '#A330C9', label: 'Dämonenjäger' },
-      evoker:      { color: '#33937F', label: 'Rufer' }
+    const WOW_CLASS_COLORS = {
+      warrior: '#C79C6E', paladin: '#F58CBA', hunter: '#ABD473', rogue: '#FFF569',
+      priest: '#FFFFFF', deathknight: '#C41F3B', shaman: '#0070DE', mage: '#3FC7EB',
+      warlock: '#8788EE', monk: '#00FF96', druid: '#FF7D0A', demonhunter: '#A330C9', evoker: '#33937F'
     };
 
     const CHAMP_UPGRADE_STEPS = [292, 295, 298, 302, 305, 308];
@@ -416,371 +353,742 @@
     const HERO_BONUS_IDS = { 12841: 'Held 1/6', 12842: 'Held 2/6', 12843: 'Held 3/6', 12844: 'Held 4/6', 12845: 'Held 5/6', 12846: 'Held 6/6 (Max)' };
     const MYTH_BONUS_IDS = { 12849: 'Mythos 1/6', 12850: 'Mythos 2/6', 12851: 'Mythos 3/6', 12852: 'Mythos 4/6', 12853: 'Mythos 5/6', 12854: 'Mythos 6/6 (Max)' };
 
-    // BEIDE CHARAKTERE INKL. ECHTER DEUTSCHER ITEM-NAMEN AUS DEINEN SIMC-EXPORTS
     const INITIAL_CHARS = [
       {
-        name: 'Lexinê',
-        realm: 'Blackmoore',
-        realmSlug: 'blackmoore',
-        className: 'demonhunter',
-        source: 'simc',
-        hasTwoHand: false,
+        name: 'Lexinê', realm: 'Blackmoore', className: 'demonhunter', hasTwoHand: false,
         advMarks: 135, vetMarks: 205, champMarks: 297, heroMarks: 120, mythMarks: 40,
         advSpent: 0,   vetSpent: 0,   champSpent: 160, heroSpent: 480, mythSpent: 392,
-        mythSpentNote: 'Aus SimC: 3× Handwerk (331) + 6× Mythos 6/6 (334)',
-        heroSpentNote: 'Aus SimC: Held-Upgrades bis 321 (50%-Rabatt-Erfolg 62414 aktiv)',
-        champSpentNote: 'Aus SimC: Champion-Upgrades bis 308',
-        slots: {
-          head: 334, neck: 334, shoulder: 321, back: 321, chest: 331, wrist: 331,
-          hands: 321, waist: 321, legs: 321, feet: 321, finger1: 321, finger2: 321,
-          trinket1: 334, trinket2: 334, mainhand: 334, offhand: 331
-        },
-        bagSlots: {
-          head: 321, neck: 321, shoulder: 0, back: 321, chest: 321, wrist: 321,
-          hands: 0, waist: 321, legs: 334, feet: 321, finger1: 321, finger2: 321,
-          trinket1: 321, trinket2: 321, mainhand: 321, offhand: 0
-        },
+        mythSpentNote: '3× Handwerk (331) + 6× Mythos 6/6 (334)',
+        slots: { head: 334, neck: 334, shoulder: 321, back: 321, chest: 331, wrist: 331, hands: 321, waist: 321, legs: 321, feet: 321, finger1: 321, finger2: 321, trinket1: 334, trinket2: 334, mainhand: 334, offhand: 331 },
+        bagSlots: { head: 321, neck: 321, shoulder: 0, back: 321, chest: 321, wrist: 321, hands: 0, waist: 321, legs: 334, feet: 321, finger1: 321, finger2: 321, trinket1: 321, trinket2: 321, mainhand: 321, offhand: 0 },
         slotMeta: {
-          head:     { track: 'myth', label: 'Mythos 6/6 (Max)', maxUpgradable: 334, eqName: 'Unerbittlicher Blick des abyssischen Verdammnishundes' },
-          neck:     { track: 'myth', label: 'Mythos 6/6 (Max)', maxUpgradable: 334, eqName: 'Reliquiar des Aqirfluches' },
-          shoulder: { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321, eqName: 'Kiefer des abyssischen Verdammnishundes' },
-          back:     { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321, eqName: 'Spelunkenschleier' },
+          head:     { track: 'myth', label: 'Mythos 6/6', maxUpgradable: 334, eqName: 'Unerbittlicher Blick des abyssischen Verdammnishundes' },
+          neck:     { track: 'myth', label: 'Mythos 6/6', maxUpgradable: 334, eqName: 'Reliquiar des Aqirfluches' },
+          shoulder: { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Kiefer des abyssischen Verdammnishundes' },
+          back:     { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Spelunkenschleier' },
           chest:    { track: 'crafted', label: 'Handwerk (331)', maxUpgradable: 331, eqName: 'Jacke des Silbermondagenten' },
           wrist:    { track: 'crafted', label: 'Handwerk (331)', maxUpgradable: 331, eqName: 'Deflektoren des Silbermondagenten' },
-          hands:    { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321, eqName: 'Beschlagene Stulpen des abyssischen Verdammnishundes' },
+          hands:    { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Beschlagene Stulpen des abyssischen Verdammnishundes' },
           waist:    { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 334, eqName: 'Unbesessene Schädelscherpe', bagMythIlvl: 321, bagMythName: 'Schärpe des verlorenen Gefäßes' },
           legs:     { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 334, eqName: 'Beinwickel des abyssischen Verdammnishundes (321)', bagName: 'Beinwickel des abyssischen Verdammnishundes (334)', bagMythIlvl: 334, bagMythName: 'Beinwickel des abyssischen Verdammnishundes' },
-          feet:     { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321, eqName: 'Sandpolierte Schlangenhautsandalen' },
-          finger1:  { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321, eqName: 'Band des abscheulichen Alchemisten' },
-          finger2:  { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321, eqName: 'Signet der widerwilligen Dienste' },
-          trinket1: { track: 'myth', label: 'Mythos 6/6 (Max)', maxUpgradable: 334, eqName: 'Brunnen des giftigen Zorns', bagMythIlvl: 321, bagMythName: 'Fläschchen des Frachtbeförderers' },
-          trinket2: { track: 'myth', label: 'Mythos 6/6 (Max)', maxUpgradable: 334, eqName: "Zul'jins Guillotinentechnik" },
-          mainhand: { track: 'myth', label: 'Mythos 6/6 (Max)', maxUpgradable: 334, eqName: "Aman'muso, Rache des Kriegsfürsten" },
+          feet:     { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Sandpolierte Schlangenhautsandalen' },
+          finger1:  { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Band des abscheulichen Alchemisten' },
+          finger2:  { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Signet der widerwilligen Dienste' },
+          trinket1: { track: 'myth', label: 'Mythos 6/6', maxUpgradable: 334, eqName: 'Brunnen des giftigen Zorns', bagMythIlvl: 321, bagMythName: 'Fläschchen des Frachtbeförderers' },
+          trinket2: { track: 'myth', label: 'Mythos 6/6', maxUpgradable: 334, eqName: "Zul'jins Guillotinentechnik" },
+          mainhand: { track: 'myth', label: 'Mythos 6/6', maxUpgradable: 334, eqName: "Aman'muso, Rache des Kriegsfürsten" },
           offhand:  { track: 'crafted', label: 'Handwerk (331)', maxUpgradable: 331, eqName: 'Kriegsgleve des Zauberbrechers' }
         },
-        charWatermarks: {
-          head: 334, neck: 334, shoulder: 321, back: 321, chest: 331, wrist: 331,
-          hands: 321, waist: 321, legs: 334, feet: 321, finger1: 321, finger2: 321,
-          trinket1: 334, trinket2: 334, mainhand: 334, offhand: 331
-        },
-        accountWatermarks: {
-          head: 334, neck: 334, shoulder: 321, back: 321, chest: 331, wrist: 331,
-          hands: 321, waist: 321, legs: 334, feet: 321, finger1: 321, finger2: 321,
-          trinket1: 334, trinket2: 334, mainhand: 334, offhand: 331
-        }
+        charWatermarks: { head: 334, neck: 334, shoulder: 321, back: 321, chest: 331, wrist: 331, hands: 321, waist: 321, legs: 334, feet: 321, finger1: 321, finger2: 321, trinket1: 334, trinket2: 334, mainhand: 334, offhand: 331 }
       },
       {
-        name: 'Tatami',
-        realm: 'Aegwynn',
-        realmSlug: 'aegwynn',
-        className: 'priest',
-        source: 'simc',
-        hasTwoHand: false,
+        name: 'Tatami', realm: 'Aegwynn', className: 'priest', hasTwoHand: false,
         advMarks: 65,  vetMarks: 45,  champMarks: 59,  heroMarks: 320, mythMarks: 212,
         advSpent: 0,   vetSpent: 0,   champSpent: 120, heroSpent: 360, mythSpent: 160,
-        mythSpentNote: 'Aus SimC: 1× Handwerk (331 Laterne = 80) + 1× Mythos 6/6 (334 Waffe = 80)',
-        heroSpentNote: 'Aus SimC: 50% Wappen-Rabatt bis 321 aktiv (Erfolg 62414)',
-        champSpentNote: 'Aus SimC: 50% Wappen-Rabatt bis 308 aktiv',
-        slots: {
-          head: 321, neck: 321, shoulder: 321, back: 321, chest: 321, wrist: 321,
-          hands: 321, waist: 321, legs: 308, feet: 321, finger1: 321, finger2: 321,
-          trinket1: 321, trinket2: 321, mainhand: 334, offhand: 331
-        },
-        bagSlots: {
-          head: 0, neck: 0, shoulder: 0, back: 311, chest: 321, wrist: 285,
-          hands: 321, waist: 285, legs: 321, feet: 321, finger1: 321, finger2: 321,
-          trinket1: 321, trinket2: 321, mainhand: 295, offhand: 311
-        },
+        mythSpentNote: '1× Handwerk (331 Laterne = 80) + 1× Mythos 6/6 (334 Waffe = 80)',
+        slots: { head: 321, neck: 321, shoulder: 321, back: 321, chest: 321, wrist: 321, hands: 321, waist: 321, legs: 308, feet: 321, finger1: 321, finger2: 321, trinket1: 321, trinket2: 321, mainhand: 334, offhand: 331 },
+        bagSlots: { head: 0, neck: 0, shoulder: 0, back: 311, chest: 321, wrist: 285, hands: 321, waist: 285, legs: 321, feet: 321, finger1: 321, finger2: 321, trinket1: 321, trinket2: 321, mainhand: 295, offhand: 311 },
         slotMeta: {
-          head:     { track: 'myth', label: 'Mythos 2/6 (321)', maxUpgradable: 334, eqName: 'Klarblick des kosmischen Büßers' },
-          neck:     { track: 'myth', label: 'Mythos 2/6 (321)', maxUpgradable: 334, eqName: 'Reliquiar des Aqirfluches' },
-          shoulder: { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321, eqName: 'Hallende Schreie des kosmischen Büßers' },
-          back:     { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321, eqName: 'Seidenes Voodootuch' },
+          head:     { track: 'myth', label: 'Mythos 2/6', maxUpgradable: 334, eqName: 'Klarblick des kosmischen Büßers' },
+          neck:     { track: 'myth', label: 'Mythos 2/6', maxUpgradable: 334, eqName: 'Reliquiar des Aqirfluches' },
+          shoulder: { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Hallende Schreie des kosmischen Büßers' },
+          back:     { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Seidenes Voodootuch' },
           chest:    { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 334, eqName: 'Verdunkelnde Roben des kosmischen Büßers', bagMythIlvl: 321, bagMythName: 'Roben der gezeitengebundenen Zauberin' },
-          wrist:    { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321, eqName: 'Knabbernde Armbinden' },
-          hands:    { track: 'myth', label: 'Mythos 2/6 (321)', maxUpgradable: 334, eqName: 'Himmlischer Handschutz des kosmischen Büßers' },
-          waist:    { track: 'myth', label: 'Mythos 2/6 (321)', maxUpgradable: 334, eqName: 'Gürtung der abyssischen Grotte' },
+          wrist:    { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Knabbernde Armbinden' },
+          hands:    { track: 'myth', label: 'Mythos 2/6', maxUpgradable: 334, eqName: 'Himmlischer Handschutz des kosmischen Büßers' },
+          waist:    { track: 'myth', label: 'Mythos 2/6', maxUpgradable: 334, eqName: 'Gürtung der abyssischen Grotte' },
           legs:     { track: 'champ_max', label: 'Champion 6/6', maxUpgradable: 321, eqName: 'Treter des Lohenwandlers (308)', bagName: 'Opferstrumpfhose des Eingeweihten' },
           feet:     { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 334, eqName: 'Sandalen des weisen Voodoo', bagMythIlvl: 321, bagMythName: "Nek'zalis Geistwandler" },
-          finger1:  { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321, eqName: 'Geladenes Sandsteinband' },
-          finger2:  { track: 'myth', label: 'Mythos 2/6 (321)', maxUpgradable: 334, eqName: 'Verlockendes Blasenband' },
+          finger1:  { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Geladenes Sandsteinband' },
+          finger2:  { track: 'myth', label: 'Mythos 2/6', maxUpgradable: 334, eqName: 'Verlockendes Blasenband' },
           trinket1: { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 334, eqName: 'Ritualgefäß des Seelenwinders', bagMythIlvl: 321, bagMythName: 'Verdammnisgötze des Hexlords' },
           trinket2: { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 334, eqName: 'Seestein des Wellenrufers (Held)', bagMythIlvl: 321, bagMythName: 'Seestein des Wellenrufers (Mythos 2/6)' },
-          mainhand: { track: 'myth', label: 'Mythos 6/6 (Max)', maxUpgradable: 334, eqName: "Jan'thrazet, der Seelenfang" },
+          mainhand: { track: 'myth', label: 'Mythos 6/6', maxUpgradable: 334, eqName: "Jan'thrazet, der Seelenfang" },
           offhand:  { track: 'crafted', label: 'Handwerk (331)', maxUpgradable: 331, eqName: "Laterne von Aln'hara" }
         },
-        charWatermarks: {
-          head: 321, neck: 321, shoulder: 321, back: 321, chest: 321, wrist: 321,
-          hands: 321, waist: 321, legs: 321, feet: 321, finger1: 321, finger2: 321,
-          trinket1: 321, trinket2: 321, mainhand: 334, offhand: 331
-        },
-        accountWatermarks: {
-          head: 334, neck: 334, shoulder: 321, back: 321, chest: 331, wrist: 331,
-          hands: 321, waist: 321, legs: 334, feet: 321, finger1: 321, finger2: 321,
-          trinket1: 334, trinket2: 334, mainhand: 334, offhand: 331
-        }
+        charWatermarks: { head: 321, neck: 321, shoulder: 321, back: 321, chest: 321, wrist: 321, hands: 321, waist: 321, legs: 321, feet: 321, finger1: 321, finger2: 321, trinket1: 321, trinket2: 321, mainhand: 334, offhand: 331 }
       }
     ];
 
     let characters = JSON.parse(JSON.stringify(INITIAL_CHARS));
-    let activeCharIndex = 1; // Startet mit Tatami, damit du die Item-Namen und den M+ Key-Rechner sofort siehst!
-    let rules = {
-      strictPairs: true,
-      strictWeapons: true,
-      includeBags: true,
-      stepCost: 20,
-      seasonWeek: 9,
-      selectedKeyLevel: 10,
-      keyTimedMode: true
-    };
+    let activeCharIndex = 0;
+    let milestoneTarget = 331;
     let currentEditingCell = null;
+    let rules = {
+      targetIlvl: 331,
+      selectedKeyLevel: 10,
+      keyTimedMode: true,
+      seasonWeek: 9,
+      stepCost: 20,
+      includeBags: true
+    };
 
+    // =========================================================================
+    // 2. INITIALISIERUNG & EINSTELLUNGEN
+    // =========================================================================
     window.addEventListener('DOMContentLoaded', () => {
       try {
-        loadFromStorage();
-        if (!Array.isArray(characters) || characters.length === 0) {
-          characters = JSON.parse(JSON.stringify(INITIAL_CHARS));
-          saveCharsToStorage();
+        const savedChars = localStorage.getItem(STORAGE_KEY_CHARS);
+        if (savedChars) {
+          const parsed = JSON.parse(savedChars);
+          if (Array.isArray(parsed) && parsed.length > 0) characters = parsed;
         }
-        renderAll();
-      } catch (err) {
-        characters = JSON.parse(JSON.stringify(INITIAL_CHARS));
-        activeCharIndex = 0;
-        renderAll();
-      }
+        const savedRules = localStorage.getItem(STORAGE_KEY_RULES);
+        if (savedRules) rules = { ...rules, ...JSON.parse(savedRules) };
+
+        document.getElementById('targetIlvlSelect').value = String(rules.targetIlvl || 331);
+        document.getElementById('selectedKeyLevelSelect').value = String(rules.selectedKeyLevel || 10);
+        document.getElementById('seasonWeekSelect').value = String(rules.seasonWeek || 9);
+        document.getElementById('crestStepCostSelect').value = String(rules.stepCost || 20);
+        document.getElementById('keyTimedToggle').checked = rules.keyTimedMode !== false;
+        document.getElementById('includeBagsToggle').checked = rules.includeBags !== false;
+      } catch (e) {}
+      renderAll();
     });
+
+    function onSettingsChange() {
+      rules.targetIlvl = parseFloat(document.getElementById('targetIlvlSelect').value || '331');
+      rules.selectedKeyLevel = parseInt(document.getElementById('selectedKeyLevelSelect').value || '10', 10);
+      rules.seasonWeek = parseInt(document.getElementById('seasonWeekSelect').value || '9', 10);
+      rules.stepCost = parseInt(document.getElementById('crestStepCostSelect').value || '20', 10);
+      rules.keyTimedMode = document.getElementById('keyTimedToggle').checked;
+      rules.includeBags = document.getElementById('includeBagsToggle').checked;
+      localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules));
+      renderAll();
+    }
 
     function hardResetStorage() {
       localStorage.removeItem(STORAGE_KEY_CHARS);
       localStorage.removeItem(STORAGE_KEY_RULES);
       characters = JSON.parse(JSON.stringify(INITIAL_CHARS));
-      activeCharIndex = 1;
-      rules.stepCost = 20;
-      rules.seasonWeek = 9;
-      rules.selectedKeyLevel = 10;
-      rules.keyTimedMode = true;
-      saveCharsToStorage();
+      activeCharIndex = 0;
+      localStorage.setItem(STORAGE_KEY_CHARS, JSON.stringify(characters));
       renderAll();
       closeModal('backupModal');
-      showToast('Lexinê & Tatami inkl. echten Item-Namen & M+ Key-Rechner frisch geladen!', 'success');
-    }
-
-    function loadFromStorage() {
-      try {
-        const savedChars = localStorage.getItem(STORAGE_KEY_CHARS);
-        if (savedChars) {
-          const parsedChars = JSON.parse(savedChars);
-          if (Array.isArray(parsedChars) && parsedChars.length > 0) {
-            characters = parsedChars.filter(c => c && typeof c === 'object' && c.name && c.slots);
-          }
-        }
-        const savedRules = localStorage.getItem(STORAGE_KEY_RULES);
-        if (savedRules) {
-          rules = { ...rules, ...JSON.parse(savedRules) };
-        }
-        document.getElementById('crestStepCostSelect').value = String(rules.stepCost || 20);
-        document.getElementById('seasonWeekSelect').value = String(rules.seasonWeek || 9);
-        document.getElementById('selectedKeyLevelSelect').value = String(rules.selectedKeyLevel || 10);
-      } catch (e) {}
+      showToast('Auf Original-Daten (Lexinê & Tatami) zurückgesetzt!', 'success');
     }
 
     function saveCharsToStorage() {
       localStorage.setItem(STORAGE_KEY_CHARS, JSON.stringify(characters));
     }
 
-    function normalizeClassKey(rawClass) {
-      if (!rawClass) return '';
-      const clean = String(rawClass).toLowerCase().replace(/[\s_-]+/g, '');
-      const map = {
-        krieger: 'warrior', warrior: 'warrior',
-        paladin: 'paladin',
-        jager: 'hunter', jaeger: 'hunter', hunter: 'hunter',
-        schurke: 'rogue', rogue: 'rogue',
-        priester: 'priest', priest: 'priest',
-        todesritter: 'deathknight', deathknight: 'deathknight',
-        schamane: 'shaman', shaman: 'shaman',
-        magier: 'mage', mage: 'mage',
-        hexenmeister: 'warlock', warlock: 'warlock',
-        monch: 'monk', moench: 'monk', monk: 'monk',
-        druide: 'druid', druid: 'druid',
-        damonenjager: 'demonhunter', daemonenjaeger: 'demonhunter', demonhunter: 'demonhunter',
-        rufer: 'evoker', evoker: 'evoker'
-      };
-      return map[clean] || '';
+    function getCharColor(char) {
+      const clean = String(char?.className || '').toLowerCase().replace(/[\s_-]+/g, '');
+      return WOW_CLASS_COLORS[clean] || '#ffffff';
     }
 
-    function getCharClassColor(char) {
-      const key = normalizeClassKey(char?.className);
-      return WOW_CLASS_META[key]?.color || '#ffffff';
+    function getKeyCrestsPerRun() {
+      const k = MPLUS_KEY_REWARDS[rules.selectedKeyLevel] || MPLUS_KEY_REWARDS[10];
+      return rules.keyTimedMode ? k.timed : k.untimed;
     }
 
     // =========================================================================
-    // 2. M+ KEY-WAPPEN-HILFSFUNKTIONEN & CAP-RECHNUNG
+    // 3. KERN-MATHEMATIK: CAPS, 331-SIMULATION & 334-MAX-RECHNER
     // =========================================================================
-    function getSelectedKeyCrestsPerRun() {
-      const lvl = Number(rules.selectedKeyLevel || 10);
-      const entry = MPLUS_MYTH_KEY_TABLE.find(k => k.level === lvl) || MPLUS_MYTH_KEY_TABLE[1];
-      return rules.keyTimedMode !== false ? entry.timed : entry.untimed;
+    function getEquippedSlotIlvl(char, slotKey) {
+      const raw = Number(char.slots?.[slotKey] || 0);
+      if (slotKey === 'offhand' && raw === 0 && Number(char.slots?.mainhand || 0) > 0 && char.hasTwoHand !== false) {
+        return Number(char.slots?.mainhand || 0);
+      }
+      return raw;
     }
 
-    function selectMplusKeyLevel(lvl, timedMode = null) {
-      rules.selectedKeyLevel = Number(lvl);
-      if (timedMode !== null) rules.keyTimedMode = Boolean(timedMode);
-      const sel = document.getElementById('selectedKeyLevelSelect');
-      if (sel) sel.value = String(rules.selectedKeyLevel);
-      localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules));
-      renderAll();
-    }
-
-    function onKeyConfigChange() {
-      rules.selectedKeyLevel = parseInt(document.getElementById('selectedKeyLevelSelect').value || '10', 10);
-      localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules));
-      renderAll();
-    }
-
-    function getSeasonMaxCap() {
-      const week = parseInt(document.getElementById('seasonWeekSelect')?.value || '9', 10);
-      return week * WEEKLY_CAP_PER_WEEK;
-    }
-
-    function calculateSpentFromCharGear(char) {
-      let mythCraftedCount = 0;
-      let mythUpgradedCount = 0;
-      let mythTotalStepsAbove321 = 0;
-      let heroCount = 0;
-
-      SLOTS.forEach(s => {
-        const eq = Number(char.slots?.[s.key] || 0);
-        const bag = Number(char.bagSlots?.[s.key] || 0);
-        const maxSlot = Math.max(eq, bag);
-        const meta = char.slotMeta?.[s.key] || {};
-
-        if (meta.track === 'crafted' && maxSlot >= 331) {
-          mythCraftedCount++;
-        } else if (maxSlot > 321) {
-          mythUpgradedCount++;
-          mythTotalStepsAbove321 += MYTH_UPGRADE_STEPS.filter(st => st <= maxSlot).length;
-        }
-        if (maxSlot >= 311) heroCount++;
-      });
-
-      const mythSpent = (mythCraftedCount * 80) + (mythTotalStepsAbove321 * 20);
-      const heroSpent = heroCount * 20;
-      const champSpent = 120;
-
-      return {
-        mythSpent,
-        heroSpent,
-        champSpent,
-        vetSpent: 0,
-        advSpent: 0,
-        mythSpentNote: `Aus SimC: ${mythCraftedCount}× Handwerk (331 à 80) + ${mythUpgradedCount}× Mythos >321 (${mythTotalStepsAbove321} Stufen à 20)`
-      };
+    function getBagSlotIlvl(char, slotKey) {
+      return rules.includeBags ? Number(char.bagSlots?.[slotKey] || 0) : 0;
     }
 
     function getCharCrestCapNumbers(char, tierKey) {
-      const seasonCap = getSeasonMaxCap();
+      const seasonCap = (rules.seasonWeek || 9) * WEEKLY_CAP_PER_WEEK;
       const tier = CREST_TIERS_META.find(t => t.key === tierKey);
       const wallet = Number(char[tier.walletField] || 0);
-
-      let spent = char[tier.spentField];
-      if (spent === undefined || spent === null || isNaN(spent)) {
-        const autoCalc = calculateSpentFromCharGear(char);
-        spent = autoCalc[tier.spentField] ?? 0;
-      }
-      spent = Math.max(0, Number(spent));
-
+      const spent = Math.max(0, Number(char[tier.spentField] || 0));
       const earned = Math.min(seasonCap, wallet + spent);
       const farmable = Math.max(0, seasonCap - earned);
-      const totalAvailable = wallet + farmable;
-      const note = char[tier.noteField] || 'Automatisch aus SimC-Ausrüstung berechnet';
-
-      return { seasonCap, wallet, spent, earned, farmable, totalAvailable, note };
+      return {
+        seasonCap,
+        wallet,
+        spent,
+        earned,
+        farmable,
+        totalAvailable: wallet + farmable,
+        note: char[tier.noteField] || 'Aus SimCraft berechnet'
+      };
     }
 
-    function calculateMax334CrestRequirements(char, mythStepCost) {
-      const using2H = isUsingSingleTwoHander(char);
+    function calculateMax334Requirements(char, mythStepCost) {
       const walletMyth = Number(char.mythMarks || 0);
-
-      let ownedMythItemsCount = 0;
-      let ownedMythStepsTo334 = 0;
-
-      let blockedHeroSlotsCount = 0;
-      let blockedHeroStepsTo334 = 0;
-
-      let crafted331SlotsCount = 0;
-      let already334SlotsCount = 0;
+      let ownedMythItemsCount = 0, ownedMythSteps = 0, blockedHeroCount = 0;
 
       SLOTS.forEach(s => {
-        if (s.key === 'offhand' && using2H) {
-          already334SlotsCount++;
-          return;
-        }
         const eq = getEquippedSlotIlvl(char, s.key);
         const bag = getBagSlotIlvl(char, s.key);
-        const bestIlvl = Math.max(eq, bag);
+        const best = Math.max(eq, bag);
         const meta = char.slotMeta?.[s.key] || {};
         const hasMythInBag = Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
         const maxTrack = hasMythInBag ? 334 : (meta.maxUpgradable || 321);
 
-        if (bestIlvl >= 334) {
-          already334SlotsCount++;
-        } else if (meta.track === 'crafted' && bestIlvl >= 331 && !hasMythInBag) {
-          crafted331SlotsCount++;
-        } else if (maxTrack >= 334) {
-          const startForMyth = hasMythInBag ? Math.max(eq, meta.bagMythIlvl) : bestIlvl;
-          const steps = MYTH_UPGRADE_STEPS.filter(st => st > Math.max(startForMyth, 318) && st <= 334).length;
+        if (best >= 334 || (meta.track === 'crafted' && best >= 331 && !hasMythInBag)) return;
+
+        if (maxTrack >= 334) {
+          const startIlvl = hasMythInBag ? Math.max(eq, meta.bagMythIlvl) : best;
+          const steps = MYTH_UPGRADE_STEPS.filter(st => st > Math.max(startIlvl, 318) && st <= 334).length;
           if (steps > 0) {
             ownedMythItemsCount++;
-            ownedMythStepsTo334 += steps;
+            ownedMythSteps += steps;
           }
         } else {
-          blockedHeroSlotsCount++;
-          blockedHeroStepsTo334 += 4;
+          blockedHeroCount++;
         }
       });
 
-      const ownedMythCostTotal = ownedMythStepsTo334 * mythStepCost;
-      const ownedMythMissingToFarm = Math.max(0, ownedMythCostTotal - walletMyth);
-
-      const allSlotsCostTotal = (ownedMythStepsTo334 + blockedHeroStepsTo334) * mythStepCost;
-      const allSlotsMissingToFarm = Math.max(0, allSlotsCostTotal - walletMyth);
+      const ownedCost = ownedMythSteps * mythStepCost;
+      const allCost = (ownedMythSteps + blockedHeroCount * 4) * mythStepCost;
 
       return {
-        already334SlotsCount,
-        crafted331SlotsCount,
         ownedMythItemsCount,
-        ownedMythStepsTo334,
-        ownedMythCostTotal,
-        ownedMythMissingToFarm,
-        blockedHeroSlotsCount,
-        blockedHeroStepsTo334,
-        allSlotsCostTotal,
-        allSlotsMissingToFarm
+        blockedHeroCount,
+        ownedMissing: Math.max(0, ownedCost - walletMyth),
+        allMissing: Math.max(0, allCost - walletMyth)
+      };
+    }
+
+    function simulateCharacter(char, charIdx) {
+      const targetAvg = Number(rules.targetIlvl || 331);
+      const targetTotalPoints = Math.ceil(targetAvg * 16);
+      const mythStepCost = Number(rules.stepCost || 20);
+
+      const mythCap = getCharCrestCapNumbers(char, 'myth');
+      const heroCap = getCharCrestCapNumbers(char, 'hero');
+      const max334  = calculateMax334Requirements(char, mythStepCost);
+
+      const simSlots = {};
+      SLOTS.forEach(s => { simSlots[s.key] = getEquippedSlotIlvl(char, s.key); });
+
+      const getSum = () => Object.values(simSlots).reduce((a, b) => a + b, 0);
+      const startPoints = getSum();
+      const startAvg = startPoints / 16;
+      const planSteps = [];
+
+      // Phase 1: Taschen-Items anlegen (0 Wappen)
+      SLOTS.forEach(s => {
+        const bagVal = getBagSlotIlvl(char, s.key);
+        const curVal = simSlots[s.key];
+        const meta = char.slotMeta?.[s.key] || {};
+        if (bagVal > curVal && getSum() < targetTotalPoints) {
+          const gain = bagVal - curVal;
+          simSlots[s.key] = bagVal;
+          const itemName = meta.bagMythName || meta.bagName || `${bagVal}er Item`;
+          planSteps.push({
+            slotKey: s.key, slotLabel: s.label, itemName,
+            fromIlvl: curVal, toIlvl: bagVal, pointGain: gain,
+            markType: 'bag', markCost: 0,
+            reason: `🎒 Aus Tasche anlegen (0 Wappen)`
+          });
+        }
+      });
+
+      const avgWithBagsOnly = getSum() / 16;
+
+      // Phase 2: Aufwertbare Mythos-/Held-Items mit Wappen hochziehen
+      let safety = 0;
+      while (getSum() < targetTotalPoints && safety < 200) {
+        safety++;
+        let best = null;
+
+        SLOTS.forEach(s => {
+          const curVal = simSlots[s.key];
+          const meta = char.slotMeta?.[s.key] || {};
+          const hasMythInBag = Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
+          const maxUpgradable = hasMythInBag ? 334 : (meta.maxUpgradable || 321);
+          if (curVal >= maxUpgradable) return;
+
+          let nextIlvl = 0, markType = 'myth', cost = mythStepCost;
+          if (curVal < 321) {
+            nextIlvl = HERO_UPGRADE_STEPS.find(st => st > curVal && st <= maxUpgradable) || 321;
+            markType = 'hero';
+            cost = 10;
+          } else {
+            const step = MYTH_UPGRADE_STEPS.find(st => st > curVal && st <= maxUpgradable);
+            if (!step) return;
+            nextIlvl = step;
+          }
+
+          const gain = nextIlvl - curVal;
+          if (gain <= 0) return;
+
+          const itemName = (hasMythInBag && meta.bagMythName) ? meta.bagMythName : (meta.eqName || '');
+          const reason = (hasMythInBag && meta.track === 'hero_max' && curVal === 321)
+            ? `🎒 Taschen-Mythos anlegen & aufwerten`
+            : (gain >= 4 ? `⚡ Power-Sprung (+4 iLvl!)` : `Aufwerten beim NPC`);
+
+          const score = (markType === 'hero' ? 100 : 0) + (gain / cost) * 100 - curVal * 0.01;
+          if (!best || score > best.score) {
+            best = { slotKey: s.key, slotLabel: s.label, itemName, fromIlvl: curVal, toIlvl: nextIlvl, pointGain: gain, markType, markCost: cost, score, reason };
+          }
+        });
+
+        if (!best) break;
+        simSlots[best.slotKey] = best.toIlvl;
+        planSteps.push(best);
+      }
+
+      // Phase 3: Blockierte Held-6/6-Slots ersetzen (falls für Ziel nötig)
+      const replaceTarget = targetAvg >= 334 ? 334 : 331;
+      while (getSum() < targetTotalPoints && safety < 230) {
+        safety++;
+        const blocked = SLOTS.find(s => simSlots[s.key] === 321);
+        if (!blocked) break;
+        const meta = char.slotMeta?.[blocked.key] || {};
+        const gain = replaceTarget - 321;
+        simSlots[blocked.key] = replaceTarget;
+        planSteps.push({
+          slotKey: blocked.key, slotLabel: blocked.label, itemName: meta.eqName || '',
+          fromIlvl: 321, toIlvl: replaceTarget, pointGain: gain,
+          markType: 'myth', markCost: 4 * mythStepCost, isBlockedReplacement: true,
+          reason: replaceTarget === 334
+            ? `🔒 Held 6/6 ersetzen: Mythos-Drop holen & auf 334 ziehen`
+            : `🔒 Held 6/6 ersetzen: 331er Handwerk bauen (80 W.) oder Mythos-Drop`
+        });
+      }
+
+      // Verfügbarkeit prüfen
+      let usedMyth = 0, usedHero = 0, reachableWalletPts = startPoints;
+      planSteps.forEach((st, idx) => {
+        if (st.markType === 'bag') {
+          st.availability = 'now';
+          reachableWalletPts += st.pointGain;
+        } else if (st.markType === 'hero') {
+          if (usedHero + st.markCost <= heroCap.wallet) {
+            st.availability = 'now';
+            reachableWalletPts += st.pointGain;
+          } else st.availability = 'farmable';
+          usedHero += st.markCost;
+        } else {
+          if (usedMyth + st.markCost <= mythCap.wallet && !st.isBlockedReplacement) {
+            st.availability = 'now';
+            reachableWalletPts += st.pointGain;
+          } else if (usedMyth + st.markCost <= mythCap.totalAvailable) {
+            st.availability = 'farmable';
+          } else st.availability = 'capped';
+          usedMyth += st.markCost;
+        }
+        const cum = planSteps.slice(0, idx + 1).reduce((a, x) => a + x.pointGain, 0);
+        st.runningAvgAfter = ((startPoints + cum) / 16).toFixed(2);
+      });
+
+      const missingMyth = Math.max(0, usedMyth - mythCap.wallet);
+      return {
+        char, charIdx, targetAvg, targetTotalPoints, mythStepCost,
+        startPoints, startAvg, avgWithBagsOnly,
+        reachableAvgWithWallet: reachableWalletPts / 16,
+        mythCap, heroCap, max334,
+        usedMyth, missingMyth, planSteps
       };
     }
 
     // =========================================================================
-    // 3. NEU: 1-KLICK "ERLEDIGT"-FUNKTION DIREKT IM UPGRADE-FAHRPLAN!
+    // 4. DARSTELLUNG (CLEAN & OHNE DOPPELUNGEN)
+    // =========================================================================
+    function renderAll() {
+      if (!Array.isArray(characters) || characters.length === 0) {
+        characters = JSON.parse(JSON.stringify(INITIAL_CHARS));
+      }
+      if (activeCharIndex >= characters.length) activeCharIndex = 0;
+
+      const sims = characters.map((c, idx) => simulateCharacter(c, idx));
+      const ranked = [...sims].sort((a, b) => a.missingMyth - b.missingMyth || b.reachableAvgWithWallet - a.reachableAvgWithWallet);
+      const activeSim = sims[activeCharIndex];
+
+      renderCharSelectorBar(ranked);
+      renderTopKpiCards(activeSim);
+      renderPlanAndAmpelView(activeSim);
+      renderCapsTableView(activeSim);
+      renderMilestoneView();
+    }
+
+    function renderCharSelectorBar(ranked) {
+      const crestsPerKey = getKeyCrestsPerRun();
+      const keyLvl = rules.selectedKeyLevel;
+
+      document.getElementById('charSelectorBar').innerHTML = ranked.map((r, rankIdx) => {
+        const isSel = r.charIdx === activeCharIndex;
+        const isTop = rankIdx === 0;
+        const col = getCharColor(r.char);
+        const runs = Math.ceil(r.missingMyth / crestsPerKey);
+
+        return `
+          <div onclick="activeCharIndex=${r.charIdx}; renderAll();"
+               style="border-top: 4px solid ${col};"
+               class="p-3.5 rounded-xl border cursor-pointer transition flex flex-col justify-between gap-2 ${
+                 isSel ? 'bg-wow-card border-wow-gold ring-2 ring-wow-gold/50 shadow-lg' : 'bg-wow-card/50 hover:bg-wow-card border-wow-border opacity-80 hover:opacity-100'
+               }">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="px-1.5 py-0.5 rounded text-[10px] font-black ${isTop ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-300'}">#${rankIdx + 1}</span>
+                <span class="text-sm font-black truncate" style="color:${col}">${escapeHtml(r.char.name)}</span>
+              </div>
+              <div class="flex items-center gap-1">
+                ${isTop ? '<span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-600/50 font-bold">🏆 Beste Wahl</span>' : ''}
+                ${characters.length > 1 ? `<button onclick="event.stopPropagation(); removeCharacter(${r.charIdx})" class="text-xs text-slate-500 hover:text-red-400 px-1">&times;</button>` : ''}
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-1 text-center bg-wow-panel p-2 rounded-lg border border-wow-border/60">
+              <div>
+                <div class="text-[9px] text-slate-400">Angezogen</div>
+                <div class="text-xs font-black text-white">${r.startAvg.toFixed(2)}</div>
+              </div>
+              <div class="border-x border-wow-border/60">
+                <div class="text-[9px] text-cyan-300">Mit Tasche</div>
+                <div class="text-xs font-black text-cyan-300">${r.avgWithBagsOnly.toFixed(2)}</div>
+              </div>
+              <div>
+                <div class="text-[9px] text-amber-300">+Beutel (${r.mythCap.wallet})</div>
+                <div class="text-xs font-black text-amber-300">${r.reachableAvgWithWallet.toFixed(2)}</div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="text-slate-400">🎯 Fehlt bis ${r.targetAvg}:</span>
+              <span class="font-bold text-emerald-300">${r.missingMyth} W. (≈ ${runs}× M+${keyLvl})</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderTopKpiCards(sim) {
+      const col = getCharColor(sim.char);
+      const myth = sim.mythCap;
+      const m334 = sim.max334;
+      const keyLvl = rules.selectedKeyLevel;
+      const cPerKey = getKeyCrestsPerRun();
+
+      const runsCap = Math.ceil(myth.farmable / cPerKey);
+      const runsTarget = Math.ceil(sim.missingMyth / cPerKey);
+      const runs334Owned = Math.ceil(m334.ownedMissing / cPerKey);
+      const runs334All = Math.ceil(m334.allMissing / cPerKey);
+
+      document.getElementById('topKpiGrid').innerHTML = `
+        <!-- Kachel 1: Item-Level -->
+        <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 shadow" style="border-left: 4px solid ${col};">
+          <div class="text-[11px] font-bold uppercase text-slate-400">1. Item-Level (${escapeHtml(sim.char.name)})</div>
+          <div class="grid grid-cols-3 gap-1 text-center mt-2 bg-wow-card p-2 rounded-xl border border-wow-border">
+            <div>
+              <div class="text-[9px] text-slate-400 uppercase">Angezogen</div>
+              <div class="text-sm font-black text-white">${sim.startAvg.toFixed(2)}</div>
+            </div>
+            <div class="border-x border-wow-border">
+              <div class="text-[9px] text-cyan-300 uppercase font-bold">Tasche</div>
+              <div class="text-sm font-black text-cyan-300">${sim.avgWithBagsOnly.toFixed(2)}</div>
+            </div>
+            <div>
+              <div class="text-[9px] text-amber-300 uppercase font-bold">+Beutel</div>
+              <div class="text-sm font-black text-wow-gold">${sim.reachableAvgWithWallet.toFixed(2)}</div>
+            </div>
+          </div>
+          <div class="text-[11px] text-slate-400 mt-2">
+            Fehlt bis Ø ${sim.targetAvg}: <strong class="text-amber-300">+${Math.max(0, sim.targetTotalPoints - sim.startPoints)} iLvl-Punkte</strong>
+          </div>
+        </div>
+
+        <!-- Kachel 2: Wappen-Bestand & Wochen-Cap -->
+        <div class="bg-wow-panel border border-emerald-500/50 rounded-2xl p-4 shadow">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold uppercase text-emerald-400">2. 🌾 Mythisch-Wappen & Cap</span>
+            <span class="text-[10px] text-slate-400">${myth.earned} / ${myth.seasonCap} Cap</span>
+          </div>
+          <div class="flex items-baseline justify-between mt-2">
+            <div>
+              <span class="text-2xl font-black text-emerald-300">${myth.farmable}</span>
+              <span class="text-xs font-bold text-emerald-400">noch farmbar</span>
+            </div>
+            <span class="text-xs font-bold px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-700/50">≈ ${runsCap}× M+${keyLvl}</span>
+          </div>
+          <div class="text-[11px] text-slate-300 mt-2 pt-2 border-t border-wow-border/60 flex justify-between">
+            <span>🎒 Beutel: <strong>${myth.wallet}</strong></span>
+            <span>🔨 Verbraucht: <strong>${myth.spent}</strong></span>
+          </div>
+        </div>
+
+        <!-- Kachel 3: Bedarf bis Ziel (331) -->
+        <div class="bg-wow-panel border border-amber-500/50 rounded-2xl p-4 shadow">
+          <div class="text-[11px] font-bold uppercase text-wow-gold">3. 🎯 Fehlt bis Ziel Ø ${sim.targetAvg}</div>
+          <div class="flex items-baseline justify-between mt-2">
+            <div>
+              <span class="text-2xl font-black text-amber-300">${sim.missingMyth}</span>
+              <span class="text-xs font-bold text-slate-300">Wappen farmen</span>
+            </div>
+            <span class="text-xs font-bold px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-700/50">≈ ${runsTarget}× M+${keyLvl}</span>
+          </div>
+          <div class="text-[11px] text-slate-300 mt-2 pt-2 border-t border-wow-border/60">
+            Gesamt nötig: <strong>${sim.usedMyth} W.</strong> (abzgl. ${myth.wallet} im Beutel)
+          </div>
+        </div>
+
+        <!-- Kachel 4: Bedarf bis Max-iLvl 334 -->
+        <div class="bg-wow-panel border border-rose-500/60 rounded-2xl p-4 shadow">
+          <div class="text-[11px] font-bold uppercase text-rose-300">4. 🔥 Fehlt für Max-iLvl 334</div>
+          <div class="mt-2 space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-300">Vorhandene (${m334.ownedMythItemsCount}×):</span>
+              <span class="font-black text-rose-300">${m334.ownedMissing} W. <span class="text-[11px] text-cyan-300">(${runs334Owned}× M+${keyLvl})</span></span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-300">Alle 16 Slots:</span>
+              <span class="font-black text-amber-300">${m334.allMissing} W. <span class="text-[11px] text-cyan-300">(${runs334All}× M+${keyLvl})</span></span>
+            </div>
+          </div>
+          <div class="text-[10px] text-slate-400 mt-2 pt-1.5 border-t border-wow-border/60">
+            Berechnet mit M+${keyLvl} (${cPerKey} Wappen / Run)
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPlanAndAmpelView(sim) {
+      const char = sim.char;
+      const charIdx = sim.charIdx;
+      const stepCost = sim.mythStepCost;
+
+      // 1. Links: Gruppierte Upgrade-Schritte mit ✅ Erledigt-Button
+      const grouped = [];
+      sim.planSteps.forEach(st => {
+        const last = grouped[grouped.length - 1];
+        if (last && last.slotKey === st.slotKey && last.markType === st.markType && last.availability === st.availability && !st.isBlockedReplacement) {
+          last.toIlvl = st.toIlvl;
+          last.pointGain += st.pointGain;
+          last.markCost += st.markCost;
+          last.stepCount += 1;
+          last.runningAvgAfter = st.runningAvgAfter;
+        } else {
+          grouped.push({ ...st, stepCount: 1 });
+        }
+      });
+
+      const stepsHtml = grouped.map((g, i) => {
+        const isNow = g.availability === 'now';
+        const costBadge = g.markCost === 0
+          ? `<span class="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-700/60 text-[11px] font-bold">🎒 0 Wappen</span>`
+          : `<span class="px-2 py-0.5 rounded ${isNow ? 'bg-amber-950 text-amber-200 border-amber-500/60' : 'bg-slate-800 text-slate-300 border-slate-600'} border text-[11px] font-bold">🟠 ${g.markCost} W. (${g.stepCount} St.)</span>`;
+
+        return `
+          <div class="p-3 rounded-xl border ${isNow ? 'bg-wow-card border-cyan-500/50' : 'bg-wow-card/60 border-wow-border'} flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <div class="w-6 h-6 rounded-lg ${isNow ? 'bg-cyan-400 text-slate-950' : 'bg-slate-700 text-slate-200'} font-black text-xs flex items-center justify-center shrink-0">${i + 1}</div>
+              <div class="min-w-0">
+                <div class="text-xs font-bold text-white truncate">
+                  ${escapeHtml(g.slotLabel)} ${g.itemName ? `<span class="text-amber-200 font-normal">„${escapeHtml(g.itemName)}“</span>` : ''}
+                  <span class="text-wow-gold ml-1">${g.fromIlvl} &rarr; ${g.toIlvl}</span>
+                  <span class="text-emerald-400">(+${g.pointGain} Pkt)</span>
+                </div>
+                <div class="text-[11px] text-slate-400 truncate">${escapeHtml(g.reason)} • Danach: <strong class="text-white">${g.runningAvgAfter} Ø</strong></div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <div class="text-right">
+                ${costBadge}
+                <div class="text-[10px] mt-0.5 ${isNow ? 'text-cyan-300 font-bold' : 'text-emerald-400'}">${isNow ? '🟢 Sofort (Beutel)' : '🌾 Noch farmen'}</div>
+              </div>
+              <button onclick="completeUpgradeStep(${charIdx}, '${g.slotKey}', ${g.toIlvl}, '${g.markType}', ${g.markCost})"
+                      class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black text-xs transition"
+                      title="Im Spiel erledigt? Klicke hier, um Slot & Wappen automatisch zu aktualisieren">
+                ✅
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('planLeftColumn').innerHTML = `
+        <div class="flex items-center justify-between border-b border-wow-border pb-2.5">
+          <div>
+            <h3 class="text-sm font-bold text-white">🎯 Schritt-für-Schritt auf Ø ${sim.targetAvg}</h3>
+            <p class="text-xs text-slate-400">Klicke rechts auf <strong>✅</strong>, sobald du einen Schritt im Spiel ausgeführt hast.</p>
+          </div>
+        </div>
+        <div class="space-y-2">${stepsHtml || '<div class="text-xs text-emerald-400">🎉 Ziel bereits erreicht!</div>'}</div>
+      `;
+
+      // 2. Rechts: 3-Zonen-Ampel mit echten Item-Namen
+      const zone1 = [], zone2 = [], zone3 = [];
+      SLOTS.forEach(s => {
+        const eq = getEquippedSlotIlvl(char, s.key);
+        const bag = getBagSlotIlvl(char, s.key);
+        const meta = char.slotMeta?.[s.key] || {};
+        const hasMythInBag = Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
+        const maxUpgradable = hasMythInBag ? 334 : (meta.maxUpgradable || 321);
+        const entry = { slot: s, eq, bag, meta, hasMythInBag };
+
+        if (eq >= sim.targetAvg && bag <= eq) zone3.push(entry);
+        else if (bag > eq || maxUpgradable > 321) zone1.push(entry);
+        else zone2.push(entry);
+      });
+
+      const renderSlotCard = (it, type) => {
+        const { slot, eq, bag, meta, hasMythInBag } = it;
+        const startMyth = hasMythInBag ? Math.max(eq, meta.bagMythIlvl) : Math.max(eq, bag);
+        const steps334 = MYTH_UPGRADE_STEPS.filter(st => st > Math.max(startMyth, 318) && st <= 334).length;
+
+        let sub = '', border = 'border-wow-border';
+        if (type === 'action') {
+          border = 'border-emerald-500/50 bg-emerald-950/15';
+          if (bag > eq) {
+            sub = `<div class="text-[11px] text-cyan-300 font-bold">🎒 In Tasche: „${escapeHtml(meta.bagMythName || meta.bagName || bag + 'er Item')}“ (${bag})</div>`;
+          } else if (hasMythInBag && meta.track === 'hero_max') {
+            sub = `<div class="text-[11px] text-amber-300 font-bold">🎒 Mythos in Tasche: „${escapeHtml(meta.bagMythName || '321er Mythos')}“ (Bis 334: ${steps334 * stepCost} W.)</div>`;
+          } else {
+            sub = `<div class="text-[11px] text-emerald-300 font-semibold">⚡ „${escapeHtml(meta.eqName || slot.label)}“ (Bis 334: ${steps334 * stepCost} W.)</div>`;
+          }
+        } else if (type === 'blocked') {
+          border = 'border-amber-700/50 bg-amber-950/10';
+          sub = `<div class="text-[11px] text-red-300">🔒 Held 6/6 Limit: „${escapeHtml(meta.eqName || slot.label)}“ (321 Max)</div>`;
+        } else {
+          sub = `<div class="text-[10px] text-emerald-300">✔️ ${escapeHtml(meta.eqName || meta.label || 'Fertig')}</div>`;
+        }
+
+        return `
+          <div onclick="openEditSlotModal(${charIdx}, '${slot.key}', '${slot.label}')"
+               class="p-2.5 rounded-xl border ${border} hover:bg-slate-800/70 cursor-pointer transition flex items-center justify-between gap-2">
+            <div class="min-w-0">
+              <div class="text-xs font-bold text-white">${slot.label}</div>
+              ${sub}
+            </div>
+            <span class="text-xs font-black ${eq >= sim.targetAvg ? 'text-emerald-400' : 'text-wow-gold'} shrink-0">${eq} iLvl</span>
+          </div>
+        `;
+      };
+
+      document.getElementById('planRightColumn').innerHTML = `
+        <div class="border-b border-wow-border pb-2.5">
+          <h3 class="text-sm font-bold text-white">🚦 3-Zonen-Slot-Ampel (Klick = Slot anpassen)</h3>
+          <p class="text-xs text-slate-400">Mit echten Item-Namen aus deinem SimCraft-Export.</p>
+        </div>
+
+        <div class="space-y-2">
+          <div class="text-xs font-bold uppercase text-emerald-400">🟢 Zone 1: Aufwertbare Slots & Taschen-Funde (${zone1.length})</div>
+          <div class="space-y-1.5">${zone1.map(x => renderSlotCard(x, 'action')).join('')}</div>
+        </div>
+
+        <div class="space-y-2 pt-2 border-t border-wow-border/60">
+          <div class="text-xs font-bold uppercase text-amber-300">🔒 Zone 2: Auf Held 6/6 (321) blockiert (${zone2.length})</div>
+          <div class="space-y-1.5">${zone2.map(x => renderSlotCard(x, 'blocked')).join('')}</div>
+        </div>
+
+        <details class="pt-2 border-t border-wow-border/60">
+          <summary class="cursor-pointer list-none flex items-center justify-between text-xs font-bold uppercase text-slate-400 hover:text-white">
+            <span>✔️ Zone 3: Bereits ≥ ${sim.targetAvg} iLvl (${zone3.length} Slots erledigt)</span>
+            <span>▼</span>
+          </summary>
+          <div class="space-y-1.5 mt-2">${zone3.map(x => renderSlotCard(x, 'done')).join('')}</div>
+        </details>
+      `;
+    }
+
+    function renderCapsTableView(sim) {
+      const char = sim.char;
+      const charIdx = sim.charIdx;
+      const stepCost = sim.mythStepCost;
+
+      const rows = CREST_TIERS_META.map(tier => {
+        const c = getCharCrestCapNumbers(char, tier.key);
+        const cost = tier.key === 'myth' ? stepCost : 10;
+        const pct = Math.min(100, Math.round((c.earned / c.seasonCap) * 100));
+
+        return `
+          <tr class="border-b border-wow-border/60 last:border-0">
+            <td class="py-3 px-4">
+              <div class="font-bold text-xs ${tier.colorText}">${tier.name}</div>
+              <div class="text-[11px] text-slate-400">${escapeHtml(c.note)}</div>
+              <div class="w-40 h-1.5 bg-slate-800 rounded-full overflow-hidden mt-1">
+                <div class="h-full ${tier.barClass}" style="width:${pct}%"></div>
+              </div>
+            </td>
+            <td class="py-3 px-3 text-center">
+              <input type="number" value="${c.wallet}" min="0" step="5"
+                     onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'wallet', this.value)"
+                     class="w-16 bg-wow-bg border border-wow-border rounded-lg px-2 py-1 text-sm font-black text-white text-center" />
+            </td>
+            <td class="py-3 px-3 text-center">
+              <input type="number" value="${c.spent}" min="0" step="20"
+                     onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'spent', this.value)"
+                     class="w-20 bg-wow-bg border border-amber-600/50 rounded-lg px-2 py-1 text-sm font-bold text-amber-200 text-center" />
+            </td>
+            <td class="py-3 px-3 text-center text-xs font-bold text-slate-200">
+              ${c.earned} / ${c.seasonCap}
+            </td>
+            <td class="py-3 px-3 text-center">
+              <input type="number" value="${c.farmable}" min="0" max="${c.seasonCap}" step="10"
+                     onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'farmable', this.value)"
+                     class="w-20 bg-emerald-950/60 border-2 border-emerald-500/70 rounded-lg px-2 py-1 text-base font-black text-emerald-300 text-center" />
+            </td>
+            <td class="py-3 px-4 text-right">
+              <div class="text-sm font-black text-amber-300">${c.totalAvailable} Wappen</div>
+              <div class="text-[11px] text-slate-400">= ${Math.floor(c.totalAvailable / cost)} Stufen (à ${cost})</div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('capsContainer').innerHTML = `
+        <div class="p-4 border-b border-wow-border">
+          <h3 class="text-sm font-bold text-white">🌾 Alle 5 Wappen-Caps für ${escapeHtml(char.name)}</h3>
+          <p class="text-xs text-slate-400">Formel: <strong>Cap</strong> − (<strong>🎒 In der Tasche</strong> + <strong>🔨 Verbraucht</strong>) = <strong>🌾 Noch farmbar</strong>.</p>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-wow-card border-b border-wow-border text-[11px] uppercase text-slate-300">
+                <th class="py-2.5 px-4">Wappen-Art</th>
+                <th class="py-2.5 px-3 text-center">🎒 Tasche</th>
+                <th class="py-2.5 px-3 text-center text-amber-300">🔨 Verbraucht</th>
+                <th class="py-2.5 px-3 text-center">📊 Summe / Cap</th>
+                <th class="py-2.5 px-3 text-center text-emerald-300">🌾 Noch farmbar</th>
+                <th class="py-2.5 px-4 text-right text-wow-gold">⚡ Gesamt nutzbar</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function setMilestoneTarget(val) {
+      milestoneTarget = val;
+      renderMilestoneView();
+    }
+
+    function renderMilestoneView() {
+      const benchmarks = {};
+      SLOTS.forEach(s => {
+        benchmarks[s.key] = Math.max(...characters.map(c => Math.max(getEquippedSlotIlvl(c, s.key), getBagSlotIlvl(c, s.key))));
+      });
+      const missing = SLOTS.filter(s => benchmarks[s.key] < milestoneTarget);
+      const banner = document.getElementById('crestStatusBanner');
+      banner.className = missing.length === 0
+        ? 'p-3.5 rounded-xl bg-emerald-950/50 border border-emerald-700/50 text-emerald-200 text-xs font-semibold'
+        : 'p-3.5 rounded-xl bg-amber-950/40 border border-amber-700/50 text-amber-200 text-xs';
+      banner.innerHTML = missing.length === 0
+        ? `✅ Alle 16 Slots haben mindestens ${milestoneTarget} erreicht (50% Wappen-Rabatt aktiv)!`
+        : `⏳ Für den ${milestoneTarget}er Wappen-Rabatt fehlen noch ${missing.length} Slots: <strong>${missing.map(s => s.label).join(', ')}</strong>`;
+
+      document.getElementById('crestSlotsGrid').innerHTML = SLOTS.map(s => {
+        const val = benchmarks[s.key];
+        const ok = val >= milestoneTarget;
+        return `<div class="p-3 rounded-xl border ${ok ? 'bg-emerald-950/20 border-emerald-800/50' : 'bg-red-950/20 border-red-800/50'} flex justify-between text-xs"><span>${s.label}: <strong>${val}/${milestoneTarget}</strong></span><span>${ok ? '✔️' : '⚠️'}</span></div>`;
+      }).join('');
+    }
+
+    // =========================================================================
+    // 5. AKTIONEN: 1-KLICK ERLEDIGT, SIMC IMPORT & RAIDER.IO
     // =========================================================================
     function completeUpgradeStep(charIdx, slotKey, toIlvl, markType, markCost) {
       const char = characters[charIdx];
       if (!char) return;
-      if (!char.slots) char.slots = {};
-      if (!char.bagSlots) char.bagSlots = {};
-      if (!char.slotMeta) char.slotMeta = {};
-      if (!char.charWatermarks) char.charWatermarks = {};
-
       const meta = char.slotMeta[slotKey] || {};
-      const using2H = isUsingSingleTwoHander(char);
 
-      // 1. Angelegtes Item-Level hochsetzen
       char.slots[slotKey] = toIlvl;
-      if (slotKey === 'mainhand' && using2H) {
-        char.slots.offhand = toIlvl;
-      }
-
-      // 2. Falls das Upgrade ein Mythos-Item oder höheres Item aus der Tasche genutzt hat, Item-Namen & Spur übernehmen
       if (markType === 'bag' && meta.bagName) {
         meta.eqName = meta.bagName;
         char.bagSlots[slotKey] = 0;
@@ -789,12 +1097,8 @@
         meta.maxUpgradable = 334;
         if (meta.bagMythName) meta.eqName = meta.bagMythName;
         delete meta.bagMythIlvl;
-      } else if (toIlvl > 321) {
-        meta.track = 'myth';
-        meta.maxUpgradable = 334;
       }
 
-      // 3. Wappen aus dem Beutel abziehen und zu "Verbraucht" addieren
       if (markCost > 0) {
         if (markType === 'myth') {
           char.mythMarks = Math.max(0, Number(char.mythMarks || 0) - markCost);
@@ -802,978 +1106,60 @@
         } else if (markType === 'hero') {
           char.heroMarks = Math.max(0, Number(char.heroMarks || 0) - markCost);
           char.heroSpent = Number(char.heroSpent || 0) + markCost;
-        } else if (markType === 'champ') {
-          char.champMarks = Math.max(0, Number(char.champMarks || 0) - markCost);
-          char.champSpent = Number(char.champSpent || 0) + markCost;
         }
       }
 
-      // 4. Charakter-Watermark aktualisieren
-      char.charWatermarks[slotKey] = Math.max(Number(char.charWatermarks[slotKey] || 0), toIlvl);
-
       saveCharsToStorage();
       renderAll();
-      const slotLabel = SLOTS.find(s => s.key === slotKey)?.label || slotKey;
-      showToast(`✅ ${char.name}: ${slotLabel} auf ${toIlvl} iLvl gesetzt${markCost > 0 ? ` (${markCost} Wappen verbucht)` : ''}!`, 'success');
+      showToast(`✅ ${char.name}: Slot auf ${toIlvl} aktualisiert!`, 'success');
     }
 
     function onCrestInputUpdate(charIdx, tierKey, mode, rawVal) {
       const char = characters[charIdx];
       if (!char) return;
-      const seasonCap = getSeasonMaxCap();
+      const seasonCap = (rules.seasonWeek || 9) * WEEKLY_CAP_PER_WEEK;
       const tier = CREST_TIERS_META.find(t => t.key === tierKey);
       const val = Math.max(0, parseInt(rawVal || '0', 10));
-      const currentWallet = Number(char[tier.walletField] || 0);
+      const wallet = Number(char[tier.walletField] || 0);
 
-      if (mode === 'wallet') {
-        char[tier.walletField] = val;
-      } else if (mode === 'spent') {
-        char[tier.spentField] = val;
-      } else if (mode === 'farmable') {
-        const targetEarned = Math.max(currentWallet, seasonCap - Math.min(seasonCap, val));
-        char[tier.spentField] = Math.max(0, targetEarned - currentWallet);
+      if (mode === 'wallet') char[tier.walletField] = val;
+      else if (mode === 'spent') char[tier.spentField] = val;
+      else if (mode === 'farmable') {
+        const targetEarned = Math.max(wallet, seasonCap - Math.min(seasonCap, val));
+        char[tier.spentField] = Math.max(0, targetEarned - wallet);
       }
-
       saveCharsToStorage();
       renderAll();
     }
 
-    function recalculateCharSpentFromSimcGear(charIdx) {
-      const char = characters[charIdx];
-      if (!char) return;
-      const auto = calculateSpentFromCharGear(char);
-      char.mythSpent = auto.mythSpent;
-      char.heroSpent = auto.heroSpent;
-      char.champSpent = auto.champSpent;
-      char.mythSpentNote = auto.mythSpentNote;
-      saveCharsToStorage();
-      renderAll();
-      showToast(`Verbrauchte Wappen für ${char.name} neu berechnet!`, 'success');
-    }
-
-    function setTargetIlvlQuick(val) {
-      document.getElementById('avgTargetIlvlInput').value = val;
-      const btn331 = document.getElementById('quickTarget331Btn');
-      const btn334 = document.getElementById('quickTarget334Btn');
-      if (val === 331) {
-        btn331.className = 'px-2.5 py-1 rounded-lg bg-wow-gold text-slate-950 font-black text-xs transition';
-        btn334.className = 'px-2.5 py-1 rounded-lg bg-wow-card hover:bg-slate-700 text-amber-300 border border-wow-border font-bold text-xs transition';
-      } else {
-        btn334.className = 'px-2.5 py-1 rounded-lg bg-wow-gold text-slate-950 font-black text-xs transition';
-        btn331.className = 'px-2.5 py-1 rounded-lg bg-wow-card hover:bg-slate-700 text-slate-200 border border-wow-border font-bold text-xs transition';
-      }
-      renderAll();
-    }
-
-    // =========================================================================
-    // 4. SIMULATION AUF 331 / 334 (INKL. ECHTER ITEM-NAMEN IN DEN SCHRITTEN!)
-    // =========================================================================
-    function isUsingSingleTwoHander(char) {
-      const rawOh = Number(char.slots?.offhand || 0);
-      const rawMh = Number(char.slots?.mainhand || 0);
-      return rawMh > 0 && rawOh === 0 && (char.hasTwoHand !== false);
-    }
-
-    function getEquippedSlotIlvl(char, slotKey) {
-      const raw = Number(char.slots?.[slotKey] || 0);
-      if (slotKey === 'offhand' && rules.strictWeapons && isUsingSingleTwoHander(char)) {
-        return Number(char.slots?.mainhand || 0);
-      }
-      return raw;
-    }
-
-    function getBagSlotIlvl(char, slotKey) {
-      return Number(char.bagSlots?.[slotKey] || 0);
-    }
-
-    function getRawCharSlotMax(char, slotKey) {
-      const eq = getEquippedSlotIlvl(char, slotKey);
-      const bag = getBagSlotIlvl(char, slotKey);
-      const accWm = Number(char.accountWatermarks?.[slotKey] || char.charWatermarks?.[slotKey] || 0);
-      const base = rules.includeBags ? Math.max(eq, bag) : eq;
-      return Math.max(base, accWm);
-    }
-
-    function getCharacterWeaponWatermark(char) {
-      const mhMax = getRawCharSlotMax(char, 'mainhand');
-      const ohMax = getRawCharSlotMax(char, 'offhand');
-      if (!rules.strictWeapons) return { mainhand: mhMax, offhand: ohMax };
-      const pairMin = isUsingSingleTwoHander(char) ? mhMax : Math.min(mhMax, ohMax);
-      return { mainhand: pairMin, offhand: pairMin };
-    }
-
-    function calculateWarbandBenchmarks() {
-      const benchmarks = {};
-      SLOTS.forEach(s => benchmarks[s.key] = 0);
-      if (characters.length === 0) return benchmarks;
-
-      SLOTS.forEach(slot => {
-        let max = 0;
-        characters.forEach(c => {
-          const val = getRawCharSlotMax(c, slot.key);
-          if (val > max) max = val;
-        });
-        benchmarks[slot.key] = max;
-      });
-
-      if (rules.strictPairs) {
-        let bestRingPair = 0, bestTrinketPair = 0;
-        characters.forEach(c => {
-          const rMin = Math.min(getRawCharSlotMax(c, 'finger1'), getRawCharSlotMax(c, 'finger2'));
-          if (rMin > bestRingPair) bestRingPair = rMin;
-          const tMin = Math.min(getRawCharSlotMax(c, 'trinket1'), getRawCharSlotMax(c, 'trinket2'));
-          if (tMin > bestTrinketPair) bestTrinketPair = tMin;
-        });
-        benchmarks.finger1 = Math.max(benchmarks.finger1, bestRingPair);
-        benchmarks.finger2 = Math.max(benchmarks.finger2, bestRingPair);
-        benchmarks.trinket1 = Math.max(benchmarks.trinket1, bestTrinketPair);
-        benchmarks.trinket2 = Math.max(benchmarks.trinket2, bestTrinketPair);
-      }
-
-      if (rules.strictWeapons) {
-        let bestWeaponWatermark = 0;
-        characters.forEach(c => {
-          const wm = getCharacterWeaponWatermark(c);
-          if (wm.mainhand > bestWeaponWatermark) bestWeaponWatermark = wm.mainhand;
-        });
-        benchmarks.mainhand = bestWeaponWatermark;
-        benchmarks.offhand = bestWeaponWatermark;
-      }
-
-      return benchmarks;
-    }
-
-    function isMythic331AchievementUnlocked() {
-      const manualOverride = parseInt(document.getElementById('crestStepCostSelect')?.value || '20', 10) === 10;
-      if (manualOverride) return true;
-      const benchmarks = calculateWarbandBenchmarks();
-      return SLOTS.every(s => (benchmarks[s.key] || 0) >= 331);
-    }
-
-    function simulateCharacterToTarget(char, charIdx) {
-      const targetAvg = parseFloat(document.getElementById('avgTargetIlvlInput')?.value || '331');
-      const targetTotalPoints = Math.ceil(targetAvg * 16);
-      const mythDiscountUnlocked = isMythic331AchievementUnlocked();
-      const mythStepCost = mythDiscountUnlocked ? 10 : 20;
-      const heroStepCost = 10;
-
-      const mythCapInfo  = getCharCrestCapNumbers(char, 'myth');
-      const heroCapInfo  = getCharCrestCapNumbers(char, 'hero');
-      const champCapInfo = getCharCrestCapNumbers(char, 'champ');
-      const max334Info   = calculateMax334CrestRequirements(char, mythStepCost);
-
-      const availableMythMarks = mythCapInfo.wallet;
-      const farmableMythMarks  = mythCapInfo.farmable;
-      const maxWeekMythMarks   = mythCapInfo.totalAvailable;
-
-      const availableHeroMarks = heroCapInfo.wallet;
-      const farmableHeroMarks  = heroCapInfo.farmable;
-      const maxWeekHeroMarks   = heroCapInfo.totalAvailable;
-
-      const using2H = isUsingSingleTwoHander(char);
-
-      const simSlots = {};
-      SLOTS.forEach(s => { simSlots[s.key] = getEquippedSlotIlvl(char, s.key); });
-
-      const getSumPoints = () => Object.values(simSlots).reduce((a, b) => a + b, 0);
-      const startPoints = getSumPoints();
-      const startAvg = startPoints / 16;
-      const planSteps = [];
-
-      // PHASE 1: Höhere Items aus der Tasche anlegen (0 Wappen) - INKL. ECHTEM ITEM-NAMEN!
-      SLOTS.forEach(s => {
-        if (s.key === 'offhand' && using2H) return;
-        const bagVal = getBagSlotIlvl(char, s.key);
-        const curVal = simSlots[s.key];
-        const meta = char.slotMeta?.[s.key] || {};
-        const bagItemName = meta.bagMythName || meta.bagName || '';
-
-        if (bagVal > curVal && getSumPoints() < targetTotalPoints) {
-          const is2HWeapon = (s.key === 'mainhand' && using2H);
-          const pointGain = is2HWeapon ? (bagVal - curVal) * 2 : (bagVal - curVal);
-          simSlots[s.key] = bagVal;
-          if (is2HWeapon) simSlots.offhand = bagVal;
-          planSteps.push({
-            slotKey: s.key,
-            slotLabel: is2HWeapon ? 'Haupthand (2H zählt doppelt!)' : s.label,
-            itemName: bagItemName,
-            fromIlvl: curVal,
-            toIlvl: bagVal,
-            pointGain,
-            markType: 'bag',
-            markCost: 0,
-            reason: `🎒 ${bagItemName ? `„${bagItemName}“ (${bagVal})` : `${bagVal}er Item`} aus deiner Tasche anlegen (0 Wappen)`
-          });
-        }
-      });
-
-      const pointsWithBagsOnly = getSumPoints();
-      const avgWithBagsOnly = pointsWithBagsOnly / 16;
-
-      // PHASE 2: Eigener Charakter-Watermark (0 Wappen)
-      SLOTS.forEach(s => {
-        if (s.key === 'offhand' && using2H) return;
-        const meta = char.slotMeta?.[s.key] || {};
-        const maxTrack = meta.bagMythIlvl ? 334 : (meta.maxUpgradable || 321);
-        const ownCharWm = Math.min(Number(char.charWatermarks?.[s.key] || 0), maxTrack);
-        const curVal = simSlots[s.key];
-        if (ownCharWm > curVal && getSumPoints() < targetTotalPoints) {
-          const is2HWeapon = (s.key === 'mainhand' && using2H);
-          const pointGain = is2HWeapon ? (ownCharWm - curVal) * 2 : (ownCharWm - curVal);
-          simSlots[s.key] = ownCharWm;
-          if (is2HWeapon) simSlots.offhand = ownCharWm;
-          planSteps.push({
-            slotKey: s.key,
-            slotLabel: is2HWeapon ? 'Haupthand (2H zählt doppelt!)' : s.label,
-            itemName: meta.eqName || '',
-            fromIlvl: curVal,
-            toIlvl: ownCharWm,
-            pointGain,
-            markType: 'free',
-            markCost: 0,
-            reason: `👑 Eigener Charakter-Watermark ist bereits ${ownCharWm} (0 Wappen)`
-          });
-        }
-      });
-
-      // PHASE 3: Wappen-Upgrades auf vorhandenen Mythos-Items (INKL. ECHTEM ITEM-NAMEN!)
-      let safety = 0;
-      while (getSumPoints() < targetTotalPoints && safety < 250) {
-        safety++;
-        let bestCandidate = null;
-
-        SLOTS.forEach(s => {
-          if (s.key === 'offhand' && using2H) return;
-          const curVal = simSlots[s.key];
-
-          const meta = char.slotMeta?.[s.key] || {};
-          const hasMythInBag = Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
-          const maxUpgradable = hasMythInBag ? 334 : (meta.maxUpgradable || 321);
-
-          if (curVal >= maxUpgradable) return;
-
-          const is2HWeapon = (s.key === 'mainhand' && using2H);
-          let nextIlvl = 0;
-          let markType = '';
-          let cost = 20;
-
-          if (curVal < 308) {
-            nextIlvl = CHAMP_UPGRADE_STEPS.find(st => st > curVal && st <= maxUpgradable) || Math.min(308, maxUpgradable);
-            markType = 'champ';
-            cost = 10;
-          } else if (curVal < 321) {
-            nextIlvl = HERO_UPGRADE_STEPS.find(st => st > curVal && st <= maxUpgradable) || Math.min(321, maxUpgradable);
-            markType = 'hero';
-            cost = heroStepCost;
-          } else {
-            const step = MYTH_UPGRADE_STEPS.find(st => st > curVal && st <= maxUpgradable);
-            if (!step) return;
-            nextIlvl = step;
-            markType = 'myth';
-            cost = mythStepCost;
-          }
-
-          const rawGain = nextIlvl - curVal;
-          if (rawGain <= 0) return;
-          const totalPointGain = is2HWeapon ? rawGain * 2 : rawGain;
-
-          const activeItemName = (hasMythInBag && meta.bagMythName) ? meta.bagMythName : (meta.eqName || '');
-          let customReason = '';
-          if (markType === 'myth') {
-            if (hasMythInBag && meta.track === 'hero_max' && curVal === 321) {
-              customReason = `🎒 Taschen-Mythos ${activeItemName ? `„${activeItemName}“` : '(321)'} anlegen & auf ${nextIlvl} aufwerten`;
-            } else {
-              customReason = rawGain >= 4
-                ? `🟠 ${activeItemName ? `„${activeItemName}“: ` : ''}Power-Sprung 321 ➔ 325 (+4 iLvl!)`
-                : `🟠 ${activeItemName ? `„${activeItemName}“ ` : ''}auf ${nextIlvl} aufwerten`;
-            }
-          } else if (markType === 'hero') {
-            customReason = `🟣 ${activeItemName ? `„${activeItemName}“ ` : ''}bis 321 aufwerten (10 Helden-Wappen)`;
-          } else {
-            customReason = `🔵 ${activeItemName ? `„${activeItemName}“ ` : ''}bis 308 aufwerten`;
-          }
-
-          const tierBonus = markType === 'champ' ? 200 : (markType === 'hero' ? 100 : 0);
-          const priorityScore = tierBonus + (totalPointGain / cost) * 100 - (curVal * 0.01);
-
-          if (!bestCandidate || priorityScore > bestCandidate.priorityScore) {
-            bestCandidate = {
-              slotKey: s.key,
-              slotLabel: is2HWeapon ? 'Haupthand (2H zählt doppelt!)' : s.label,
-              itemName: activeItemName,
-              fromIlvl: curVal,
-              toIlvl: nextIlvl,
-              pointGain: totalPointGain,
-              markType,
-              markCost: cost,
-              is2HWeapon,
-              priorityScore,
-              reason: customReason
-            };
-          }
-        });
-
-        if (!bestCandidate) break;
-        simSlots[bestCandidate.slotKey] = bestCandidate.toIlvl;
-        if (bestCandidate.is2HWeapon) simSlots.offhand = bestCandidate.toIlvl;
-        planSteps.push(bestCandidate);
-      }
-
-      const maxPointsWithCurrentItems = getSumPoints();
-      const maxAvgWithCurrentItems = maxPointsWithCurrentItems / 16;
-
-      // PHASE 4: Blockierte Held-6/6-Slots (321) ersetzen
-      const replacementTargetIlvl = targetAvg >= 334 ? 334 : 331;
-      while (getSumPoints() < targetTotalPoints && safety < 280) {
-        safety++;
-        const blockedSlot = SLOTS.find(s => {
-          if (s.key === 'offhand' && using2H) return false;
-          return simSlots[s.key] === 321;
-        });
-        if (!blockedSlot) break;
-
-        const meta = char.slotMeta?.[blockedSlot.key] || {};
-        const gain = replacementTargetIlvl - 321;
-        simSlots[blockedSlot.key] = replacementTargetIlvl;
-        planSteps.push({
-          slotKey: blockedSlot.key,
-          slotLabel: blockedSlot.label,
-          itemName: meta.eqName || '',
-          fromIlvl: 321,
-          toIlvl: replacementTargetIlvl,
-          pointGain: gain,
-          markType: 'myth',
-          markCost: 4 * mythStepCost,
-          isBlockedHeroReplacement: true,
-          reason: replacementTargetIlvl === 334
-            ? `🔒 Aktuell Held 6/6 (${meta.eqName || '321'}) ➔ Mythos-Item droppen & in 4 Stufen auf 334 ziehen`
-            : `🔒 Aktuell Held 6/6 (${meta.eqName || '321'}) ➔ 331er Handwerks-Item herstellen (80 Wappen) oder Mythos-Drop holen`
-        });
-      }
-
-      let usedHeroMarks = 0, usedMythMarks = 0;
-      let reachablePointsWithWallet = startPoints;
-      let reachablePointsThisWeek = startPoints;
-
-      planSteps.forEach((step, idx) => {
-        if (step.markType === 'bag' || step.markType === 'free') {
-          step.availability = 'now';
-          reachablePointsWithWallet += step.pointGain;
-          reachablePointsThisWeek += step.pointGain;
-        } else if (step.markType === 'hero') {
-          if (usedHeroMarks + step.markCost <= availableHeroMarks) {
-            step.availability = 'now';
-            reachablePointsWithWallet += step.pointGain;
-            reachablePointsThisWeek += step.pointGain;
-          } else if (usedHeroMarks + step.markCost <= maxWeekHeroMarks) {
-            step.availability = 'farmable';
-            reachablePointsThisWeek += step.pointGain;
-          } else step.availability = 'capped';
-          usedHeroMarks += step.markCost;
-        } else if (step.markType === 'myth') {
-          if (usedMythMarks + step.markCost <= availableMythMarks && !step.isBlockedHeroReplacement) {
-            step.availability = 'now';
-            reachablePointsWithWallet += step.pointGain;
-            reachablePointsThisWeek += step.pointGain;
-          } else if (usedMythMarks + step.markCost <= maxWeekMythMarks) {
-            step.availability = 'farmable';
-            reachablePointsThisWeek += step.pointGain;
-          } else step.availability = 'capped';
-          usedMythMarks += step.markCost;
-        }
-
-        const cumGain = planSteps.slice(0, idx + 1).reduce((acc, s) => acc + s.pointGain, 0);
-        step.runningAvgAfter = ((startPoints + cumGain) / 16).toFixed(2);
-      });
-
-      const missingMythMarks = Math.max(0, usedMythMarks - availableMythMarks);
-      const missingHeroMarks = Math.max(0, usedHeroMarks - availableHeroMarks);
-
-      return {
-        char, charIdx, targetAvg, targetTotalPoints, baseStepCost: mythStepCost,
-        mythDiscountUnlocked,
-        startPoints, startAvg,
-        pointsWithBagsOnly, avgWithBagsOnly,
-        reachablePointsWithWallet, reachableAvgWithWallet: reachablePointsWithWallet / 16,
-        maxPointsWithCurrentItems, maxAvgWithCurrentItems,
-        reachablePointsThisWeek, reachableAvgThisWeek: reachablePointsThisWeek / 16,
-        mythCapInfo, heroCapInfo, champCapInfo, max334Info,
-        availableMythMarks, farmableMythMarks, maxWeekMythMarks,
-        availableHeroMarks, farmableHeroMarks, maxWeekHeroMarks,
-        usedHeroMarks, usedMythMarks, missingHeroMarks, missingMythMarks,
-        totalMissingMarks: missingMythMarks + missingHeroMarks,
-        totalNeededMarks: usedHeroMarks + usedMythMarks,
-        planSteps
-      };
-    }
-
-    function computeAllCharacter331Rankings() {
-      const results = characters.map((c, idx) => simulateCharacterToTarget(c, idx));
-      results.sort((a, b) => {
-        if (a.missingMythMarks !== b.missingMythMarks) return a.missingMythMarks - b.missingMythMarks;
-        if (Math.abs(b.reachableAvgWithWallet - a.reachableAvgWithWallet) > 0.01) return b.reachableAvgWithWallet - a.reachableAvgWithWallet;
-        return a.totalNeededMarks - b.totalNeededMarks;
-      });
-      return results;
-    }
-
-    // =========================================================================
-    // 5. DARSTELLUNG: CHARAKTER-KARTEN, 5 KACHELN & M+ KEY-RECHNER
-    // =========================================================================
-    function buildCharSelectorCardsHtml(rankings) {
-      const crestsPerKey = getSelectedKeyCrestsPerRun();
-      const keyLvl = rules.selectedKeyLevel || 10;
-
-      return rankings.map((r, rankIdx) => {
-        const isSelected = r.charIdx === activeCharIndex;
-        const isTop1 = rankIdx === 0;
-        const cColor = getCharClassColor(r.char);
-        const myth = r.mythCapInfo;
-        const m334 = r.max334Info;
-        const runsToTarget = Math.ceil(r.missingMythMarks / crestsPerKey);
-
-        return `
-          <div onclick="selectActiveCharacter(${r.charIdx})"
-               style="border-top: 4px solid ${cColor};"
-               class="p-3.5 rounded-xl border cursor-pointer transition flex flex-col justify-between gap-2.5 ${
-                 isSelected
-                   ? 'bg-wow-card border-wow-gold ring-2 ring-wow-gold/60 shadow-xl'
-                   : 'bg-wow-card/60 hover:bg-wow-card border-wow-border opacity-85 hover:opacity-100'
-               }">
-            <div class="flex items-center justify-between gap-1.5">
-              <div class="flex items-center gap-2 min-w-0">
-                <span class="px-1.5 py-0.5 rounded text-[10px] font-black ${isTop1 ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-300'}">
-                  #${rankIdx + 1}
-                </span>
-                <span class="text-sm font-black truncate" style="color:${cColor}">${escapeHtml(r.char.name)}</span>
-              </div>
-              <div class="flex items-center gap-1">
-                ${isTop1 ? '<span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-600/60 font-bold shrink-0">🏆 #1</span>' : ''}
-                ${characters.length > 1 ? `<button onclick="event.stopPropagation(); removeCharacter(${r.charIdx})" class="text-xs text-slate-500 hover:text-red-400 px-1" title="Charakter löschen">&times;</button>` : ''}
-              </div>
-            </div>
-
-            <div class="grid grid-cols-3 gap-1.5 text-center bg-wow-panel p-2 rounded-lg border border-wow-border/70">
-              <div>
-                <div class="text-[9px] text-slate-400">Angezogen</div>
-                <div class="text-xs font-black text-white">${r.startAvg.toFixed(2)}</div>
-              </div>
-              <div class="border-x border-wow-border/70">
-                <div class="text-[9px] text-cyan-300">Nur Tasche</div>
-                <div class="text-xs font-black text-cyan-300">${r.avgWithBagsOnly.toFixed(2)}</div>
-              </div>
-              <div>
-                <div class="text-[9px] text-amber-300">+${myth.wallet} Beutel</div>
-                <div class="text-xs font-black text-amber-300">${r.reachableAvgWithWallet.toFixed(2)}</div>
-              </div>
-            </div>
-
-            <div class="space-y-1 text-[11px] pt-0.5">
-              <div class="flex items-center justify-between">
-                <span class="text-slate-400">🎯 Fehlt bis ${r.targetAvg}:</span>
-                <span class="font-bold text-emerald-300">${r.missingMythMarks} W. (≈ ${runsToTarget}× M+${keyLvl})</span>
-              </div>
-              <div class="flex items-center justify-between">
-                <span class="text-slate-400">🔥 Fehlt für 334 Max:</span>
-                <span class="font-bold text-amber-300">${m334.ownedMythMissingToFarm} W. (Alle: ${m334.allSlotsMissingToFarm})</span>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function buildCharacterDetailHtml(activeSim) {
-      const char = activeSim.char;
-      const charIdx = activeSim.charIdx;
-      const charColor = getCharClassColor(char);
-      const seasonCap = getSeasonMaxCap();
-      const missingPoints = Math.max(0, activeSim.targetTotalPoints - activeSim.startPoints);
-      const stepCost = activeSim.baseStepCost;
-
-      const myth = activeSim.mythCapInfo;
-      const m334 = activeSim.max334Info;
-      const mythSubsWallet = Math.floor(myth.wallet / stepCost);
-
-      const selKeyLvl = rules.selectedKeyLevel || 10;
-      const crestsPerKey = getSelectedKeyCrestsPerRun();
-      const runsForCap = Math.ceil(myth.farmable / crestsPerKey);
-      const runsForTarget = Math.ceil(activeSim.missingMythMarks / crestsPerKey);
-      const runsFor334Owned = Math.ceil(m334.ownedMythMissingToFarm / crestsPerKey);
-      const runsFor334All = Math.ceil(m334.allSlotsMissingToFarm / crestsPerKey);
-
-      // BLOCK 1: 5 HAUPT-KACHELN MIT DIREKTER M+ KEY-UMRECHNUNG
-      const topSummaryHtml = `
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-3.5">
-          <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 shadow-lg" style="border-left: 5px solid ${charColor};">
-            <div class="text-[11px] font-bold uppercase text-slate-400">1. Item-Level (${escapeHtml(char.name)})</div>
-            <div class="grid grid-cols-3 gap-1 text-center mt-2 bg-wow-card p-2 rounded-xl border border-wow-border">
-              <div>
-                <div class="text-[9px] text-slate-400 uppercase">Angezogen</div>
-                <div class="text-sm font-black text-white">${activeSim.startAvg.toFixed(2)}</div>
-              </div>
-              <div class="border-x border-wow-border">
-                <div class="text-[9px] text-cyan-300 uppercase font-bold">Tasche</div>
-                <div class="text-sm font-black text-cyan-300">${activeSim.avgWithBagsOnly.toFixed(2)}</div>
-              </div>
-              <div>
-                <div class="text-[9px] text-amber-300 uppercase font-bold">+Beutel</div>
-                <div class="text-sm font-black text-wow-gold">${activeSim.reachableAvgWithWallet.toFixed(2)}</div>
-              </div>
-            </div>
-            <div class="text-[11px] text-slate-400 mt-2">
-              Fehlt bis Ø ${activeSim.targetAvg}: <strong class="text-amber-300">+${missingPoints} iLvl-Pkt</strong>
-            </div>
-          </div>
-
-          <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 shadow-lg">
-            <div class="text-[11px] font-bold uppercase text-purple-300">2. Tasche + Verbraucht</div>
-            <div class="flex items-baseline gap-1.5 mt-1.5">
-              <span class="text-2xl font-black text-white">${myth.wallet}</span>
-              <span class="text-[11px] text-slate-400">Tasche +</span>
-              <span class="text-2xl font-black text-amber-300">${myth.spent}</span>
-              <span class="text-[11px] text-slate-400">Verbr.</span>
-            </div>
-            <div class="text-[11px] text-slate-300 mt-2 pt-2 border-t border-wow-border/60">
-              Season-Stand: <strong class="text-white">${myth.earned} / ${seasonCap} Cap</strong>
-            </div>
-          </div>
-
-          <div class="bg-wow-panel border-2 border-emerald-500/70 rounded-2xl p-4 shadow-lg bg-emerald-950/10">
-            <div class="text-[11px] font-black uppercase text-emerald-400">3. 🌾 Noch farmbar (Cap)</div>
-            <div class="flex items-baseline gap-2 mt-1.5">
-              <span class="text-3xl font-black text-emerald-300">${myth.farmable}</span>
-              <span class="text-xs font-bold text-emerald-400">≈ ${runsForCap}× M+${selKeyLvl}</span>
-            </div>
-            <div class="text-[11px] text-slate-300 mt-2 pt-2 border-t border-wow-border/60">
-              Gesamt nutzbar diese ID: <strong class="text-white">${myth.totalAvailable} Wappen</strong>
-            </div>
-          </div>
-
-          <div class="bg-wow-panel border border-amber-500/60 rounded-2xl p-4 shadow-lg">
-            <div class="text-[11px] font-bold uppercase text-wow-gold">4. 🎯 Fehlt bis Ziel Ø ${activeSim.targetAvg}</div>
-            <div class="flex items-baseline gap-2 mt-1.5">
-              <span class="text-3xl font-black text-amber-300">${activeSim.missingMythMarks}</span>
-              <span class="text-xs font-bold text-cyan-300">≈ ${runsForTarget}× M+${selKeyLvl}</span>
-            </div>
-            <div class="text-[11px] text-slate-300 mt-2 pt-2 border-t border-wow-border/60">
-              Gesamt nötig: <strong>${activeSim.usedMythMarks} W.</strong> (abzgl. ${myth.wallet} Beutel)
-            </div>
-          </div>
-
-          <div class="bg-gradient-to-br from-wow-panel to-red-950/30 border-2 border-rose-500/70 rounded-2xl p-4 shadow-lg">
-            <div class="text-[11px] font-black uppercase text-rose-300">5. 🔥 Fehlt für Max-iLvl 334</div>
-            <div class="mt-1.5 space-y-1">
-              <div class="flex items-baseline justify-between">
-                <span class="text-[11px] text-slate-300">Vorhandene (${m334.ownedMythItemsCount}×):</span>
-                <span class="text-sm font-black text-rose-300">${m334.ownedMythMissingToFarm} W. <span class="text-[10px] text-cyan-300">(${runsFor334Owned}× M+${selKeyLvl})</span></span>
-              </div>
-              <div class="flex items-baseline justify-between">
-                <span class="text-[11px] text-slate-300">Alle Slots (+${m334.blockedHeroSlotsCount} Held):</span>
-                <span class="text-sm font-black text-amber-300">${m334.allSlotsMissingToFarm} W. <span class="text-[10px] text-cyan-300">(${runsFor334All}× M+${selKeyLvl})</span></span>
-              </div>
-            </div>
-            <div class="text-[10px] text-slate-400 mt-1.5 pt-1.5 border-t border-wow-border/60">
-              Bei M+${selKeyLvl} (${crestsPerKey} Wappen pro Run)
-            </div>
-          </div>
-        </div>
-      `;
-
-      // BLOCK 2 (NEU): SEPARATER M+ KEY-STUFEN-RECHNER (SKALIERUNG +9 BIS +14+)
-      const mplusScalingRows = MPLUS_MYTH_KEY_TABLE.map(k => {
-        const isCurrentKey = k.level === selKeyLvl;
-        const cPerRun = rules.keyTimedMode !== false ? k.timed : k.untimed;
-        const r331 = Math.ceil(activeSim.missingMythMarks / cPerRun);
-        const r334Owned = Math.ceil(m334.ownedMythMissingToFarm / cPerRun);
-        const r334All = Math.ceil(m334.allSlotsMissingToFarm / cPerRun);
-        const rCap = Math.ceil(myth.farmable / cPerRun);
-
-        return `
-          <tr onclick="selectMplusKeyLevel(${k.level})"
-              class="cursor-pointer border-b border-wow-border/60 last:border-0 transition ${
-                isCurrentKey ? 'bg-cyan-950/40 font-bold' : 'hover:bg-white/[0.03]'
-              }">
-            <td class="py-2.5 px-4">
-              <div class="flex items-center gap-2">
-                <span class="px-2 py-0.5 rounded text-xs font-black ${isCurrentKey ? 'bg-cyan-400 text-slate-950' : 'bg-wow-card text-white border border-wow-border'}">
-                  ${k.label}
-                </span>
-                <span class="text-[11px] text-slate-400">${k.note}</span>
-              </div>
-            </td>
-            <td class="py-2.5 px-3 text-center">
-              <span class="text-sm font-black text-wow-gold">${cPerRun} Wappen</span>
-              <span class="text-[10px] text-slate-400 block">(Intime: ${k.timed} | Depl: ${k.untimed})</span>
-            </td>
-            <td class="py-2.5 px-3 text-center">
-              <span class="px-2.5 py-1 rounded-lg bg-amber-950/70 border border-amber-600/50 text-xs font-black text-amber-200">
-                ${r331} Runs
-              </span>
-              <span class="text-[10px] text-slate-400 block">für ${activeSim.missingMythMarks} Wappen</span>
-            </td>
-            <td class="py-2.5 px-3 text-center">
-              <span class="px-2.5 py-1 rounded-lg bg-rose-950/70 border border-rose-600/50 text-xs font-black text-rose-200">
-                ${r334Owned} Runs
-              </span>
-              <span class="text-[10px] text-slate-400 block">für ${m334.ownedMythMissingToFarm} Wappen</span>
-            </td>
-            <td class="py-2.5 px-3 text-center">
-              <span class="px-2.5 py-1 rounded-lg bg-purple-950/70 border border-purple-600/50 text-xs font-black text-purple-200">
-                ${r334All} Runs
-              </span>
-              <span class="text-[10px] text-slate-400 block">für ${m334.allSlotsMissingToFarm} Wappen</span>
-            </td>
-            <td class="py-2.5 px-4 text-right">
-              <span class="text-xs font-bold text-emerald-300">${rCap} Runs bis Cap (${myth.farmable} W.)</span>
-            </td>
-          </tr>
-        `;
-      }).join('');
-
-      const mplusCalculatorSectionHtml = `
-        <div class="bg-wow-panel border-2 border-cyan-600/50 rounded-2xl overflow-hidden shadow-lg">
-          <div class="p-4 border-b border-wow-border flex flex-wrap items-center justify-between gap-3 bg-cyan-950/15">
-            <div>
-              <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                <span>🗝️</span> M+ Key-Stufen-Rechner für <span style="color:${charColor}">${escapeHtml(char.name)}</span> (Je höher der Key, desto mehr Wappen!)
-              </h3>
-              <p class="text-xs text-slate-400">
-                Klicke auf eine Key-Stufe (+9 bis +14+), um zu sehen, wie viele Dungeons du für <strong>Ø ${activeSim.targetAvg}</strong>, für <strong>334 Max</strong> oder bis zum <strong>Wochen-Cap</strong> laufen musst.
-              </p>
-            </div>
-
-            <div class="flex items-center gap-1.5 bg-wow-card border border-wow-border rounded-xl p-1 text-xs">
-              <button onclick="selectMplusKeyLevel(${selKeyLvl}, true)"
-                      class="px-2.5 py-1 rounded-lg font-bold transition ${rules.keyTimedMode !== false ? 'bg-emerald-500 text-slate-950' : 'text-slate-300 hover:text-white'}">
-                ⏱️ Intime (+100%)
-              </button>
-              <button onclick="selectMplusKeyLevel(${selKeyLvl}, false)"
-                      class="px-2.5 py-1 rounded-lg font-bold transition ${rules.keyTimedMode === false ? 'bg-amber-500 text-slate-950' : 'text-slate-300 hover:text-white'}">
-                💀 Nicht Intime (−4 W.)
-              </button>
-            </div>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="bg-wow-card border-b border-wow-border text-[11px] uppercase text-slate-300">
-                  <th class="py-2.5 px-4">M+ Key-Stufe</th>
-                  <th class="py-2.5 px-3 text-center text-wow-gold">Wappen / Run</th>
-                  <th class="py-2.5 px-3 text-center text-amber-300">🎯 Runs bis Ø ${activeSim.targetAvg}</th>
-                  <th class="py-2.5 px-3 text-center text-rose-300">🔥 Runs bis 334 (Vorhandene Mythos)</th>
-                  <th class="py-2.5 px-3 text-center text-purple-300">👑 Runs bis 334 (Alle 16 Slots)</th>
-                  <th class="py-2.5 px-4 text-right text-emerald-300">🌾 Runs bis Wochen-Cap</th>
-                </tr>
-              </thead>
-              <tbody>${mplusScalingRows}</tbody>
-            </table>
-          </div>
-        </div>
-      `;
-
-      // BLOCK 3: WAPPEN-CAP-TABELLE
-      const crestTableRows = CREST_TIERS_META.map(tier => {
-        const cInfo = getCharCrestCapNumbers(char, tier.key);
-        const tierCost = tier.key === 'myth' ? stepCost : 10;
-        const subsNow = Math.floor(cInfo.wallet / tierCost);
-        const subsTotal = Math.floor(cInfo.totalAvailable / tierCost);
-        const pct = Math.min(100, Math.round((cInfo.earned / cInfo.seasonCap) * 100));
-
-        return `
-          <tr class="border-b border-wow-border/60 last:border-0 hover:bg-white/[0.02] transition">
-            <td class="py-3 px-4">
-              <div class="font-bold text-xs ${tier.colorText}">${tier.name}</div>
-              <div class="text-[11px] text-slate-400">${escapeHtml(cInfo.note)}</div>
-              <div class="w-44 h-1.5 bg-slate-800 rounded-full overflow-hidden mt-1.5">
-                <div class="h-full ${tier.barClass}" style="width: ${pct}%"></div>
-              </div>
-            </td>
-            <td class="py-3 px-3 text-center">
-              <div class="inline-flex items-center gap-1.5">
-                <input type="number" value="${cInfo.wallet}" min="0" step="5"
-                       onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'wallet', this.value)"
-                       class="w-16 bg-wow-bg border border-wow-border rounded-lg px-2 py-1 text-sm font-black text-white text-center" />
-                <span class="text-[11px] text-slate-400">(${subsNow} St. à ${tierCost})</span>
-              </div>
-            </td>
-            <td class="py-3 px-3 text-center">
-              <input type="number" value="${cInfo.spent}" min="0" step="20"
-                     onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'spent', this.value)"
-                     class="w-20 bg-wow-bg border border-amber-600/50 rounded-lg px-2 py-1 text-sm font-bold text-amber-200 text-center" />
-            </td>
-            <td class="py-3 px-3 text-center">
-              <span class="px-2.5 py-1 rounded-lg bg-wow-panel border border-wow-border text-xs font-bold text-slate-200">
-                ${cInfo.earned} <span class="text-slate-400 font-normal">/ ${cInfo.seasonCap}</span>
-              </span>
-            </td>
-            <td class="py-3 px-3 text-center">
-              <input type="number" value="${cInfo.farmable}" min="0" max="${cInfo.seasonCap}" step="10"
-                     onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'farmable', this.value)"
-                     class="w-20 bg-emerald-950/60 border-2 border-emerald-500/70 rounded-lg px-2 py-1 text-base font-black text-emerald-300 text-center" />
-            </td>
-            <td class="py-3 px-4 text-right">
-              <div class="text-sm font-black text-amber-300">${cInfo.totalAvailable} Wappen</div>
-              <div class="text-[11px] text-slate-300 font-semibold">= <strong>${subsTotal} Stufen</strong> (à ${tierCost} Wappen)</div>
-            </td>
-          </tr>
-        `;
-      }).join('');
-
-      const crestTableSectionHtml = `
-        <div class="bg-wow-panel border border-wow-border rounded-2xl overflow-hidden shadow-lg">
-          <div class="p-4 border-b border-wow-border flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <h3 class="text-sm font-bold text-white">🌾 SimCraft Wappen-Bestand & Wochen-Cap (${seasonCap})</h3>
-              <p class="text-xs text-slate-400">
-                <strong>🎒 In der Tasche</strong> + <strong>🔨 Verbraucht auf Charakter</strong> = <strong>📊 Summe</strong> ➔ Abgezogen vom <strong>${seasonCap}er Cap</strong> ergibt das deine <strong>🌾 noch farmbaren Wappen</strong>!
-              </p>
-            </div>
-            <button onclick="recalculateCharSpentFromSimcGear(${charIdx})" class="px-3 py-1.5 rounded-xl bg-wow-card hover:bg-slate-700 border border-wow-border text-xs font-semibold text-slate-200 transition">
-              🔄 Verbraucht neu aus SimC-Items berechnen
-            </button>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="bg-wow-card border-b border-wow-border text-[11px] uppercase text-slate-300">
-                  <th class="py-2.5 px-4">Wappen-Art & SimC-Erkennung</th>
-                  <th class="py-2.5 px-3 text-center">🎒 In der Tasche</th>
-                  <th class="py-2.5 px-3 text-center text-amber-300">🔨 Verbraucht (Char)</th>
-                  <th class="py-2.5 px-3 text-center">📊 Summe / Cap</th>
-                  <th class="py-2.5 px-3 text-center text-emerald-300">🌾 Noch farmbar</th>
-                  <th class="py-2.5 px-4 text-right text-wow-gold">⚡ Gesamt nutzbar (Tasche + Farmbar)</th>
-                </tr>
-              </thead>
-              <tbody>${crestTableRows}</tbody>
-            </table>
-          </div>
-        </div>
-      `;
-
-      // BLOCK 4: 2-SPALTEN-LAYOUT UNTEN (LINKS: UPGRADE-FAHRPLAN MIT "✅ ERLEDIGT"-HÄKCHEN | RECHTS: 3-ZONEN-AMPEL MIT ECHTEN ITEM-NAMEN)
-      const targetIlvlGoal = activeSim.targetAvg;
-      const zone1ActionNow = [], zone2BlockedHero = [], zone3Completed = [];
-
-      SLOTS.forEach(s => {
-        const eq = getEquippedSlotIlvl(char, s.key);
-        const bag = getBagSlotIlvl(char, s.key);
-        const meta = char.slotMeta?.[s.key] || {};
-        const hasMythInBag = Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
-        const maxUpgradable = hasMythInBag ? 334 : (meta.maxUpgradable || 321);
-        const itemEntry = { slot: s, eq, bag, meta, hasMythInBag, maxUpgradable };
-
-        if (eq >= targetIlvlGoal && bag <= eq) zone3Completed.push(itemEntry);
-        else if (bag > eq || maxUpgradable > 321) zone1ActionNow.push(itemEntry);
-        else zone2BlockedHero.push(itemEntry);
-      });
-
-      const renderZoneSlotCard = (item, zoneType) => {
-        const { slot, eq, bag, meta, hasMythInBag } = item;
-        const startMyth = hasMythInBag ? Math.max(eq, meta.bagMythIlvl) : Math.max(eq, bag);
-        const stepsLeftTo334 = MYTH_UPGRADE_STEPS.filter(st => st > Math.max(startMyth, 318) && st <= 334).length;
-        const costTo334 = stepsLeftTo334 * stepCost;
-
-        const eqItemTitle = meta.eqName ? `<div class="text-[11px] text-slate-300 font-medium truncate">Angezogen: ${escapeHtml(meta.eqName)}</div>` : '';
-        let statusTag = '', borderClass = 'border-wow-border';
-
-        if (zoneType === 'action') {
-          borderClass = 'border-emerald-500/60 bg-emerald-950/20';
-          if (bag > eq && bag >= 334) {
-            statusTag = `<div class="text-[11px] text-cyan-300 font-bold">🎒 In Tasche: „${escapeHtml(meta.bagMythName || meta.bagName || '334er Item')}“ (${bag}) ➔ Sofort anziehen (0 W.)!</div>`;
-          } else if (hasMythInBag && meta.track === 'hero_max') {
-            statusTag = `<div class="text-[11px] text-amber-300 font-bold">🎒 Mythos-2/6 in Tasche: „${escapeHtml(meta.bagMythName || '321er Mythos')}“ ➔ Bis 334: ${stepsLeftTo334} St. (${costTo334} W.)</div>`;
-          } else if (bag > eq) {
-            statusTag = `<div class="text-[11px] text-cyan-300 font-bold">🎒 Höher in Tasche: „${escapeHtml(meta.bagName || bag + 'er Item')}“ (${bag}) (+${bag - eq} Pkt für 0 W.)</div>`;
-          } else {
-            statusTag = `<div class="text-[11px] text-emerald-300 font-bold">⚡ Direkt aufwertbar bis 334 Max: ${stepsLeftTo334} Stufen (${costTo334} Wappen)</div>`;
-          }
-        } else if (zoneType === 'blocked') {
-          borderClass = 'border-amber-700/50 bg-amber-950/10';
-          statusTag = `<div class="text-[11px] text-red-300 font-semibold">🔒 Held 6/6 Limit (321 Max – braucht Mythos-Drop oder 331 Handwerk)</div>`;
-        } else {
-          borderClass = 'border-emerald-800/40 bg-wow-card/50';
-          statusTag = `<div class="text-[10px] text-emerald-300 font-semibold">✔️ ${meta.label || 'Fertig'} ${eq < 334 && meta.track !== 'crafted' ? `(Bis 334: ${costTo334} W.)` : ''}</div>`;
-        }
-        return `
-          <div onclick="openEditSlotModal(${charIdx}, '${slot.key}', '${slot.label}')"
-               class="p-3 rounded-xl border ${borderClass} hover:bg-slate-800/80 cursor-pointer transition flex items-center justify-between gap-2">
-            <div class="min-w-0 pr-2">
-              <div class="text-xs font-bold text-white">${slot.label}</div>
-              ${eqItemTitle}
-              ${statusTag}
-            </div>
-            <span class="text-sm font-black ${eq >= targetIlvlGoal ? 'text-emerald-400' : 'text-wow-gold'} shrink-0">${eq || '–'} iLvl</span>
-          </div>
-        `;
-      };
-
-      const groupedSteps = [];
-      activeSim.planSteps.forEach(st => {
-        const last = groupedSteps[groupedSteps.length - 1];
-        if (last && last.slotKey === st.slotKey && last.markType === st.markType && last.availability === st.availability && !st.isBlockedHeroReplacement) {
-          last.toIlvl = st.toIlvl;
-          last.pointGain += st.pointGain;
-          last.markCost += st.markCost;
-          last.stepCount += 1;
-          last.runningAvgAfter = st.runningAvgAfter;
-        } else {
-          groupedSteps.push({ ...st, stepCount: 1 });
-        }
-      });
-
-      const stepsHtml = groupedSteps.map((g, index) => {
-        let badgeColor = 'bg-slate-800 text-slate-300 border-slate-600';
-        let costLabel = '0 Wappen';
-        if (g.markType === 'bag') { badgeColor = 'bg-cyan-950 text-cyan-300 border-cyan-600'; costLabel = '🎒 0 Wappen (Tasche)'; }
-        else if (g.markType === 'free') { badgeColor = 'bg-emerald-950 text-emerald-300 border-emerald-600'; costLabel = '👑 0 Wappen (Char-WM)'; }
-        else if (g.isBlockedHeroReplacement) {
-          badgeColor = 'bg-purple-950 text-purple-200 border-purple-500';
-          costLabel = `🔨 ${g.markCost} Mythisch (Ersatz-Slot)`;
-        } else if (g.markType === 'myth') {
-          badgeColor = g.availability === 'now' ? 'bg-amber-950 text-amber-200 border-amber-500' : 'bg-emerald-950 text-emerald-200 border-emerald-500';
-          costLabel = `🟠 ${g.markCost} Mythisch (${g.stepCount} St. à ${stepCost})`;
-        } else {
-          badgeColor = 'bg-purple-950 text-purple-200 border-purple-500';
-          costLabel = `🟣 ${g.markCost} Held (${g.stepCount} St. à 10)`;
-        }
-
-        const availabilityLabel = g.availability === 'now'
-          ? `<span class="text-[11px] font-bold text-cyan-300">🟢 Sofort (aus ${myth.wallet} Tasche)</span>`
-          : (g.availability === 'farmable' ? `<span class="text-[11px] font-bold text-emerald-400">🌾 Aus ${myth.farmable} noch farmbar</span>` : `<span class="text-[11px] text-amber-400">🔒 Über Cap</span>`);
-
-        return `
-          <div class="p-3 rounded-xl border ${g.availability === 'now' ? 'bg-wow-card border-cyan-500/50' : 'bg-wow-card/70 border-wow-border'} flex flex-wrap items-center justify-between gap-2">
-            <div class="flex items-center gap-2.5 min-w-0 flex-1">
-              <div class="w-6 h-6 rounded-lg ${g.availability === 'now' ? 'bg-cyan-400 text-slate-950' : 'bg-emerald-500 text-slate-950'} font-black text-xs flex items-center justify-center shrink-0">${index + 1}</div>
-              <div class="min-w-0">
-                <div class="text-xs font-bold text-white flex flex-wrap items-center gap-1.5">
-                  <span>${escapeHtml(g.slotLabel)}</span>
-                  ${g.itemName ? `<span class="text-amber-200 font-semibold">„${escapeHtml(g.itemName)}“</span>` : ''}
-                  <span class="text-wow-gold">${g.fromIlvl} &rarr; ${g.toIlvl}</span>
-                  <span class="text-emerald-400">(+${g.pointGain} Pkt)</span>
-                </div>
-                <div class="text-[11px] text-slate-400">${escapeHtml(g.reason)} • Schnitt danach: <strong class="text-white">${g.runningAvgAfter} Ø</strong></div>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-2.5 shrink-0">
-              <div class="text-right">
-                <div class="px-2.5 py-0.5 rounded-full border text-[11px] font-bold ${badgeColor}">${costLabel}</div>
-                <div class="mt-0.5">${availabilityLabel}</div>
-              </div>
-              <button onclick="completeUpgradeStep(${charIdx}, '${g.slotKey}', ${g.toIlvl}, '${g.markType}', ${g.markCost})"
-                      class="px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black text-xs shadow transition flex items-center gap-1"
-                      title="Klicken, wenn du diesen Schritt im Spiel erledigt hast (setzt Slot auf ${g.toIlvl} und zieht ${g.markCost} Wappen ab)">
-                <span>✅</span> Erledigt
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      const bottomTwoColHtml = `
-        <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
-          <div class="xl:col-span-7 bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-3 shadow-lg">
-            <div>
-              <h3 class="text-sm font-bold text-white">🎯 Upgrade-Fahrplan auf Ø ${targetIlvlGoal} für <span style="color:${charColor}">${escapeHtml(char.name)}</span> (Mit „✅ Erledigt“-Häkchen)</h3>
-              <p class="text-xs text-slate-400">
-                Klicke rechts neben einem Schritt einfach auf <strong>„✅ Erledigt“</strong>, sobald du das Item im Spiel angelegt oder beim NPC aufgewertet hast – dein Item-Level und deine Wappen aktualisieren sich sofort!
-              </p>
-            </div>
-            <div class="space-y-2">${stepsHtml}</div>
-          </div>
-
-          <div class="xl:col-span-5 bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-4 shadow-lg">
-            <div>
-              <h3 class="text-sm font-bold text-white">🚦 3-Zonen-Slot-Ampel (Inkl. echter Item-Namen aus SimCraft)</h3>
-              <p class="text-xs text-slate-400">Zeigt dir den genauen Namen jedes angelegten Items und jedes Mythos-Schatzes in deiner Tasche.</p>
-            </div>
-
-            <div class="space-y-2">
-              <div class="text-xs font-bold uppercase text-emerald-400">🟢 Zone 1: Aufwertbare Mythos-Slots & Taschen-Upgrades (${zone1ActionNow.length} Slots)</div>
-              <div class="space-y-2">${zone1ActionNow.map(i => renderZoneSlotCard(i, 'action')).join('')}</div>
-            </div>
-
-            <div class="space-y-2 pt-3 border-t border-wow-border/60">
-              <div class="text-xs font-bold uppercase text-amber-300">🔒 Zone 2: Auf Held 6/6 (321) blockiert (${zone2BlockedHero.length} Slots)</div>
-              <div class="space-y-2">${zone2BlockedHero.map(i => renderZoneSlotCard(i, 'blocked')).join('')}</div>
-            </div>
-
-            <details class="pt-3 border-t border-wow-border/60 group">
-              <summary class="cursor-pointer list-none flex items-center justify-between text-xs font-bold uppercase text-slate-400 hover:text-white">
-                <span>✔️ Zone 3: Bereits ≥ ${targetIlvlGoal} iLvl (${zone3Completed.length} Slots fertig)</span>
-                <span>▼</span>
-              </summary>
-              <div class="space-y-2 mt-2.5">${zone3Completed.map(i => renderZoneSlotCard(i, 'done')).join('')}</div>
-            </details>
-          </div>
-        </div>
-      `;
-
-      return topSummaryHtml + mplusCalculatorSectionHtml + crestTableSectionHtml + bottomTwoColHtml;
-    }
-
-    function renderCharacterHubAndPopup() {
-      if (characters.length === 0) return;
-      if (activeCharIndex >= characters.length) activeCharIndex = 0;
-
-      const rankings = computeAllCharacter331Rankings();
-      const activeSim = simulateCharacterToTarget(characters[activeCharIndex], activeCharIndex);
-
-      const selectorCardsHtml = buildCharSelectorCardsHtml(rankings);
-      const detailHtml = buildCharacterDetailHtml(activeSim);
-
-      const hubTop = document.getElementById('charHubTopSelectorBar');
-      const hubDetail = document.getElementById('charHubDetailContainer');
-      if (hubTop) hubTop.innerHTML = selectorCardsHtml;
-      if (hubDetail) hubDetail.innerHTML = detailHtml;
-
-      const popTop = document.getElementById('popupCharSelectorBar');
-      const popDetail = document.getElementById('popupCharDetailBody');
-      if (popTop) popTop.innerHTML = selectorCardsHtml;
-      if (popDetail) popDetail.innerHTML = detailHtml;
-    }
-
-    // =========================================================================
-    // 6. SIMCRAFT PARSER (LIEST JETZT AUCH DIE ECHTEN ITEM-NAMEN AUS!)
-    // =========================================================================
     function classifyItemTrackFromBonusIds(bonusStr, isCrafted) {
       if (isCrafted) return { track: 'crafted', label: 'Handwerk', maxUpgradable: 331 };
       const ids = String(bonusStr || '').split('/').map(n => parseInt(n, 10));
       for (const id of ids) {
         if (MYTH_BONUS_IDS[id]) return { track: 'myth', label: MYTH_BONUS_IDS[id], maxUpgradable: 334 };
-        if (HERO_BONUS_IDS[id]) {
-          return { track: id === 12846 ? 'hero_max' : 'hero', label: HERO_BONUS_IDS[id], maxUpgradable: 321 };
-        }
+        if (HERO_BONUS_IDS[id]) return { track: id === 12846 ? 'hero_max' : 'hero', label: HERO_BONUS_IDS[id], maxUpgradable: 321 };
       }
       return { track: 'hero_max', label: 'Max 321', maxUpgradable: 321 };
     }
 
     function parseSimcString(rawText) {
       const lines = (rawText || '').split(/\r?\n/);
-      let charName = '', realm = '', region = 'eu', className = '';
-      let advMarks = null, vetMarks = null, champMarks = null, heroMarks = null, mythMarks = null;
+      let charName = '', realm = 'Unbekannt', className = '';
+      let advMarks = 0, vetMarks = 0, champMarks = 0, heroMarks = 0, mythMarks = 0;
 
-      const equippedSlots = {}, bagSlots = {}, slotMeta = {}, charWatermarks = {}, accountWatermarks = {};
+      const equippedSlots = {}, bagSlots = {}, slotMeta = {}, charWatermarks = {};
       SLOTS.forEach(s => {
         equippedSlots[s.key] = 0;
         bagSlots[s.key] = 0;
         slotMeta[s.key] = { track: 'hero_max', label: '', maxUpgradable: 321, eqName: '' };
       });
 
-      const bagRingsList = [], bagTrinketsList = [];
-      const bagMythRings = [], bagMythTrinkets = [];
-      let currentSection = 'equipped';
-      let lastCommentIlvl = 0;
-      let lastCommentName = '';
+      const bagRings = [], bagTrinkets = [], bagMythRings = [], bagMythTrinkets = [];
+      let section = 'equipped', lastIlvl = 0, lastName = '';
 
-      const simcToSlotKey = {
-        head: 'head', neck: 'neck', shoulder: 'shoulder', back: 'back',
-        chest: 'chest', wrist: 'wrist', hands: 'hands', waist: 'waist',
-        legs: 'legs', feet: 'feet', finger1: 'finger1', finger2: 'finger2',
+      const mapKey = {
+        head: 'head', neck: 'neck', shoulder: 'shoulder', back: 'back', chest: 'chest', wrist: 'wrist',
+        hands: 'hands', waist: 'waist', legs: 'legs', feet: 'feet', finger1: 'finger1', finger2: 'finger2',
         trinket1: 'trinket1', trinket2: 'trinket2', main_hand: 'mainhand', off_hand: 'offhand'
       };
 
@@ -1781,190 +1167,108 @@
         const line = lines[i].trim();
         if (!line || /^#\s*(?:Saved Loadout|talents=)/i.test(line)) continue;
 
-        if (i === 0 && line.startsWith('#')) {
-          const headerParts = line.replace(/^#\s*/, '').split(' - ');
-          if (headerParts.length >= 4) {
-            if (!charName) charName = headerParts[0].trim();
-            const regRealm = headerParts[headerParts.length - 1].trim();
-            if (regRealm.includes('/')) {
-              const [rReg, rName] = regRealm.split('/');
-              if (rReg) region = rReg.toLowerCase().trim();
-              if (rName) realm = rName.trim();
-            }
-          }
-        }
-
         if (line.startsWith('###')) {
-          const lower = line.toLowerCase();
-          if (lower.includes('gear from bags')) currentSection = 'bags';
-          else if (lower.includes('additional character info')) currentSection = 'info';
-          else currentSection = 'other';
-          lastCommentIlvl = 0;
-          lastCommentName = '';
+          section = line.toLowerCase().includes('gear from bags') ? 'bags' : 'other';
+          lastIlvl = 0; lastName = '';
           continue;
         }
 
         if (/^#\s*upgrade_currencies=/i.test(line)) {
-          const c3442 = line.match(/\bc:3442:(\d+)/);
-          const c3443 = line.match(/\bc:3443:(\d+)/);
-          const c3444 = line.match(/\bc:3444:(\d+)/);
-          const c3445 = line.match(/\bc:3445:(\d+)/);
-          const c3446 = line.match(/\bc:3446:(\d+)/);
-          if (c3442) advMarks   = parseInt(c3442[1], 10);
-          if (c3443) vetMarks   = parseInt(c3443[1], 10);
-          if (c3444) champMarks = parseInt(c3444[1], 10);
-          if (c3445) heroMarks  = parseInt(c3445[1], 10);
-          if (c3446) mythMarks  = parseInt(c3446[1], 10);
+          advMarks   = parseInt((line.match(/\bc:3442:(\d+)/) || [])[1] || '0', 10);
+          vetMarks   = parseInt((line.match(/\bc:3443:(\d+)/) || [])[1] || '0', 10);
+          champMarks = parseInt((line.match(/\bc:3444:(\d+)/) || [])[1] || '0', 10);
+          heroMarks  = parseInt((line.match(/\bc:3445:(\d+)/) || [])[1] || '0', 10);
+          mythMarks  = parseInt((line.match(/\bc:3446:(\d+)/) || [])[1] || '0', 10);
           continue;
         }
 
-        if (/^#\s*slot_high_watermarks=/i.test(line)) {
-          const rawWm = line.replace(/^#\s*slot_high_watermarks=/i, '').trim();
-          const charMap = {}, accMap = {};
-          rawWm.split('/').forEach(entry => {
-            const parts = entry.split(':').map(n => parseInt(n, 10));
-            if (parts.length >= 3 && !isNaN(parts[0])) {
-              charMap[parts[0]] = parts[1] || 0;
-              accMap[parts[0]]  = Math.max(parts[1] || 0, parts[2] || 0);
-            }
-          });
-          SLOTS.forEach(s => {
-            if (charMap[s.redundancyId] !== undefined) charWatermarks[s.key] = charMap[s.redundancyId];
-            if (accMap[s.redundancyId] !== undefined)  accountWatermarks[s.key] = accMap[s.redundancyId];
-          });
-          continue;
-        }
+        if (section === 'equipped') {
+          const cm = line.match(/^(warrior|paladin|hunter|rogue|priest|deathknight|shaman|mage|warlock|monk|druid|demonhunter|evoker)="?([^"\n]+)"?/i);
+          if (cm) { className = cm[1].toLowerCase(); charName = cm[2].trim(); continue; }
+          const sm = line.match(/^server=(.+)$/i);
+          if (sm) { realm = sm[1].trim().replace(/_/g, ' '); continue; }
 
-        if (currentSection === 'equipped') {
-          const classMatch = line.match(/^(warrior|paladin|hunter|rogue|priest|deathknight|shaman|mage|warlock|monk|druid|demonhunter|evoker)="?([^"\n]+)"?/i);
-          if (classMatch) {
-            className = classMatch[1].toLowerCase();
-            charName = classMatch[2].trim();
-            continue;
-          }
-          const serverMatch = line.match(/^server=(.+)$/i);
-          if (serverMatch && !realm) {
-            realm = serverMatch[1].trim().replace(/_/g, ' ');
-            continue;
-          }
           if (line.startsWith('#')) {
-            const commentItemMatch = line.replace(/^#\s*/, '').match(/^(.*?)\s*\((\d+)\)\s*$/);
-            if (commentItemMatch) {
-              lastCommentName = commentItemMatch[1].trim();
-              lastCommentIlvl = parseInt(commentItemMatch[2], 10);
-            }
+            const im = line.replace(/^#\s*/, '').match(/^(.*?)\s*\((\d+)\)\s*$/);
+            if (im) { lastName = im[1].trim(); lastIlvl = parseInt(im[2], 10); }
             continue;
           }
-          const slotMatch = line.match(/^(head|neck|shoulder|back|chest|wrist|hands|waist|legs|feet|finger1|finger2|trinket1|trinket2|main_hand|off_hand)=/i);
-          if (slotMatch) {
-            const rawSlot = slotMatch[1].toLowerCase();
-            const slotKey = simcToSlotKey[rawSlot];
-            const inlineIlvl = line.match(/ilevel=(\d+)/i);
-            const finalIlvl = inlineIlvl ? parseInt(inlineIlvl[1], 10) : lastCommentIlvl;
-            const bonusMatch = line.match(/bonus_id=([0-9/]+)/i);
-            const isCrafted = /crafting_quality=/i.test(line);
-            if (slotKey && finalIlvl > 0) {
-              equippedSlots[slotKey] = finalIlvl;
-              slotMeta[slotKey] = {
-                ...slotMeta[slotKey],
-                ...classifyItemTrackFromBonusIds(bonusMatch ? bonusMatch[1] : '', isCrafted),
-                eqName: lastCommentName || ''
-              };
+
+          const slm = line.match(/^(head|neck|shoulder|back|chest|wrist|hands|waist|legs|feet|finger1|finger2|trinket1|trinket2|main_hand|off_hand)=/i);
+          if (slm) {
+            const key = mapKey[slm[1].toLowerCase()];
+            const bonus = (line.match(/bonus_id=([0-9/]+)/i) || [])[1] || '';
+            if (key && lastIlvl > 0) {
+              equippedSlots[key] = lastIlvl;
+              slotMeta[key] = { ...classifyItemTrackFromBonusIds(bonus, /crafting_quality=/i.test(line)), eqName: lastName };
             }
-            lastCommentIlvl = 0;
-            lastCommentName = '';
+            lastIlvl = 0; lastName = '';
           }
-        } else if (currentSection === 'bags') {
+        } else if (section === 'bags') {
           const stripped = line.replace(/^#\s*/, '');
-          if (!stripped) continue;
-          const bagSlotMatch = stripped.match(/^(head|neck|shoulder|back|chest|wrist|hands|waist|legs|feet|finger1|finger2|trinket1|trinket2|main_hand|off_hand)=/i);
-          if (bagSlotMatch) {
-            const rawSlot = bagSlotMatch[1].toLowerCase();
-            const slotKey = simcToSlotKey[rawSlot];
-            const inlineIlvl = stripped.match(/ilevel=(\d+)/i);
-            const finalIlvl = inlineIlvl ? parseInt(inlineIlvl[1], 10) : lastCommentIlvl;
-            const bonusMatch = stripped.match(/bonus_id=([0-9/]+)/i);
-            const trackInfo = classifyItemTrackFromBonusIds(bonusMatch ? bonusMatch[1] : '', /crafting_quality=/i.test(stripped));
-            if (slotKey && finalIlvl > 0) {
-              if (rawSlot === 'finger1' || rawSlot === 'finger2') {
-                bagRingsList.push({ ilvl: finalIlvl, name: lastCommentName });
-                if (trackInfo.track === 'myth') bagMythRings.push({ ilvl: finalIlvl, name: lastCommentName });
-              } else if (rawSlot === 'trinket1' || rawSlot === 'trinket2') {
-                bagTrinketsList.push({ ilvl: finalIlvl, name: lastCommentName });
-                if (trackInfo.track === 'myth') bagMythTrinkets.push({ ilvl: finalIlvl, name: lastCommentName });
+          const slm = stripped.match(/^(head|neck|shoulder|back|chest|wrist|hands|waist|legs|feet|finger1|finger2|trinket1|trinket2|main_hand|off_hand)=/i);
+          if (slm) {
+            const raw = slm[1].toLowerCase();
+            const key = mapKey[raw];
+            const bonus = (stripped.match(/bonus_id=([0-9/]+)/i) || [])[1] || '';
+            const trackInfo = classifyItemTrackFromBonusIds(bonus, /crafting_quality=/i.test(stripped));
+            if (key && lastIlvl > 0) {
+              if (raw === 'finger1' || raw === 'finger2') {
+                bagRings.push({ ilvl: lastIlvl, name: lastName });
+                if (trackInfo.track === 'myth') bagMythRings.push({ ilvl: lastIlvl, name: lastName });
+              } else if (raw === 'trinket1' || raw === 'trinket2') {
+                bagTrinkets.push({ ilvl: lastIlvl, name: lastName });
+                if (trackInfo.track === 'myth') bagMythTrinkets.push({ ilvl: lastIlvl, name: lastName });
               } else {
-                if (finalIlvl > (bagSlots[slotKey] || 0)) {
-                  bagSlots[slotKey] = finalIlvl;
-                  slotMeta[slotKey].bagName = lastCommentName;
-                }
-                if (trackInfo.track === 'myth' && finalIlvl >= (slotMeta[slotKey].bagMythIlvl || 0)) {
-                  slotMeta[slotKey].bagMythIlvl = finalIlvl;
-                  slotMeta[slotKey].bagMythName = lastCommentName;
-                  slotMeta[slotKey].maxUpgradable = 334;
-                }
+                if (lastIlvl > (bagSlots[key] || 0)) { bagSlots[key] = lastIlvl; slotMeta[key].bagName = lastName; }
+                if (trackInfo.track === 'myth') { slotMeta[key].bagMythIlvl = lastIlvl; slotMeta[key].bagMythName = lastName; slotMeta[key].maxUpgradable = 334; }
               }
             }
-            lastCommentIlvl = 0;
-            lastCommentName = '';
+            lastIlvl = 0; lastName = '';
           } else {
-            const commentItemMatch = stripped.match(/^(.*?)\s*\((\d+)\)\s*$/);
-            if (commentItemMatch) {
-              lastCommentName = commentItemMatch[1].trim();
-              lastCommentIlvl = parseInt(commentItemMatch[2], 10);
-            }
+            const im = stripped.match(/^(.*?)\s*\((\d+)\)\s*$/);
+            if (im) { lastName = im[1].trim(); lastIlvl = parseInt(im[2], 10); }
           }
         }
       }
 
-      if (bagRingsList.length > 0) {
-        bagRingsList.sort((a, b) => b.ilvl - a.ilvl);
-        bagSlots.finger1 = bagRingsList[0].ilvl;
-        slotMeta.finger1.bagName = bagRingsList[0].name;
-        bagSlots.finger2 = bagRingsList.length > 1 ? bagRingsList[1].ilvl : bagRingsList[0].ilvl;
-        slotMeta.finger2.bagName = bagRingsList.length > 1 ? bagRingsList[1].name : bagRingsList[0].name;
+      if (bagRings.length > 0) {
+        bagRings.sort((a, b) => b.ilvl - a.ilvl);
+        bagSlots.finger1 = bagRings[0].ilvl; slotMeta.finger1.bagName = bagRings[0].name;
+        bagSlots.finger2 = (bagRings[1] || bagRings[0]).ilvl; slotMeta.finger2.bagName = (bagRings[1] || bagRings[0]).name;
       }
       if (bagMythRings.length > 0) {
         bagMythRings.sort((a, b) => b.ilvl - a.ilvl);
-        slotMeta.finger1.bagMythIlvl = bagMythRings[0].ilvl;
-        slotMeta.finger1.bagMythName = bagMythRings[0].name;
-        slotMeta.finger1.maxUpgradable = 334;
-        if (bagMythRings.length > 1) {
-          slotMeta.finger2.bagMythIlvl = bagMythRings[1].ilvl;
-          slotMeta.finger2.bagMythName = bagMythRings[1].name;
-          slotMeta.finger2.maxUpgradable = 334;
-        }
+        slotMeta.finger1.bagMythIlvl = bagMythRings[0].ilvl; slotMeta.finger1.bagMythName = bagMythRings[0].name; slotMeta.finger1.maxUpgradable = 334;
+        if (bagMythRings[1]) { slotMeta.finger2.bagMythIlvl = bagMythRings[1].ilvl; slotMeta.finger2.bagMythName = bagMythRings[1].name; slotMeta.finger2.maxUpgradable = 334; }
       }
-
-      if (bagTrinketsList.length > 0) {
-        bagTrinketsList.sort((a, b) => b.ilvl - a.ilvl);
-        bagSlots.trinket1 = bagTrinketsList[0].ilvl;
-        slotMeta.trinket1.bagName = bagTrinketsList[0].name;
-        bagSlots.trinket2 = bagTrinketsList.length > 1 ? bagTrinketsList[1].ilvl : bagTrinketsList[0].ilvl;
-        slotMeta.trinket2.bagName = bagTrinketsList.length > 1 ? bagTrinketsList[1].name : bagTrinketsList[0].name;
+      if (bagTrinkets.length > 0) {
+        bagTrinkets.sort((a, b) => b.ilvl - a.ilvl);
+        bagSlots.trinket1 = bagTrinkets[0].ilvl; slotMeta.trinket1.bagName = bagTrinkets[0].name;
+        bagSlots.trinket2 = (bagTrinkets[1] || bagTrinkets[0]).ilvl; slotMeta.trinket2.bagName = (bagTrinkets[1] || bagTrinkets[0]).name;
       }
       if (bagMythTrinkets.length > 0) {
         bagMythTrinkets.sort((a, b) => b.ilvl - a.ilvl);
-        slotMeta.trinket1.bagMythIlvl = bagMythTrinkets[0].ilvl;
-        slotMeta.trinket1.bagMythName = bagMythTrinkets[0].name;
-        slotMeta.trinket1.maxUpgradable = 334;
-        if (bagMythTrinkets.length > 1) {
-          slotMeta.trinket2.bagMythIlvl = bagMythTrinkets[1].ilvl;
-          slotMeta.trinket2.bagMythName = bagMythTrinkets[1].name;
-          slotMeta.trinket2.maxUpgradable = 334;
-        }
+        slotMeta.trinket1.bagMythIlvl = bagMythTrinkets[0].ilvl; slotMeta.trinket1.bagMythName = bagMythTrinkets[0].name; slotMeta.trinket1.maxUpgradable = 334;
+        if (bagMythTrinkets[1]) { slotMeta.trinket2.bagMythIlvl = bagMythTrinkets[1].ilvl; slotMeta.trinket2.bagMythName = bagMythTrinkets[1].name; slotMeta.trinket2.maxUpgradable = 334; }
       }
 
-      const tempChar = { slots: equippedSlots, bagSlots, slotMeta };
-      const spentInfo = calculateSpentFromCharGear(tempChar);
+      // Verbrauchte Wappen aus Items berechnen
+      let mythCrafted = 0, mythSteps = 0;
+      SLOTS.forEach(s => {
+        const best = Math.max(equippedSlots[s.key] || 0, bagSlots[s.key] || 0);
+        if (slotMeta[s.key].track === 'crafted' && best >= 331) mythCrafted++;
+        else if (best > 321) mythSteps += MYTH_UPGRADE_STEPS.filter(st => st <= best).length;
+      });
+      const mythSpent = mythCrafted * 80 + mythSteps * 20;
 
       return {
-        charName, realm: realm || 'Unbekannt', region, className,
-        equippedSlots, bagSlots, slotMeta, charWatermarks, accountWatermarks,
-        equippedCount: Object.values(equippedSlots).filter(v => v > 0).length,
-        bagCount: Object.values(bagSlots).filter(v => v > 0).length,
+        name: charName, realm, className,
+        hasTwoHand: equippedSlots.mainhand > 0 && equippedSlots.offhand === 0,
+        slots: equippedSlots, bagSlots, slotMeta, charWatermarks,
         advMarks, vetMarks, champMarks, heroMarks, mythMarks,
-        spentInfo,
-        hasTwoHand: equippedSlots.mainhand > 0 && equippedSlots.offhand === 0
+        advSpent: 0, vetSpent: 0, champSpent: 120, heroSpent: 360, mythSpent,
+        mythSpentNote: `${mythCrafted}× Handwerk (331) + ${mythSteps}× Mythos-Stufen`
       };
     }
 
@@ -1976,107 +1280,40 @@
 
     function previewSimcInput() {
       const raw = document.getElementById('simcTextarea').value;
-      const preview = document.getElementById('simcPreviewBox');
-      if (!raw.trim()) { preview.classList.add('hidden'); return; }
-      const parsed = parseSimcString(raw);
-      preview.classList.remove('hidden');
-
-      const seasonCap = getSeasonMaxCap();
-      const mWallet = parsed.mythMarks ?? 0;
-      const mSpent = parsed.spentInfo.mythSpent;
-      const mTotal = Math.min(seasonCap, mWallet + mSpent);
-      const mFarmable = Math.max(0, seasonCap - mTotal);
-
-      preview.innerHTML = `
-        <div class="font-bold text-purple-300">✔️ Charakter erkannt: <span class="text-white">${escapeHtml(parsed.charName || 'Unbekannt')} (${escapeHtml(parsed.realm)})</span></div>
-        <div class="text-slate-300">🎒 <strong>In der Tasche (SimC):</strong> 🟠 ${mWallet} Mythisch • 🟣 ${parsed.heroMarks ?? 0} Held • 🔵 ${parsed.champMarks ?? 0} Champion</div>
-        <div class="text-amber-300">🔨 <strong>Verbraucht auf Charakter:</strong> 🟠 ${mSpent} Mythisch (${escapeHtml(parsed.spentInfo.mythSpentNote)})</div>
-        <div class="text-emerald-300 font-bold">🌾 <strong>Cap-Rechnung:</strong> ${seasonCap} Cap − (${mWallet} Tasche + ${mSpent} Verbraucht = ${mTotal}) = <u>Noch ${mFarmable} Mythisch-Wappen farmbar!</u></div>
-      `;
+      const box = document.getElementById('simcPreviewBox');
+      if (!raw.trim()) { box.classList.add('hidden'); return; }
+      const p = parseSimcString(raw);
+      box.classList.remove('hidden');
+      box.innerHTML = `<div class="font-bold text-purple-300">✔️ ${escapeHtml(p.name || 'Unbekannt')} (${escapeHtml(p.realm)})</div><div>🟠 Beutel: ${p.mythMarks} | 🔨 Verbraucht: ${p.mythSpent}</div>`;
     }
 
     function importSimcProfile() {
       const raw = document.getElementById('simcTextarea').value;
       if (!raw.trim()) return;
-      const parsed = parseSimcString(raw);
-      if (!parsed.charName || parsed.equippedCount === 0) {
-        showToast('Kein gültiger SimC-Text erkannt.', 'error');
-        return;
-      }
-      const charObj = {
-        name: parsed.charName,
-        realm: parsed.realm,
-        realmSlug: toRealmSlug(parsed.realm),
-        className: parsed.className || '',
-        source: 'simc',
-        hasTwoHand: parsed.hasTwoHand,
-        slots: parsed.equippedSlots,
-        bagSlots: parsed.bagSlots,
-        slotMeta: parsed.slotMeta,
-        charWatermarks: parsed.charWatermarks,
-        accountWatermarks: parsed.accountWatermarks,
-        advMarks: parsed.advMarks ?? 0,
-        vetMarks: parsed.vetMarks ?? 0,
-        champMarks: parsed.champMarks ?? 0,
-        heroMarks: parsed.heroMarks ?? 0,
-        mythMarks: parsed.mythMarks ?? 0,
-        advSpent: parsed.spentInfo.advSpent,
-        vetSpent: parsed.spentInfo.vetSpent,
-        champSpent: parsed.spentInfo.champSpent,
-        heroSpent: parsed.spentInfo.heroSpent,
-        mythSpent: parsed.spentInfo.mythSpent,
-        mythSpentNote: parsed.spentInfo.mythSpentNote,
-        updatedAt: new Date().toISOString()
-      };
-      activeCharIndex = upsertCharacter(charObj);
+      const p = parseSimcString(raw);
+      if (!p.name) { showToast('Kein Charakter im SimC erkannt.', 'error'); return; }
+      const idx = characters.findIndex(c => c.name.toLowerCase() === p.name.toLowerCase());
+      if (idx >= 0) { characters[idx] = { ...characters[idx], ...p }; activeCharIndex = idx; }
+      else { characters.push(p); activeCharIndex = characters.length - 1; }
       saveCharsToStorage();
       renderAll();
       closeModal('simcModal');
-      switchTab('charhub');
-      showToast(`${charObj.name} inkl. Item-Namen über SimCraft importiert!`, 'success');
-    }
-
-    function toRealmSlug(realm) {
-      return String(realm || '').toLowerCase().trim().replace(/[\s_]+/g, '-');
+      showToast(`${p.name} importiert!`, 'success');
     }
 
     async function fetchCharacterFromRaiderIO(name, realm, region = 'eu') {
       const res = await fetch(`https://raider.io/api/v1/characters/profile?region=${region}&realm=${encodeURIComponent(realm.trim())}&name=${encodeURIComponent(name.trim())}&fields=gear`);
-      if (!res.ok) throw new Error(`Charakter "${name}" auf "${realm}" wurde bei Raider.IO nicht gefunden.`);
+      if (!res.ok) throw new Error(`Charakter "${name}" nicht gefunden.`);
       const data = await res.json();
       const items = data.gear?.items || {};
-      const slots = {};
-      const slotMeta = {};
-
+      const slots = {}, slotMeta = {};
       SLOTS.forEach(s => {
-        const itemObj = items[s.key];
-        const ilvl = itemObj?.item_level || 0;
-        slots[s.key] = ilvl;
-        const bonuses = (itemObj?.bonuses || []).join('/');
-        slotMeta[s.key] = {
-          ...classifyItemTrackFromBonusIds(bonuses, false),
-          eqName: itemObj?.name || ''
-        };
-        if (ilvl > 321) slotMeta[s.key].maxUpgradable = 334;
+        const it = items[s.key];
+        slots[s.key] = it?.item_level || 0;
+        slotMeta[s.key] = { ...classifyItemTrackFromBonusIds((it?.bonuses || []).join('/'), false), eqName: it?.name || '' };
+        if (slots[s.key] > 321) slotMeta[s.key].maxUpgradable = 334;
       });
-
-      const tempChar = { slots, bagSlots: {}, slotMeta };
-      const spentInfo = calculateSpentFromCharGear(tempChar);
-
-      return {
-        name: data.name || name,
-        realm: data.realm || realm,
-        realmSlug: toRealmSlug(data.realm || realm),
-        className: data.class || '',
-        source: 'raiderio',
-        hasTwoHand: slots.mainhand > 0 && slots.offhand === 0,
-        slots,
-        slotMeta,
-        mythSpent: spentInfo.mythSpent,
-        heroSpent: spentInfo.heroSpent,
-        mythSpentNote: spentInfo.mythSpentNote,
-        updatedAt: new Date().toISOString()
-      };
+      return { name: data.name || name, realm: data.realm || realm, className: data.class || '', slots, slotMeta };
     }
 
     async function addSingleCharacterRaiderIO() {
@@ -2085,118 +1322,30 @@
       const realm = document.getElementById('singleCharRealm').value.trim();
       if (!name || !realm) return;
       try {
-        const charData = await fetchCharacterFromRaiderIO(name, realm, region);
-        activeCharIndex = upsertCharacter(charData);
+        const c = await fetchCharacterFromRaiderIO(name, realm, region);
+        characters.push({ ...c, bagSlots: {}, mythMarks: 0, mythSpent: 0 });
+        activeCharIndex = characters.length - 1;
         saveCharsToStorage();
         renderAll();
         closeModal('addCharModal');
-        showToast(`${charData.name} über Raider.IO geladen!`, 'success');
-      } catch (e) {
-        showToast(e.message, 'error');
-      }
+        showToast(`${c.name} geladen!`, 'success');
+      } catch (e) { showToast(e.message, 'error'); }
     }
 
     async function refreshActiveCharRaiderIO() {
       const char = characters[activeCharIndex];
       if (!char) return;
       try {
-        showToast(`Aktualisiere ${char.name} über Raider.IO...`, 'info');
         const updated = await fetchCharacterFromRaiderIO(char.name, char.realm, 'eu');
-        upsertCharacter(updated);
+        characters[activeCharIndex] = { ...char, ...updated };
         saveCharsToStorage();
         renderAll();
-        showToast(`${char.name} erfolgreich über Raider.IO aktualisiert!`, 'success');
-      } catch (e) {
-        showToast(e.message, 'error');
-      }
-    }
-
-    function upsertCharacter(newChar) {
-      const existingIdx = characters.findIndex(c => (c.name || '').toLowerCase() === (newChar.name || '').toLowerCase());
-      if (existingIdx >= 0) {
-        const ex = characters[existingIdx];
-        characters[existingIdx] = {
-          ...ex,
-          ...newChar,
-          className: newChar.className || ex.className || '',
-          bagSlots: newChar.bagSlots && Object.keys(newChar.bagSlots).length > 0 ? newChar.bagSlots : (ex.bagSlots || {}),
-          slotMeta: newChar.slotMeta || ex.slotMeta || {},
-          charWatermarks: newChar.charWatermarks || ex.charWatermarks || {},
-          accountWatermarks: newChar.accountWatermarks || ex.accountWatermarks || {},
-          mythMarks: newChar.mythMarks !== undefined ? newChar.mythMarks : (ex.mythMarks || 0),
-          heroMarks: newChar.heroMarks !== undefined ? newChar.heroMarks : (ex.heroMarks || 0),
-          champMarks: newChar.champMarks !== undefined ? newChar.champMarks : (ex.champMarks || 0),
-          vetMarks: newChar.vetMarks !== undefined ? newChar.vetMarks : (ex.vetMarks || 0),
-          advMarks: newChar.advMarks !== undefined ? newChar.advMarks : (ex.advMarks || 0),
-          mythSpent: newChar.mythSpent ?? ex.mythSpent,
-          heroSpent: newChar.heroSpent ?? ex.heroSpent,
-          champSpent: newChar.champSpent ?? ex.champSpent,
-          mythSpentNote: newChar.mythSpentNote || ex.mythSpentNote
-        };
-        return existingIdx;
-      } else {
-        characters.push(newChar);
-        return characters.length - 1;
-      }
-    }
-
-    function selectActiveCharacter(idxStr) {
-      const idx = parseInt(idxStr, 10);
-      if (!isNaN(idx) && characters[idx]) {
-        activeCharIndex = idx;
-        renderAll();
-      }
-    }
-
-    function onStepCostChange() {
-      rules.stepCost = parseInt(document.getElementById('crestStepCostSelect').value || '20', 10);
-      localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules));
-      renderAll();
-    }
-
-    function onSeasonCapConfigChange() {
-      rules.seasonWeek = parseInt(document.getElementById('seasonWeekSelect').value || '9', 10);
-      localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules));
-      renderAll();
-    }
-
-    function openCharPopupModal() {
-      renderCharacterHubAndPopup();
-      openModal('charPopupModal');
-    }
-
-    function renderAll() {
-      if (!Array.isArray(characters) || characters.length === 0) {
-        characters = JSON.parse(JSON.stringify(INITIAL_CHARS));
-      }
-      renderCharacterHubAndPopup();
-      renderCrestsView();
-    }
-
-    function setCrestTarget(val) {
-      document.getElementById('crestTargetInput').value = val;
-      renderCrestsView();
-    }
-
-    function renderCrestsView() {
-      const target = parseInt(document.getElementById('crestTargetInput').value || '331', 10);
-      const benchmarks = calculateWarbandBenchmarks();
-      const banner = document.getElementById('crestStatusBanner');
-      const grid = document.getElementById('crestSlotsGrid');
-      const missingSlots = SLOTS.filter(s => benchmarks[s.key] < target);
-      banner.className = missingSlots.length === 0 ? 'p-4 rounded-xl bg-emerald-950/50 border border-emerald-700/50 text-emerald-200 text-sm font-semibold' : 'p-4 rounded-xl bg-amber-950/40 border border-amber-700/50 text-amber-200 text-sm';
-      banner.innerHTML = missingSlots.length === 0
-        ? `✅ Alle 16 Slots sind mindestens auf ${target} ➔ 50% Wappen-Rabatt (10 statt 20 Wappen) für diese Stufe ist freigeschaltet!`
-        : `⏳ Für den ${target}er Wappen-Rabatt-Erfolg fehlen noch ${missingSlots.length} von 16 Slots: ${missingSlots.map(s => s.label).join(', ')}`;
-      grid.innerHTML = SLOTS.map(s => {
-        const val = benchmarks[s.key];
-        const ok = val >= target;
-        return `<div class="p-3 rounded-xl border ${ok ? 'bg-emerald-950/20 border-emerald-800/50' : 'bg-red-950/20 border-red-800/50'} flex justify-between"><span class="text-xs">${s.label}: <strong>${val}/${target}</strong></span><span>${ok ? '✔️' : '⚠️'}</span></div>`;
-      }).join('');
+        showToast(`${char.name} aktualisiert!`, 'success');
+      } catch (e) { showToast(e.message, 'error'); }
     }
 
     function removeCharacter(idx) {
-      if (!confirm(`"${characters[idx]?.name}" wirklich entfernen?`)) return;
+      if (!confirm(`"${characters[idx]?.name}" entfernen?`)) return;
       characters.splice(idx, 1);
       activeCharIndex = 0;
       saveCharsToStorage();
@@ -2205,7 +1354,6 @@
 
     function openEditSlotModal(charIdx, slotKey, slotLabel) {
       const char = characters[charIdx];
-      if (!char) return;
       currentEditingCell = { charIdx, slotKey };
       document.getElementById('editSlotTitle').textContent = `${char.name} – ${slotLabel}`;
       document.getElementById('editSlotEquippedInput').value = char.slots?.[slotKey] || 0;
@@ -2224,29 +1372,15 @@
       closeModal('editSlotModal');
     }
 
-    function toggleRules() {
-      rules.strictPairs = document.getElementById('strictPairsToggle').checked;
-      rules.strictWeapons = document.getElementById('strictWeaponsToggle').checked;
-      rules.includeBags = document.getElementById('includeBagsToggle').checked;
-      localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules));
-      renderAll();
-    }
-
     function switchTab(tab) {
-      ['charhub', 'crests'].forEach(t => {
-        const sec = document.getElementById(`tab-${t}`);
-        const btn = document.getElementById(`tabBtn-${t}`);
-        if (sec) sec.classList.toggle('hidden', t !== tab);
-        if (btn) {
-          btn.className = t === tab
-            ? 'w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-start gap-2.5 bg-wow-gold text-slate-950 font-bold shadow'
-            : 'w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-start gap-2.5 bg-wow-card/60 hover:bg-wow-card text-slate-200 border border-transparent';
-        }
+      ['plan', 'caps', 'milestone'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tab);
+        document.getElementById(`tabBtn-${t}`).className = t === tab
+          ? 'w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-3 bg-wow-gold text-slate-950 font-bold shadow'
+          : 'w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-3 bg-wow-card/60 hover:bg-wow-card text-slate-200';
       });
     }
 
-    function openAddCharModal() { openModal('addCharModal'); }
-    function openBackupModal()  { openModal('backupModal'); }
     function openModal(id)  { const el = document.getElementById(id); el.classList.remove('hidden'); el.classList.add('flex'); }
     function closeModal(id) { const el = document.getElementById(id); el.classList.add('hidden'); el.classList.remove('flex'); }
 
@@ -2280,7 +1414,7 @@
       el.className = `px-4 py-3 rounded-xl border shadow-xl text-xs font-medium ${colors[type] || colors.info}`;
       el.textContent = msg;
       container.appendChild(el);
-      setTimeout(() => el.remove(), 4000);
+      setTimeout(() => el.remove(), 3500);
     }
 
     function escapeHtml(str) {
