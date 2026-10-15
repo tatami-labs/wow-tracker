@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>WoW Kriegsmeuten-Upgrade-Tracker</title>
+  <title>WoW Kriegsmeuten-Upgrade-Tracker v4.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -50,6 +50,7 @@
         <div>
           <h1 class="text-base font-bold text-white tracking-tight flex items-center gap-2">
             Kriegsmeuten-Upgrade-Tracker
+            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v4.0 AKTIV</span>
             <span id="apiStatusBadge" onclick="openApiModal()" class="cursor-pointer text-[11px] px-2.5 py-0.5 rounded-full bg-red-950/80 text-red-300 border border-red-700/50 font-medium">
               ⚠️ API nicht verbunden
             </span>
@@ -69,7 +70,7 @@
         <button onclick="openAddCharModal()" class="px-2.5 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 text-slate-200 border border-wow-border text-xs font-medium transition">
           + Charakter einzeln
         </button>
-        <button id="refreshAllBtn" onclick="refreshAllCharacters()" class="px-2.5 py-1.5 rounded-lg bg-emerald-700/80 hover:bg-emerald-600 text-white text-xs font-medium transition">
+        <button onclick="refreshAllCharacters()" class="px-2.5 py-1.5 rounded-lg bg-emerald-700/80 hover:bg-emerald-600 text-white text-xs font-medium transition">
           🔄 Alle aktualisieren
         </button>
         <button onclick="openApiModal()" class="px-2.5 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 text-slate-300 border border-wow-border text-xs font-medium transition">
@@ -78,26 +79,15 @@
         <button onclick="openBackupModal()" class="px-2.5 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 text-slate-300 border border-wow-border text-xs font-medium transition">
           💾 Backup
         </button>
-        <button onclick="hardResetStorage()" class="px-2.5 py-1.5 rounded-lg bg-red-950/60 hover:bg-red-900 text-red-200 border border-red-800/50 text-xs font-medium transition" title="Setzt den Browser-Speicher bei Anzeigeproblemen auf Lexinê zurück">
+        <button onclick="hardResetStorage()" class="px-2.5 py-1.5 rounded-lg bg-red-950/70 hover:bg-red-900 text-red-200 border border-red-700/50 text-xs font-bold transition">
           🧹 Reset
         </button>
       </div>
     </div>
   </header>
 
-  <!-- MAIN CONTENT AREA (Standardmäßig sichtbar, damit niemals ein leerer Bildschirm entsteht!) -->
+  <!-- MAIN CONTENT (Immer sichtbar, niemals hidden!) -->
   <main class="flex-1 max-w-[1560px] w-full mx-auto px-4 py-5">
-
-    <section id="emptyStateSection" class="hidden bg-wow-panel border border-wow-border rounded-2xl p-8 max-w-2xl mx-auto my-8 shadow-xl">
-      <div class="text-center space-y-3">
-        <h2 class="text-xl font-bold text-white">Keine Charaktere geladen</h2>
-        <div class="flex justify-center gap-3 pt-2">
-          <button onclick="openSimcModal()" class="px-4 py-2 rounded-lg bg-purple-700 text-white text-xs font-bold">📋 WoW ➔ SimCraft Import</button>
-          <button onclick="hardResetStorage()" class="px-4 py-2 rounded-lg bg-wow-card border border-wow-border text-white text-xs font-bold">Standard-Profil (Lexinê) laden</button>
-        </div>
-      </div>
-    </section>
-
     <div id="dashboardContent" class="flex flex-col lg:flex-row gap-6 items-start">
 
       <!-- LINKES SEITENMENÜ -->
@@ -111,7 +101,7 @@
             <span class="text-lg leading-none mt-0.5">📈</span>
             <div class="flex-1 min-w-0">
               <div class="text-xs font-bold leading-tight">Durchschnittliches Item-Level</div>
-              <div id="menuSubtextAvgIlvl" class="text-[10px] opacity-85 font-semibold mt-0.5 truncate">331-Sieger & Wappen-Cap</div>
+              <div id="menuSubtextAvgIlvl" class="text-[10px] opacity-85 font-semibold mt-0.5 truncate">🏆 #1: Lexinê (329.38 Ø)</div>
             </div>
           </button>
 
@@ -178,7 +168,7 @@
 
         <section id="tab-avgilvl" class="space-y-6">
           <div class="grid grid-cols-1 xl:grid-cols-12 gap-5">
-            <!-- FRAGE 1: WELCHER CHARAKTER LOHNT SICH AM MEISTEN AUF 331? -->
+            <!-- FRAGE 1: WER LOHNT SICH AM MEISTEN AUF 331? -->
             <div class="xl:col-span-6 bg-gradient-to-br from-wow-panel via-wow-panel to-emerald-950/30 border-2 border-emerald-500/50 rounded-2xl p-5 flex flex-col justify-between space-y-4 shadow-2xl">
               <div class="flex flex-wrap items-center justify-between gap-2 border-b border-wow-border/80 pb-3">
                 <div>
@@ -204,7 +194,7 @@
                   <h2 class="text-base font-bold text-white mt-1.5 flex items-center gap-1.5 flex-wrap">
                     <span>Wie viel kann</span>
                     <span id="capHeaderCharName" class="underline decoration-amber-400">Lexinê</span>
-                    <span>noch farmen?</span>
+                    <span>diese Woche noch farmen?</span>
                   </h2>
                 </div>
 
@@ -231,7 +221,7 @@
             </div>
           </div>
 
-          <div id="avgIlvlVerdictBanner" class="p-4 rounded-2xl border text-sm"></div>
+          <div id="avgIlvlVerdictBanner" class="p-4 rounded-2xl border border-cyan-600/50 bg-cyan-950/40 text-sm"></div>
 
           <div class="bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-5 shadow-lg">
             <div class="flex flex-wrap items-center justify-between gap-2 border-b border-wow-border pb-3">
@@ -286,7 +276,6 @@
               <label for="plannerCharSelect" class="text-sm font-semibold text-white">Twink auswählen:</label>
               <select id="plannerCharSelect" onchange="selectActiveCharacter(this.value)" class="bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-white"></select>
             </div>
-            <div id="plannerSummaryText" class="text-xs text-slate-300"></div>
           </div>
           <div id="plannerCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </section>
@@ -295,9 +284,7 @@
         <section id="tab-crests" class="hidden space-y-6">
           <div class="bg-wow-panel border border-wow-border rounded-xl p-5 space-y-4">
             <div class="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <h3 class="text-base font-bold text-white">🏆 Offizielle Wappen-Rabatt-Stufen (50 % Twink-Rabatt)</h3>
-              </div>
+              <h3 class="text-base font-bold text-white">🏆 Offizielle Wappen-Rabatt-Stufen (50 % Twink-Rabatt)</h3>
               <div class="flex items-center gap-2">
                 <label class="text-xs text-slate-300">Ziel-iLvl:</label>
                 <input type="number" id="crestTargetInput" value="321" onchange="renderCrestsView()" class="w-24 bg-wow-card border border-wow-border rounded-lg px-3 py-1.5 text-sm text-white font-bold text-center" />
@@ -378,12 +365,6 @@
         <div>
           <label class="block text-xs text-cyan-300 mb-1">🎒 Max. Item-Level in der Tasche</label>
           <input type="number" id="editSlotBagInput" class="w-full bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-cyan-300 font-bold" />
-        </div>
-        <div id="editWeaponTypeBox" class="hidden pt-1">
-          <label class="flex items-center gap-2 text-xs text-amber-300 cursor-pointer">
-            <input type="checkbox" id="editSlotTwoHandCheckbox" class="w-4 h-4 accent-amber-500 rounded" />
-            <span>Zweihandwaffe (deckt Nebenhand ab)</span>
-          </label>
         </div>
       </div>
       <div class="flex items-center justify-end gap-2 pt-2">
@@ -477,9 +458,9 @@
   <div id="toastContainer" class="fixed bottom-4 right-4 z-50 space-y-2"></div>
 
   <script>
-    const STORAGE_KEY_CHARS = 'wow_warband_chars_v2';
+    const STORAGE_KEY_CHARS = 'wow_warband_chars_v4';
     const STORAGE_KEY_API   = 'wow_warband_api_v2';
-    const STORAGE_KEY_RULES = 'wow_warband_rules_v2';
+    const STORAGE_KEY_RULES = 'wow_warband_rules_v4';
 
     const SLOTS = [
       { key: 'head',     label: 'Kopf',          blizz: ['HEAD'],          simc: 'head',      redundancyId: 0 },
@@ -607,10 +588,9 @@
         if (rankings.length > 0) activeCharIndex = rankings[0].charIdx;
         renderAll();
       } catch (err) {
-        console.error('Auto-Recovery ausgeführt:', err);
+        console.error('Auto-Recovery:', err);
         characters = [JSON.parse(JSON.stringify(INITIAL_LEXINE_CHAR))];
         activeCharIndex = 0;
-        saveCharsToStorage();
         renderAll();
       }
 
@@ -642,39 +622,16 @@
             characters = parsedChars.filter(c => c && typeof c === 'object' && c.name && c.slots);
           }
         }
-        const lexIdx = characters.findIndex(c => (c.name || '').toLowerCase() === 'lexinê');
-        if (lexIdx >= 0) {
-          if (!characters[lexIdx].className) characters[lexIdx].className = 'demonhunter';
-          if (characters[lexIdx].mythFarmable === undefined) characters[lexIdx].mythFarmable = 90;
-          if (characters[lexIdx].heroFarmable === undefined) characters[lexIdx].heroFarmable = 90;
-          if (!characters[lexIdx].slotMeta) characters[lexIdx].slotMeta = INITIAL_LEXINE_CHAR.slotMeta;
-        }
-
         const savedApi = localStorage.getItem(STORAGE_KEY_API);
         if (savedApi) {
           const parsed = JSON.parse(savedApi);
           apiConfig = { ...apiConfig, ...parsed, redirectUri: parsed.redirectUri || (window.location.origin + window.location.pathname) };
         }
-
         const savedRules = localStorage.getItem(STORAGE_KEY_RULES);
         if (savedRules) {
           rules = { ...rules, ...JSON.parse(savedRules) };
         }
-        const sp = document.getElementById('strictPairsToggle');
-        const sw = document.getElementById('strictWeaponsToggle');
-        const ib = document.getElementById('includeBagsToggle');
-        const hm = document.getElementById('hideCompletedMatrixToggle');
-        const sc = document.getElementById('crestStepCostSelect');
-        const wk = document.getElementById('seasonWeekSelect');
-        if (sp) sp.checked = rules.strictPairs !== false;
-        if (sw) sw.checked = rules.strictWeapons !== false;
-        if (ib) ib.checked = rules.includeBags !== false;
-        if (hm) hm.checked = Boolean(rules.hideCompletedMatrix);
-        if (sc) sc.value = String(rules.stepCost || 15);
-        if (wk) wk.value = String(rules.seasonWeek || 8);
-      } catch (e) {
-        console.warn('Storage-Reset wegen ungültiger Altdaten:', e);
-      }
+      } catch (e) {}
     }
 
     function saveCharsToStorage() {
@@ -1671,15 +1628,9 @@
     }
 
     function renderAll() {
-      const emptySection = document.getElementById('emptyStateSection');
-      const dashboard = document.getElementById('dashboardContent');
-      if (characters.length === 0) {
-        emptySection.classList.remove('hidden');
-        dashboard.classList.add('hidden');
-        return;
+      if (!Array.isArray(characters) || characters.length === 0) {
+        characters = [JSON.parse(JSON.stringify(INITIAL_LEXINE_CHAR))];
       }
-      emptySection.classList.add('hidden');
-      dashboard.classList.remove('hidden');
       renderSidebarRanking();
       renderAvgIlvlOptimizer();
       renderMatrixView();
