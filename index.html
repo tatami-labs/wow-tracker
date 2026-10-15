@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>WoW Kriegsmeuten-Tracker v11.0</title>
+  <title>WoW Kriegsmeuten-Tracker v12.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -47,7 +47,7 @@
         <div>
           <h1 class="text-sm font-bold text-white flex items-center gap-2">
             Kriegsmeuten-Upgrade-Tracker
-            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v11.0 CLEAN</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v12.0</span>
           </h1>
         </div>
       </div>
@@ -83,7 +83,7 @@
     <!-- 2. UNTEN: SEITENMENÜ LINKS + AKTIVE ANSICHT RECHTS -->
     <div class="flex flex-col lg:flex-row gap-5 items-start">
 
-      <!-- LINKES MENÜ & GLOBALE PARAMETER (Alles an einem Ort, nichts doppelt!) -->
+      <!-- LINKES MENÜ & GLOBALE PARAMETER -->
       <aside class="w-full lg:w-72 shrink-0 space-y-4 lg:sticky lg:top-16">
 
         <!-- ANSICHTEN-UMSCHALTER -->
@@ -96,7 +96,7 @@
             <span class="text-base">🎯</span>
             <div>
               <div class="text-xs font-bold leading-tight">Upgrade-Plan & Slots</div>
-              <div class="text-[10px] opacity-80 font-semibold">Fahrplan, Ampel & Item-Namen</div>
+              <div class="text-[11px] opacity-80 font-semibold">Fahrplan, Ampel & Item-Namen</div>
             </div>
           </button>
 
@@ -104,7 +104,7 @@
             <span class="text-base">🌾</span>
             <div>
               <div class="text-xs font-bold leading-tight">Alle 5 Wappen-Caps</div>
-              <div class="text-[10px] text-slate-400">Beutel, Verbraucht & Cap-Werte</div>
+              <div class="text-[11px] text-slate-400">Beutel, Verbraucht & Cap-Werte</div>
             </div>
           </button>
 
@@ -112,12 +112,12 @@
             <span class="text-base">🏆</span>
             <div>
               <div class="text-xs font-bold leading-tight">331-Rabatt-Meilenstein</div>
-              <div class="text-[10px] text-slate-400">16-Slot Kriegsmeuten-Check</div>
+              <div class="text-[11px] text-slate-400">16-Slot Kriegsmeuten-Check</div>
             </div>
           </button>
         </div>
 
-        <!-- EINSTELLUNGEN (Einzige Steuerung für Ziel, Cap, Preis & M+ Key) -->
+        <!-- EINSTELLUNGEN -->
         <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 space-y-3 shadow-lg">
           <div class="text-[11px] font-bold text-slate-300 uppercase tracking-wider border-b border-wow-border pb-2">
             Rechner-Einstellungen
@@ -146,17 +146,20 @@
           <div class="flex items-center justify-between gap-2">
             <span class="text-xs text-slate-300 whitespace-nowrap font-medium">📅 Wochen-Cap:</span>
             <select id="seasonWeekSelect" onchange="onSettingsChange()" class="w-40 bg-wow-card border border-wow-border rounded-lg px-2.5 py-1.5 text-amber-300 font-bold text-xs focus:outline-none">
+              <option value="auto" selected id="autoWeekOption">Auto (Aktuelle ID)</option>
               <option value="7">Woche 7 (700 Cap)</option>
               <option value="8">Woche 8 (800 Cap)</option>
-              <option value="9" selected>Woche 9 (900 Cap)</option>
+              <option value="9">Woche 9 (900 Cap)</option>
               <option value="10">Woche 10 (1000 Cap)</option>
+              <option value="12">Woche 12 (1200 Cap)</option>
             </select>
           </div>
 
           <div class="flex items-center justify-between gap-2">
             <span class="text-xs text-slate-300 whitespace-nowrap font-medium">🟠 Myth-Preis:</span>
             <select id="crestStepCostSelect" onchange="onSettingsChange()" class="w-40 bg-wow-card border border-wow-border rounded-lg px-2.5 py-1.5 text-white font-bold text-xs focus:outline-none">
-              <option value="20" selected>20 Wappen (Standard)</option>
+              <option value="auto" selected id="autoCostOption">Auto (Prüft 331-Erfolg)</option>
+              <option value="20">20 Wappen (Standard)</option>
               <option value="10">10 Wappen (331-Rabatt)</option>
             </select>
           </div>
@@ -177,30 +180,36 @@
       <!-- RECHTER HAUPTBEREICH -->
       <div class="flex-1 min-w-0 w-full space-y-5">
 
-        <!-- OBEN IM COCKPIT: 4 KOMPAKTE KACHELN (Immer sichtbar für den gewählten Charakter) -->
+        <!-- OBEN IM COCKPIT: 4 KOMPAKTE KACHELN -->
         <div id="topKpiGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5"></div>
 
-        <!-- ANSICHT 1: UPGRADE-PLAN & 3-ZONEN-AMPEL (Standard) -->
+        <!-- ANSICHT 1: UPGRADE-PLAN & 3-ZONEN-AMPEL -->
         <section id="tab-plan" class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
           <div id="planLeftColumn" class="xl:col-span-7 bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-3 shadow-lg"></div>
           <div id="planRightColumn" class="xl:col-span-5 bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-4 shadow-lg"></div>
         </section>
 
-        <!-- ANSICHT 2: ALLE 5 WAPPEN-CAPS (Separat & aufgeräumt) -->
+        <!-- ANSICHT 2: ALLE 5 WAPPEN-CAPS -->
         <section id="tab-caps" class="hidden bg-wow-panel border border-wow-border rounded-2xl overflow-hidden shadow-lg">
           <div id="capsContainer"></div>
         </section>
 
-        <!-- ANSICHT 3: 331-RABATT-MEILENSTEIN (Separat & aufgeräumt) -->
+        <!-- ANSICHT 3: 331-RABATT-MEILENSTEIN -->
         <section id="tab-milestone" class="hidden bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-4 shadow-lg">
           <div class="flex flex-wrap items-center justify-between gap-4">
             <div>
               <h3 class="text-sm font-bold text-white">🏆 Kriegsmeuten-Meilenstein (50 % Wappen-Rabatt: 10 statt 20 Wappen)</h3>
-              <p class="text-xs text-slate-400">Sobald alle 16 Slots auf mindestens 331 sind, kosten Mythisch-Upgrades für alle Twinks nur noch 10 Wappen.</p>
+              <p class="text-xs text-slate-400">
+                Für den Erfolg zählen angelegte Items und bereits im Spiel freigeschaltete Charakter-Watermarks (inkl. 2-Ring- & 2-Schmuck-Minimum).
+              </p>
             </div>
             <div class="flex items-center gap-1.5">
-              <button onclick="setMilestoneTarget(321)" class="px-3 py-1 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-purple-300 font-bold">Held (321)</button>
-              <button onclick="setMilestoneTarget(331)" class="px-3 py-1 rounded-lg bg-wow-gold text-slate-950 text-xs font-black">Mythos (331)</button>
+              <button id="milestoneBtn321" onclick="setMilestoneTarget(321)" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-purple-300 font-bold transition">
+                Held (321)
+              </button>
+              <button id="milestoneBtn331" onclick="setMilestoneTarget(331)" class="px-3 py-1.5 rounded-lg bg-wow-gold text-slate-950 text-xs font-black shadow transition">
+                Mythos (331)
+              </button>
             </div>
           </div>
           <div id="crestStatusBanner" class="p-3.5 rounded-xl border text-xs"></div>
@@ -217,11 +226,15 @@
       <div class="flex items-center justify-between">
         <div>
           <h3 class="text-base font-bold text-white">📋 WoW ➔ SimCraft Import (/simc)</h3>
-          <p class="text-xs text-slate-400">Liest automatisch Ausrüstung, echte Item-Namen, Taschen-Schätze und Wappen aus.</p>
+          <p class="text-xs text-slate-400">Aktualisiert Ausrüstung, echte Item-Namen, Taschen-Schätze und Beutel-Wappen (manuell angepasste Cap-Stände bleiben erhalten).</p>
         </div>
         <button onclick="closeModal('simcModal')" class="text-slate-400 hover:text-white text-lg">&times;</button>
       </div>
       <textarea id="simcTextarea" oninput="previewSimcInput()" rows="8" placeholder="Füge hier deinen /simc Text ein..." class="w-full bg-wow-bg border border-wow-border rounded-xl p-3 text-xs text-slate-200 font-mono"></textarea>
+      <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+        <input type="checkbox" id="simcForceRecalcSpent" class="w-4 h-4 accent-purple-500 rounded" />
+        <span>„Verbraucht“-Wappen komplett neu aus den Items schätzen (überschreibt manuelle Cap-Anpassungen)</span>
+      </label>
       <div id="simcPreviewBox" class="hidden p-3.5 rounded-xl bg-purple-950/30 border border-purple-700/50 text-xs space-y-1"></div>
       <div class="flex items-center justify-end gap-2">
         <button onclick="closeModal('simcModal')" class="px-4 py-2 rounded-lg bg-wow-card text-xs text-slate-300">Abbrechen</button>
@@ -286,7 +299,7 @@
       <div class="space-y-3">
         <button onclick="exportJsonBackup()" class="w-full py-2.5 px-4 rounded-xl bg-wow-card border border-wow-border text-xs font-semibold text-white text-left">📥 JSON-Backup herunterladen</button>
         <label class="w-full py-2.5 px-4 rounded-xl bg-wow-card border border-wow-border text-xs font-semibold text-white text-left block cursor-pointer">
-          <span>📤 JSON-Backup importieren</span>
+          <span>📤 JSON-Backup importieren (mit Struktur-Prüfung)</span>
           <input type="file" accept=".json" onchange="importJsonBackup(event)" class="hidden" />
         </label>
         <button onclick="hardResetStorage()" class="w-full py-2.5 px-4 rounded-xl bg-red-950/50 border border-red-800/50 text-xs font-semibold text-red-300 text-left">🔄 Auf Standard-Profile (Lexinê & Tatami) zurücksetzen</button>
@@ -298,11 +311,14 @@
 
   <script>
     // =========================================================================
-    // 1. KONSTANTEN & DATENSTRUKTUREN
+    // 1. KONSTANTEN, SCHEMA-MIGRATION & DATENSTRUKTUREN
     // =========================================================================
-    const STORAGE_KEY_CHARS = 'wow_warband_chars_v11';
-    const STORAGE_KEY_RULES = 'wow_warband_rules_v11';
+    const STORAGE_KEY_MAIN  = 'wow_warband_tracker_data';
+    const STORAGE_KEY_RULES = 'wow_warband_tracker_rules';
+    const CURRENT_SCHEMA_VERSION = 12;
     const WEEKLY_CAP_PER_WEEK = 100;
+    // Offizieller EU Season 2 Start: Mittwoch, 19.08.2026, 07:00 UTC
+    const EU_SEASON2_START_UTC = Date.UTC(2026, 7, 19, 7, 0, 0);
 
     const MPLUS_KEY_REWARDS = {
       9:  { timed: 10, untimed: 6 },
@@ -350,61 +366,71 @@
     const HERO_UPGRADE_STEPS  = [311, 315, 318, 321];
     const MYTH_UPGRADE_STEPS  = [325, 328, 331, 334];
 
-    const HERO_BONUS_IDS = { 12841: 'Held 1/6', 12842: 'Held 2/6', 12843: 'Held 3/6', 12844: 'Held 4/6', 12845: 'Held 5/6', 12846: 'Held 6/6 (Max)' };
-    const MYTH_BONUS_IDS = { 12849: 'Mythos 1/6', 12850: 'Mythos 2/6', 12851: 'Mythos 3/6', 12852: 'Mythos 4/6', 12853: 'Mythos 5/6', 12854: 'Mythos 6/6 (Max)' };
+    // Bonus-IDs für Abenteurer, Veteran, Champion, Held und Mythos
+    const ADV_BONUS_IDS   = { 12817: 1, 12818: 2, 12819: 3, 12820: 4, 12821: 5, 12826: 6 };
+    const VET_BONUS_IDS   = { 12827: 1, 12828: 2, 12829: 3, 12830: 4, 12831: 5, 12832: 6 };
+    const CHAMP_BONUS_IDS = { 12833: 'Champion 1/6', 12834: 'Champion 2/6', 12835: 'Champion 3/6', 12836: 'Champion 4/6', 12837: 'Champion 5/6', 12838: 'Champion 6/6 (Max 308)' };
+    const HERO_BONUS_IDS  = { 12841: 'Held 1/6', 12842: 'Held 2/6', 12843: 'Held 3/6', 12844: 'Held 4/6', 12845: 'Held 5/6', 12846: 'Held 6/6 (Max 321)' };
+    const MYTH_BONUS_IDS  = { 12849: 'Mythos 1/6', 12850: 'Mythos 2/6', 12851: 'Mythos 3/6', 12852: 'Mythos 4/6', 12853: 'Mythos 5/6', 12854: 'Mythos 6/6 (Max 334)' };
 
+    // Saubere Trennung zwischen eqMaxUpgradable (angelegtes Item) und bagMaxUpgradable (Taschen-Item)!
     const INITIAL_CHARS = [
       {
-        name: 'Lexinê', realm: 'Blackmoore', className: 'demonhunter', hasTwoHand: false,
+        name: 'Lexinê', realm: 'Blackmoore', region: 'eu', className: 'demonhunter', hasTwoHand: false,
         advMarks: 135, vetMarks: 205, champMarks: 297, heroMarks: 120, mythMarks: 40,
         advSpent: 0,   vetSpent: 0,   champSpent: 160, heroSpent: 480, mythSpent: 392,
         mythSpentNote: '3× Handwerk (331) + 6× Mythos 6/6 (334)',
+        heroSpentNote: 'Held-Upgrades bis 321',
+        champSpentNote: 'Champion-Upgrades bis 308',
         slots: { head: 334, neck: 334, shoulder: 321, back: 321, chest: 331, wrist: 331, hands: 321, waist: 321, legs: 321, feet: 321, finger1: 321, finger2: 321, trinket1: 334, trinket2: 334, mainhand: 334, offhand: 331 },
         bagSlots: { head: 321, neck: 321, shoulder: 0, back: 321, chest: 321, wrist: 321, hands: 0, waist: 321, legs: 334, feet: 321, finger1: 321, finger2: 321, trinket1: 321, trinket2: 321, mainhand: 321, offhand: 0 },
         slotMeta: {
-          head:     { track: 'myth', label: 'Mythos 6/6', maxUpgradable: 334, eqName: 'Unerbittlicher Blick des abyssischen Verdammnishundes' },
-          neck:     { track: 'myth', label: 'Mythos 6/6', maxUpgradable: 334, eqName: 'Reliquiar des Aqirfluches' },
-          shoulder: { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Kiefer des abyssischen Verdammnishundes' },
-          back:     { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Spelunkenschleier' },
-          chest:    { track: 'crafted', label: 'Handwerk (331)', maxUpgradable: 331, eqName: 'Jacke des Silbermondagenten' },
-          wrist:    { track: 'crafted', label: 'Handwerk (331)', maxUpgradable: 331, eqName: 'Deflektoren des Silbermondagenten' },
-          hands:    { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Beschlagene Stulpen des abyssischen Verdammnishundes' },
-          waist:    { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 334, eqName: 'Unbesessene Schädelscherpe', bagMythIlvl: 321, bagMythName: 'Schärpe des verlorenen Gefäßes' },
-          legs:     { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 334, eqName: 'Beinwickel des abyssischen Verdammnishundes (321)', bagName: 'Beinwickel des abyssischen Verdammnishundes (334)', bagMythIlvl: 334, bagMythName: 'Beinwickel des abyssischen Verdammnishundes' },
-          feet:     { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Sandpolierte Schlangenhautsandalen' },
-          finger1:  { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Band des abscheulichen Alchemisten' },
-          finger2:  { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Signet der widerwilligen Dienste' },
-          trinket1: { track: 'myth', label: 'Mythos 6/6', maxUpgradable: 334, eqName: 'Brunnen des giftigen Zorns', bagMythIlvl: 321, bagMythName: 'Fläschchen des Frachtbeförderers' },
-          trinket2: { track: 'myth', label: 'Mythos 6/6', maxUpgradable: 334, eqName: "Zul'jins Guillotinentechnik" },
-          mainhand: { track: 'myth', label: 'Mythos 6/6', maxUpgradable: 334, eqName: "Aman'muso, Rache des Kriegsfürsten" },
-          offhand:  { track: 'crafted', label: 'Handwerk (331)', maxUpgradable: 331, eqName: 'Kriegsgleve des Zauberbrechers' }
+          head:     { track: 'myth', label: 'Mythos 6/6', eqMaxUpgradable: 334, eqName: 'Unerbittlicher Blick des abyssischen Verdammnishundes' },
+          neck:     { track: 'myth', label: 'Mythos 6/6', eqMaxUpgradable: 334, eqName: 'Reliquiar des Aqirfluches' },
+          shoulder: { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Kiefer des abyssischen Verdammnishundes' },
+          back:     { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Spelunkenschleier' },
+          chest:    { track: 'crafted', label: 'Handwerk (331)', eqMaxUpgradable: 331, eqName: 'Jacke des Silbermondagenten' },
+          wrist:    { track: 'crafted', label: 'Handwerk (331)', eqMaxUpgradable: 331, eqName: 'Deflektoren des Silbermondagenten' },
+          hands:    { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Beschlagene Stulpen des abyssischen Verdammnishundes' },
+          waist:    { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Unbesessene Schädelscherpe', bagMythIlvl: 321, bagMythName: 'Schärpe des verlorenen Gefäßes', bagMaxUpgradable: 334 },
+          legs:     { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Beinwickel des abyssischen Verdammnishundes (321)', bagName: 'Beinwickel des abyssischen Verdammnishundes (334)', bagMythIlvl: 334, bagMythName: 'Beinwickel des abyssischen Verdammnishundes', bagMaxUpgradable: 334 },
+          feet:     { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Sandpolierte Schlangenhautsandalen' },
+          finger1:  { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Band des abscheulichen Alchemisten' },
+          finger2:  { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Signet der widerwilligen Dienste' },
+          trinket1: { track: 'myth', label: 'Mythos 6/6', eqMaxUpgradable: 334, eqName: 'Brunnen des giftigen Zorns', bagMythIlvl: 321, bagMythName: 'Fläschchen des Frachtbeförderers', bagMaxUpgradable: 334 },
+          trinket2: { track: 'myth', label: 'Mythos 6/6', eqMaxUpgradable: 334, eqName: "Zul'jins Guillotinentechnik" },
+          mainhand: { track: 'myth', label: 'Mythos 6/6', eqMaxUpgradable: 334, eqName: "Aman'muso, Rache des Kriegsfürsten" },
+          offhand:  { track: 'crafted', label: 'Handwerk (331)', eqMaxUpgradable: 331, eqName: 'Kriegsgleve des Zauberbrechers' }
         },
         charWatermarks: { head: 334, neck: 334, shoulder: 321, back: 321, chest: 331, wrist: 331, hands: 321, waist: 321, legs: 334, feet: 321, finger1: 321, finger2: 321, trinket1: 334, trinket2: 334, mainhand: 334, offhand: 331 }
       },
       {
-        name: 'Tatami', realm: 'Aegwynn', className: 'priest', hasTwoHand: false,
+        name: 'Tatami', realm: 'Aegwynn', region: 'eu', className: 'priest', hasTwoHand: false,
         advMarks: 65,  vetMarks: 45,  champMarks: 59,  heroMarks: 320, mythMarks: 212,
         advSpent: 0,   vetSpent: 0,   champSpent: 120, heroSpent: 360, mythSpent: 160,
         mythSpentNote: '1× Handwerk (331 Laterne = 80) + 1× Mythos 6/6 (334 Waffe = 80)',
+        heroSpentNote: 'Held-Upgrades bis 321 (50%-Rabatt aktiv)',
+        champSpentNote: 'Champion-Upgrades bis 308',
         slots: { head: 321, neck: 321, shoulder: 321, back: 321, chest: 321, wrist: 321, hands: 321, waist: 321, legs: 308, feet: 321, finger1: 321, finger2: 321, trinket1: 321, trinket2: 321, mainhand: 334, offhand: 331 },
         bagSlots: { head: 0, neck: 0, shoulder: 0, back: 311, chest: 321, wrist: 285, hands: 321, waist: 285, legs: 321, feet: 321, finger1: 321, finger2: 321, trinket1: 321, trinket2: 321, mainhand: 295, offhand: 311 },
         slotMeta: {
-          head:     { track: 'myth', label: 'Mythos 2/6', maxUpgradable: 334, eqName: 'Klarblick des kosmischen Büßers' },
-          neck:     { track: 'myth', label: 'Mythos 2/6', maxUpgradable: 334, eqName: 'Reliquiar des Aqirfluches' },
-          shoulder: { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Hallende Schreie des kosmischen Büßers' },
-          back:     { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Seidenes Voodootuch' },
-          chest:    { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 334, eqName: 'Verdunkelnde Roben des kosmischen Büßers', bagMythIlvl: 321, bagMythName: 'Roben der gezeitengebundenen Zauberin' },
-          wrist:    { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Knabbernde Armbinden' },
-          hands:    { track: 'myth', label: 'Mythos 2/6', maxUpgradable: 334, eqName: 'Himmlischer Handschutz des kosmischen Büßers' },
-          waist:    { track: 'myth', label: 'Mythos 2/6', maxUpgradable: 334, eqName: 'Gürtung der abyssischen Grotte' },
-          legs:     { track: 'champ_max', label: 'Champion 6/6', maxUpgradable: 321, eqName: 'Treter des Lohenwandlers (308)', bagName: 'Opferstrumpfhose des Eingeweihten' },
-          feet:     { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 334, eqName: 'Sandalen des weisen Voodoo', bagMythIlvl: 321, bagMythName: "Nek'zalis Geistwandler" },
-          finger1:  { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 321, eqName: 'Geladenes Sandsteinband' },
-          finger2:  { track: 'myth', label: 'Mythos 2/6', maxUpgradable: 334, eqName: 'Verlockendes Blasenband' },
-          trinket1: { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 334, eqName: 'Ritualgefäß des Seelenwinders', bagMythIlvl: 321, bagMythName: 'Verdammnisgötze des Hexlords' },
-          trinket2: { track: 'hero_max', label: 'Held 6/6', maxUpgradable: 334, eqName: 'Seestein des Wellenrufers (Held)', bagMythIlvl: 321, bagMythName: 'Seestein des Wellenrufers (Mythos 2/6)' },
-          mainhand: { track: 'myth', label: 'Mythos 6/6', maxUpgradable: 334, eqName: "Jan'thrazet, der Seelenfang" },
-          offhand:  { track: 'crafted', label: 'Handwerk (331)', maxUpgradable: 331, eqName: "Laterne von Aln'hara" }
+          head:     { track: 'myth', label: 'Mythos 2/6', eqMaxUpgradable: 334, eqName: 'Klarblick des kosmischen Büßers' },
+          neck:     { track: 'myth', label: 'Mythos 2/6', eqMaxUpgradable: 334, eqName: 'Reliquiar des Aqirfluches' },
+          shoulder: { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Hallende Schreie des kosmischen Büßers' },
+          back:     { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Seidenes Voodootuch' },
+          chest:    { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Verdunkelnde Roben des kosmischen Büßers', bagMythIlvl: 321, bagMythName: 'Roben der gezeitengebundenen Zauberin', bagMaxUpgradable: 334 },
+          wrist:    { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Knabbernde Armbinden' },
+          hands:    { track: 'myth', label: 'Mythos 2/6', eqMaxUpgradable: 334, eqName: 'Himmlischer Handschutz des kosmischen Büßers' },
+          waist:    { track: 'myth', label: 'Mythos 2/6', eqMaxUpgradable: 334, eqName: 'Gürtung der abyssischen Grotte' },
+          // WICHTIG: Tatamis angezogene Hose ist Champion 6/6 (eqMaxUpgradable: 308!), nur die Taschen-Hose hat bagMaxUpgradable: 321!
+          legs:     { track: 'champ_max', label: 'Champion 6/6', eqMaxUpgradable: 308, eqName: 'Treter des Lohenwandlers (308)', bagName: 'Opferstrumpfhose des Eingeweihten', bagMaxUpgradable: 321 },
+          feet:     { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Sandalen des weisen Voodoo', bagMythIlvl: 321, bagMythName: "Nek'zalis Geistwandler", bagMaxUpgradable: 334 },
+          finger1:  { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Geladenes Sandsteinband' },
+          finger2:  { track: 'myth', label: 'Mythos 2/6', eqMaxUpgradable: 334, eqName: 'Verlockendes Blasenband' },
+          trinket1: { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Ritualgefäß des Seelenwinders', bagMythIlvl: 321, bagMythName: 'Verdammnisgötze des Hexlords', bagMaxUpgradable: 334 },
+          trinket2: { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Seestein des Wellenrufers (Held)', bagMythIlvl: 321, bagMythName: 'Seestein des Wellenrufers (Mythos 2/6)', bagMaxUpgradable: 334 },
+          mainhand: { track: 'myth', label: 'Mythos 6/6', eqMaxUpgradable: 334, eqName: "Jan'thrazet, der Seelenfang" },
+          offhand:  { track: 'crafted', label: 'Handwerk (331)', eqMaxUpgradable: 331, eqName: "Laterne von Aln'hara" }
         },
         charWatermarks: { head: 321, neck: 321, shoulder: 321, back: 321, chest: 321, wrist: 321, hands: 321, waist: 321, legs: 321, feet: 321, finger1: 321, finger2: 321, trinket1: 321, trinket2: 321, mainhand: 334, offhand: 331 }
       }
@@ -418,58 +444,176 @@
       targetIlvl: 331,
       selectedKeyLevel: 10,
       keyTimedMode: true,
-      seasonWeek: 9,
-      stepCost: 20,
+      seasonWeek: 'auto',
+      stepCost: 'auto',
       includeBags: true
     };
 
     // =========================================================================
-    // 2. INITIALISIERUNG & EINSTELLUNGEN
+    // 2. INITIALISIERUNG, SCHEMA-MIGRATION & SAFE STORAGE
     // =========================================================================
+    function getAutoSeasonWeek() {
+      const diffMs = Date.now() - EU_SEASON2_START_UTC;
+      const week = Math.floor(diffMs / (7 * 86400000)) + 1;
+      return Math.max(1, Math.min(20, week));
+    }
+
+    function getEffectiveSeasonWeek() {
+      if (rules.seasonWeek === 'auto' || !rules.seasonWeek) return getAutoSeasonWeek();
+      return parseInt(rules.seasonWeek, 10) || 9;
+    }
+
+    // Prüft den Meilenstein anhand angelegter Items + charWatermarks (inkl. 2-Ring- & 2-Trinket-Regel!)
+    function calculateMilestoneBenchmarks() {
+      const benchmarks = {};
+      SLOTS.forEach(s => { benchmarks[s.key] = 0; });
+      if (characters.length === 0) return benchmarks;
+
+      const getEarnedSlotIlvl = (c, key) => Math.max(getEquippedSlotIlvl(c, key), Number(c.charWatermarks?.[key] || 0));
+
+      SLOTS.forEach(s => {
+        benchmarks[s.key] = Math.max(...characters.map(c => getEarnedSlotIlvl(c, s.key)));
+      });
+
+      // Paar-Regel für Ringe, Schmuckstücke und Waffen
+      let bestRingMin = 0, bestTrinketMin = 0, bestWeaponMin = 0;
+      characters.forEach(c => {
+        bestRingMin = Math.max(bestRingMin, Math.min(getEarnedSlotIlvl(c, 'finger1'), getEarnedSlotIlvl(c, 'finger2')));
+        bestTrinketMin = Math.max(bestTrinketMin, Math.min(getEarnedSlotIlvl(c, 'trinket1'), getEarnedSlotIlvl(c, 'trinket2')));
+        const mh = getEarnedSlotIlvl(c, 'mainhand');
+        const oh = (c.hasTwoHand && Number(c.slots?.offhand || 0) === 0) ? mh : getEarnedSlotIlvl(c, 'offhand');
+        bestWeaponMin = Math.max(bestWeaponMin, Math.min(mh, oh));
+      });
+
+      benchmarks.finger1 = bestRingMin;
+      benchmarks.finger2 = bestRingMin;
+      benchmarks.trinket1 = bestTrinketMin;
+      benchmarks.trinket2 = bestTrinketMin;
+      benchmarks.mainhand = bestWeaponMin;
+      benchmarks.offhand = bestWeaponMin;
+
+      return benchmarks;
+    }
+
+    function is331MilestoneUnlocked() {
+      const bm = calculateMilestoneBenchmarks();
+      const allSlots331 = SLOTS.every(s => (bm[s.key] || 0) >= 331);
+      const hasAchievementFlag = characters.some(c => c.has331Achievement === true);
+      return allSlots331 || hasAchievementFlag;
+    }
+
+    function getEffectiveMythStepCost() {
+      if (rules.stepCost === 'auto' || !rules.stepCost) {
+        return is331MilestoneUnlocked() ? 10 : 20;
+      }
+      return parseInt(rules.stepCost, 10) || 20;
+    }
+
+    function isValidCharacterArray(arr) {
+      return Array.isArray(arr) && arr.length > 0 && arr.every(c =>
+        c && typeof c === 'object' && typeof c.name === 'string' && c.name.trim() !== '' && c.slots && typeof c.slots === 'object'
+      );
+    }
+
+    function migrateCharacterObject(c) {
+      if (!c.slotMeta) c.slotMeta = {};
+      SLOTS.forEach(s => {
+        const m = c.slotMeta[s.key] || {};
+        if (!m.eqMaxUpgradable) {
+          m.eqMaxUpgradable = m.track === 'champ_max' ? 308 : (m.track === 'hero_max' ? 321 : (m.track === 'crafted' ? 331 : (m.maxUpgradable || 321)));
+        }
+        if (m.bagMythIlvl && !m.bagMaxUpgradable) {
+          m.bagMaxUpgradable = 334;
+        }
+        c.slotMeta[s.key] = m;
+      });
+      return c;
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       try {
-        const savedChars = localStorage.getItem(STORAGE_KEY_CHARS);
-        if (savedChars) {
-          const parsed = JSON.parse(savedChars);
-          if (Array.isArray(parsed) && parsed.length > 0) characters = parsed;
+        // 1. Lade aus permanentem Haupt-Key oder migriere automatisch aus v11 / v10 / v9
+        let loadedChars = null;
+        const mainRaw = localStorage.getItem(STORAGE_KEY_MAIN);
+        if (mainRaw) {
+          const parsed = JSON.parse(mainRaw);
+          if (parsed && isValidCharacterArray(parsed.characters)) {
+            loadedChars = parsed.characters;
+          } else if (isValidCharacterArray(parsed)) {
+            loadedChars = parsed;
+          }
+        } else {
+          for (const legacyKey of ['wow_warband_chars_v11', 'wow_warband_chars_v10', 'wow_warband_chars_v9']) {
+            const legRaw = localStorage.getItem(legacyKey);
+            if (legRaw) {
+              const legParsed = JSON.parse(legRaw);
+              if (isValidCharacterArray(legParsed)) {
+                loadedChars = legParsed;
+                break;
+              }
+            }
+          }
         }
+
+        if (loadedChars) {
+          characters = loadedChars.map(migrateCharacterObject);
+          saveCharsToStorage();
+        }
+
         const savedRules = localStorage.getItem(STORAGE_KEY_RULES);
         if (savedRules) rules = { ...rules, ...JSON.parse(savedRules) };
 
+        const autoWk = getAutoSeasonWeek();
+        document.getElementById('autoWeekOption').textContent = `Auto (Woche ${autoWk} = ${autoWk * 100} Cap)`;
+
         document.getElementById('targetIlvlSelect').value = String(rules.targetIlvl || 331);
         document.getElementById('selectedKeyLevelSelect').value = String(rules.selectedKeyLevel || 10);
-        document.getElementById('seasonWeekSelect').value = String(rules.seasonWeek || 9);
-        document.getElementById('crestStepCostSelect').value = String(rules.stepCost || 20);
+        document.getElementById('seasonWeekSelect').value = String(rules.seasonWeek || 'auto');
+        document.getElementById('crestStepCostSelect').value = String(rules.stepCost || 'auto');
         document.getElementById('keyTimedToggle').checked = rules.keyTimedMode !== false;
         document.getElementById('includeBagsToggle').checked = rules.includeBags !== false;
-      } catch (e) {}
+      } catch (e) {
+        console.error('Fehler beim Laden:', e);
+      }
       renderAll();
     });
+
+    function saveCharsToStorage() {
+      try {
+        const payload = { schemaVersion: CURRENT_SCHEMA_VERSION, updatedAt: new Date().toISOString(), characters };
+        localStorage.setItem(STORAGE_KEY_MAIN, JSON.stringify(payload));
+      } catch (e) {
+        showToast('Warnung: Browser-Speicher konnte nicht beschrieben werden.', 'error');
+      }
+    }
 
     function onSettingsChange() {
       rules.targetIlvl = parseFloat(document.getElementById('targetIlvlSelect').value || '331');
       rules.selectedKeyLevel = parseInt(document.getElementById('selectedKeyLevelSelect').value || '10', 10);
-      rules.seasonWeek = parseInt(document.getElementById('seasonWeekSelect').value || '9', 10);
-      rules.stepCost = parseInt(document.getElementById('crestStepCostSelect').value || '20', 10);
+      rules.seasonWeek = document.getElementById('seasonWeekSelect').value;
+      rules.stepCost = document.getElementById('crestStepCostSelect').value;
       rules.keyTimedMode = document.getElementById('keyTimedToggle').checked;
       rules.includeBags = document.getElementById('includeBagsToggle').checked;
-      localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules));
+      try {
+        localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules));
+      } catch (e) {}
       renderAll();
     }
 
     function hardResetStorage() {
-      localStorage.removeItem(STORAGE_KEY_CHARS);
-      localStorage.removeItem(STORAGE_KEY_RULES);
+      if (!confirm('Möchtest du wirklich alle gespeicherten Anpassungen zurücksetzen und die Standard-Profile (Lexinê & Tatami) neu laden?')) {
+        return;
+      }
+      try {
+        localStorage.removeItem(STORAGE_KEY_MAIN);
+        localStorage.removeItem(STORAGE_KEY_RULES);
+      } catch (e) {}
       characters = JSON.parse(JSON.stringify(INITIAL_CHARS));
       activeCharIndex = 0;
-      localStorage.setItem(STORAGE_KEY_CHARS, JSON.stringify(characters));
+      saveCharsToStorage();
       renderAll();
       closeModal('backupModal');
-      showToast('Auf Original-Daten (Lexinê & Tatami) zurückgesetzt!', 'success');
-    }
-
-    function saveCharsToStorage() {
-      localStorage.setItem(STORAGE_KEY_CHARS, JSON.stringify(characters));
+      showToast('Auf Standard-Daten (Lexinê & Tatami) zurückgesetzt!', 'success');
     }
 
     function getCharColor(char) {
@@ -497,8 +641,16 @@
       return rules.includeBags ? Number(char.bagSlots?.[slotKey] || 0) : 0;
     }
 
+    function getEffectiveSlotMaxUpgradable(char, slotKey) {
+      const meta = char.slotMeta?.[slotKey] || {};
+      const eqMax = meta.eqMaxUpgradable || (meta.track === 'champ_max' ? 308 : (meta.track === 'hero_max' ? 321 : (meta.track === 'crafted' ? 331 : (meta.maxUpgradable || 321))));
+      if (!rules.includeBags) return eqMax;
+      const bagMax = (meta.bagMythIlvl && meta.bagMythIlvl >= 318) ? 334 : (meta.bagMaxUpgradable || (Number(char.bagSlots?.[slotKey] || 0) > 0 ? 321 : 0));
+      return Math.max(eqMax, bagMax);
+    }
+
     function getCharCrestCapNumbers(char, tierKey) {
-      const seasonCap = (rules.seasonWeek || 9) * WEEKLY_CAP_PER_WEEK;
+      const seasonCap = getEffectiveSeasonWeek() * WEEKLY_CAP_PER_WEEK;
       const tier = CREST_TIERS_META.find(t => t.key === tierKey);
       const wallet = Number(char[tier.walletField] || 0);
       const spent = Math.max(0, Number(char[tier.spentField] || 0));
@@ -524,8 +676,8 @@
         const bag = getBagSlotIlvl(char, s.key);
         const best = Math.max(eq, bag);
         const meta = char.slotMeta?.[s.key] || {};
-        const hasMythInBag = Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
-        const maxTrack = hasMythInBag ? 334 : (meta.maxUpgradable || 321);
+        const hasMythInBag = rules.includeBags && Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
+        const maxTrack = getEffectiveSlotMaxUpgradable(char, s.key);
 
         if (best >= 334 || (meta.track === 'crafted' && best >= 331 && !hasMythInBag)) return;
 
@@ -555,7 +707,13 @@
     function simulateCharacter(char, charIdx) {
       const targetAvg = Number(rules.targetIlvl || 331);
       const targetTotalPoints = Math.ceil(targetAvg * 16);
-      const mythStepCost = Number(rules.stepCost || 20);
+      const mythStepCost = getEffectiveMythStepCost();
+
+      // Update Auto-Cost Label in Sidebar
+      const autoCostOpt = document.getElementById('autoCostOption');
+      if (autoCostOpt) {
+        autoCostOpt.textContent = `Auto (${mythStepCost} Wappen – ${mythStepCost === 10 ? '331 aktiv' : 'Standard'})`;
+      }
 
       const mythCap = getCharCrestCapNumbers(char, 'myth');
       const heroCap = getCharCrestCapNumbers(char, 'hero');
@@ -589,7 +747,24 @@
 
       const avgWithBagsOnly = getSum() / 16;
 
-      // Phase 2: Aufwertbare Mythos-/Held-Items mit Wappen hochziehen
+      // Phase 2: Eigener Charakter-Watermark (0 Wappen bis zum eigenen charWatermarks-Wert)
+      SLOTS.forEach(s => {
+        const curVal = simSlots[s.key];
+        const maxUpgradable = getEffectiveSlotMaxUpgradable(char, s.key);
+        const ownWm = Math.min(Number(char.charWatermarks?.[s.key] || 0), maxUpgradable);
+        if (ownWm > curVal && getSum() < targetTotalPoints) {
+          const gain = ownWm - curVal;
+          simSlots[s.key] = ownWm;
+          planSteps.push({
+            slotKey: s.key, slotLabel: s.label, itemName: char.slotMeta?.[s.key]?.eqName || '',
+            fromIlvl: curVal, toIlvl: ownWm, pointGain: gain,
+            markType: 'free', markCost: 0,
+            reason: `👑 Eigener Charakter-Watermark ist bereits ${ownWm} (0 Wappen)`
+          });
+        }
+      });
+
+      // Phase 3: Aufwertbare Items mit Wappen hochziehen (beachtet strikt eqMaxUpgradable vs. bagMaxUpgradable!)
       let safety = 0;
       while (getSum() < targetTotalPoints && safety < 200) {
         safety++;
@@ -598,13 +773,17 @@
         SLOTS.forEach(s => {
           const curVal = simSlots[s.key];
           const meta = char.slotMeta?.[s.key] || {};
-          const hasMythInBag = Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
-          const maxUpgradable = hasMythInBag ? 334 : (meta.maxUpgradable || 321);
+          const hasMythInBag = rules.includeBags && Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
+          const maxUpgradable = getEffectiveSlotMaxUpgradable(char, s.key);
           if (curVal >= maxUpgradable) return;
 
           let nextIlvl = 0, markType = 'myth', cost = mythStepCost;
-          if (curVal < 321) {
-            nextIlvl = HERO_UPGRADE_STEPS.find(st => st > curVal && st <= maxUpgradable) || 321;
+          if (curVal < 308) {
+            nextIlvl = CHAMP_UPGRADE_STEPS.find(st => st > curVal && st <= maxUpgradable) || Math.min(308, maxUpgradable);
+            markType = 'champ';
+            cost = 10;
+          } else if (curVal < 321) {
+            nextIlvl = HERO_UPGRADE_STEPS.find(st => st > curVal && st <= maxUpgradable) || Math.min(321, maxUpgradable);
             markType = 'hero';
             cost = 10;
           } else {
@@ -621,7 +800,7 @@
             ? `🎒 Taschen-Mythos anlegen & aufwerten`
             : (gain >= 4 ? `⚡ Power-Sprung (+4 iLvl!)` : `Aufwerten beim NPC`);
 
-          const score = (markType === 'hero' ? 100 : 0) + (gain / cost) * 100 - curVal * 0.01;
+          const score = (markType === 'champ' ? 200 : (markType === 'hero' ? 100 : 0)) + (gain / cost) * 100 - curVal * 0.01;
           if (!best || score > best.score) {
             best = { slotKey: s.key, slotLabel: s.label, itemName, fromIlvl: curVal, toIlvl: nextIlvl, pointGain: gain, markType, markCost: cost, score, reason };
           }
@@ -632,36 +811,41 @@
         planSteps.push(best);
       }
 
-      // Phase 3: Blockierte Held-6/6-Slots ersetzen (falls für Ziel nötig)
+      // Phase 4: Blockierte Slots (Champion 308 oder Held 321) durch Handwerk/Mythos-Drop ersetzen
       const replaceTarget = targetAvg >= 334 ? 334 : 331;
       while (getSum() < targetTotalPoints && safety < 230) {
         safety++;
-        const blocked = SLOTS.find(s => simSlots[s.key] === 321);
+        const blocked = SLOTS.find(s => simSlots[s.key] <= 321 && getEffectiveSlotMaxUpgradable(char, s.key) <= 321);
         if (!blocked) break;
         const meta = char.slotMeta?.[blocked.key] || {};
-        const gain = replaceTarget - 321;
+        const curVal = simSlots[blocked.key];
+        const gain = replaceTarget - curVal;
         simSlots[blocked.key] = replaceTarget;
         planSteps.push({
           slotKey: blocked.key, slotLabel: blocked.label, itemName: meta.eqName || '',
-          fromIlvl: 321, toIlvl: replaceTarget, pointGain: gain,
+          fromIlvl: curVal, toIlvl: replaceTarget, pointGain: gain,
           markType: 'myth', markCost: 4 * mythStepCost, isBlockedReplacement: true,
           reason: replaceTarget === 334
-            ? `🔒 Held 6/6 ersetzen: Mythos-Drop holen & auf 334 ziehen`
-            : `🔒 Held 6/6 ersetzen: 331er Handwerk bauen (80 W.) oder Mythos-Drop`
+            ? `🔒 Slot am Limit (${curVal}) ➔ Mythos-Item droppen & auf 334 ziehen`
+            : `🔒 Slot am Limit (${curVal}) ➔ 331er Handwerk bauen (80 W.) oder Mythos-Drop`
         });
       }
 
-      // Verfügbarkeit prüfen
+      // Verfügbarkeit prüfen (inkl. echtem 'capped'-Status!)
       let usedMyth = 0, usedHero = 0, reachableWalletPts = startPoints;
       planSteps.forEach((st, idx) => {
-        if (st.markType === 'bag') {
+        if (st.markType === 'bag' || st.markType === 'free') {
           st.availability = 'now';
           reachableWalletPts += st.pointGain;
-        } else if (st.markType === 'hero') {
+        } else if (st.markType === 'hero' || st.markType === 'champ') {
           if (usedHero + st.markCost <= heroCap.wallet) {
             st.availability = 'now';
             reachableWalletPts += st.pointGain;
-          } else st.availability = 'farmable';
+          } else if (usedHero + st.markCost <= heroCap.totalAvailable) {
+            st.availability = 'farmable';
+          } else {
+            st.availability = 'capped';
+          }
           usedHero += st.markCost;
         } else {
           if (usedMyth + st.markCost <= mythCap.wallet && !st.isBlockedReplacement) {
@@ -669,7 +853,9 @@
             reachableWalletPts += st.pointGain;
           } else if (usedMyth + st.markCost <= mythCap.totalAvailable) {
             st.availability = 'farmable';
-          } else st.availability = 'capped';
+          } else {
+            st.availability = 'capped';
+          }
           usedMyth += st.markCost;
         }
         const cum = planSteps.slice(0, idx + 1).reduce((a, x) => a + x.pointGain, 0);
@@ -687,10 +873,10 @@
     }
 
     // =========================================================================
-    // 4. DARSTELLUNG (CLEAN & OHNE DOPPELUNGEN)
+    // 4. DARSTELLUNG (INKL. CAPPED-ANZEIGE & AKTIVEN MEILENSTEIN-BUTTONS)
     // =========================================================================
     function renderAll() {
-      if (!Array.isArray(characters) || characters.length === 0) {
+      if (!isValidCharacterArray(characters)) {
         characters = JSON.parse(JSON.stringify(INITIAL_CHARS));
       }
       if (activeCharIndex >= characters.length) activeCharIndex = 0;
@@ -718,37 +904,39 @@
 
         return `
           <div onclick="activeCharIndex=${r.charIdx}; renderAll();"
+               role="button" tabindex="0"
+               onkeydown="if(event.key==='Enter'||event.key===' '){activeCharIndex=${r.charIdx};renderAll();}"
                style="border-top: 4px solid ${col};"
                class="p-3.5 rounded-xl border cursor-pointer transition flex flex-col justify-between gap-2 ${
-                 isSel ? 'bg-wow-card border-wow-gold ring-2 ring-wow-gold/50 shadow-lg' : 'bg-wow-card/50 hover:bg-wow-card border-wow-border opacity-80 hover:opacity-100'
+                 isSel ? 'bg-wow-card border-wow-gold ring-2 ring-wow-gold/50 shadow-lg' : 'bg-wow-card/50 hover:bg-wow-card border-wow-border opacity-85 hover:opacity-100'
                }">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2 min-w-0">
-                <span class="px-1.5 py-0.5 rounded text-[10px] font-black ${isTop ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-300'}">#${rankIdx + 1}</span>
+                <span class="px-1.5 py-0.5 rounded text-[11px] font-black ${isTop ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-300'}">#${rankIdx + 1}</span>
                 <span class="text-sm font-black truncate" style="color:${col}">${escapeHtml(r.char.name)}</span>
               </div>
               <div class="flex items-center gap-1">
-                ${isTop ? '<span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-600/50 font-bold">🏆 Beste Wahl</span>' : ''}
-                ${characters.length > 1 ? `<button onclick="event.stopPropagation(); removeCharacter(${r.charIdx})" class="text-xs text-slate-500 hover:text-red-400 px-1">&times;</button>` : ''}
+                ${isTop ? '<span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-600/50 font-bold">🏆 Beste Wahl</span>' : ''}
+                ${characters.length > 1 ? `<button onclick="event.stopPropagation(); removeCharacter(${r.charIdx})" class="text-xs text-slate-400 hover:text-red-400 px-1">&times;</button>` : ''}
               </div>
             </div>
 
             <div class="grid grid-cols-3 gap-1 text-center bg-wow-panel p-2 rounded-lg border border-wow-border/60">
               <div>
-                <div class="text-[9px] text-slate-400">Angezogen</div>
+                <div class="text-[10px] text-slate-400">Angezogen</div>
                 <div class="text-xs font-black text-white">${r.startAvg.toFixed(2)}</div>
               </div>
               <div class="border-x border-wow-border/60">
-                <div class="text-[9px] text-cyan-300">Mit Tasche</div>
+                <div class="text-[10px] text-cyan-300">Mit Tasche</div>
                 <div class="text-xs font-black text-cyan-300">${r.avgWithBagsOnly.toFixed(2)}</div>
               </div>
               <div>
-                <div class="text-[9px] text-amber-300">+Beutel (${r.mythCap.wallet})</div>
+                <div class="text-[10px] text-amber-300">+Beutel (${r.mythCap.wallet})</div>
                 <div class="text-xs font-black text-amber-300">${r.reachableAvgWithWallet.toFixed(2)}</div>
               </div>
             </div>
 
-            <div class="flex items-center justify-between text-[11px]">
+            <div class="flex items-center justify-between text-xs">
               <span class="text-slate-400">🎯 Fehlt bis ${r.targetAvg}:</span>
               <span class="font-bold text-emerald-300">${r.missingMyth} W. (≈ ${runs}× M+${keyLvl})</span>
             </div>
@@ -770,33 +958,31 @@
       const runs334All = Math.ceil(m334.allMissing / cPerKey);
 
       document.getElementById('topKpiGrid').innerHTML = `
-        <!-- Kachel 1: Item-Level -->
         <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 shadow" style="border-left: 4px solid ${col};">
           <div class="text-[11px] font-bold uppercase text-slate-400">1. Item-Level (${escapeHtml(sim.char.name)})</div>
           <div class="grid grid-cols-3 gap-1 text-center mt-2 bg-wow-card p-2 rounded-xl border border-wow-border">
             <div>
-              <div class="text-[9px] text-slate-400 uppercase">Angezogen</div>
+              <div class="text-[10px] text-slate-400 uppercase">Angezogen</div>
               <div class="text-sm font-black text-white">${sim.startAvg.toFixed(2)}</div>
             </div>
             <div class="border-x border-wow-border">
-              <div class="text-[9px] text-cyan-300 uppercase font-bold">Tasche</div>
+              <div class="text-[10px] text-cyan-300 uppercase font-bold">Tasche</div>
               <div class="text-sm font-black text-cyan-300">${sim.avgWithBagsOnly.toFixed(2)}</div>
             </div>
             <div>
-              <div class="text-[9px] text-amber-300 uppercase font-bold">+Beutel</div>
+              <div class="text-[10px] text-amber-300 uppercase font-bold">+Beutel</div>
               <div class="text-sm font-black text-wow-gold">${sim.reachableAvgWithWallet.toFixed(2)}</div>
             </div>
           </div>
-          <div class="text-[11px] text-slate-400 mt-2">
+          <div class="text-xs text-slate-400 mt-2">
             Fehlt bis Ø ${sim.targetAvg}: <strong class="text-amber-300">+${Math.max(0, sim.targetTotalPoints - sim.startPoints)} iLvl-Punkte</strong>
           </div>
         </div>
 
-        <!-- Kachel 2: Wappen-Bestand & Wochen-Cap -->
         <div class="bg-wow-panel border border-emerald-500/50 rounded-2xl p-4 shadow">
           <div class="flex items-center justify-between">
             <span class="text-[11px] font-bold uppercase text-emerald-400">2. 🌾 Mythisch-Wappen & Cap</span>
-            <span class="text-[10px] text-slate-400">${myth.earned} / ${myth.seasonCap} Cap</span>
+            <span class="text-[11px] text-slate-400">${myth.earned} / ${myth.seasonCap} Cap</span>
           </div>
           <div class="flex items-baseline justify-between mt-2">
             <div>
@@ -805,13 +991,12 @@
             </div>
             <span class="text-xs font-bold px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-700/50">≈ ${runsCap}× M+${keyLvl}</span>
           </div>
-          <div class="text-[11px] text-slate-300 mt-2 pt-2 border-t border-wow-border/60 flex justify-between">
+          <div class="text-xs text-slate-300 mt-2 pt-2 border-t border-wow-border/60 flex justify-between">
             <span>🎒 Beutel: <strong>${myth.wallet}</strong></span>
             <span>🔨 Verbraucht: <strong>${myth.spent}</strong></span>
           </div>
         </div>
 
-        <!-- Kachel 3: Bedarf bis Ziel (331) -->
         <div class="bg-wow-panel border border-amber-500/50 rounded-2xl p-4 shadow">
           <div class="text-[11px] font-bold uppercase text-wow-gold">3. 🎯 Fehlt bis Ziel Ø ${sim.targetAvg}</div>
           <div class="flex items-baseline justify-between mt-2">
@@ -821,12 +1006,11 @@
             </div>
             <span class="text-xs font-bold px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-700/50">≈ ${runsTarget}× M+${keyLvl}</span>
           </div>
-          <div class="text-[11px] text-slate-300 mt-2 pt-2 border-t border-wow-border/60">
+          <div class="text-xs text-slate-300 mt-2 pt-2 border-t border-wow-border/60">
             Gesamt nötig: <strong>${sim.usedMyth} W.</strong> (abzgl. ${myth.wallet} im Beutel)
           </div>
         </div>
 
-        <!-- Kachel 4: Bedarf bis Max-iLvl 334 -->
         <div class="bg-wow-panel border border-rose-500/60 rounded-2xl p-4 shadow">
           <div class="text-[11px] font-bold uppercase text-rose-300">4. 🔥 Fehlt für Max-iLvl 334</div>
           <div class="mt-2 space-y-1">
@@ -839,7 +1023,7 @@
               <span class="font-black text-amber-300">${m334.allMissing} W. <span class="text-[11px] text-cyan-300">(${runs334All}× M+${keyLvl})</span></span>
             </div>
           </div>
-          <div class="text-[10px] text-slate-400 mt-2 pt-1.5 border-t border-wow-border/60">
+          <div class="text-[11px] text-slate-400 mt-2 pt-1.5 border-t border-wow-border/60">
             Berechnet mit M+${keyLvl} (${cPerKey} Wappen / Run)
           </div>
         </div>
@@ -851,7 +1035,7 @@
       const charIdx = sim.charIdx;
       const stepCost = sim.mythStepCost;
 
-      // 1. Links: Gruppierte Upgrade-Schritte mit ✅ Erledigt-Button
+      // 1. Links: Gruppierte Upgrade-Schritte (inkl. 'now', 'farmable' UND 'capped'!)
       const grouped = [];
       sim.planSteps.forEach(st => {
         const last = grouped[grouped.length - 1];
@@ -868,14 +1052,22 @@
 
       const stepsHtml = grouped.map((g, i) => {
         const isNow = g.availability === 'now';
+        const isCapped = g.availability === 'capped';
+
         const costBadge = g.markCost === 0
           ? `<span class="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-700/60 text-[11px] font-bold">🎒 0 Wappen</span>`
-          : `<span class="px-2 py-0.5 rounded ${isNow ? 'bg-amber-950 text-amber-200 border-amber-500/60' : 'bg-slate-800 text-slate-300 border-slate-600'} border text-[11px] font-bold">🟠 ${g.markCost} W. (${g.stepCount} St.)</span>`;
+          : `<span class="px-2 py-0.5 rounded ${isNow ? 'bg-amber-950 text-amber-200 border-amber-500/60' : (isCapped ? 'bg-red-950 text-red-200 border-red-600/60' : 'bg-slate-800 text-slate-300 border-slate-600')} border text-[11px] font-bold">🟠 ${g.markCost} W. (${g.stepCount} St.)</span>`;
+
+        const statusText = isNow
+          ? `<div class="text-[11px] mt-0.5 text-cyan-300 font-bold">🟢 Sofort (Beutel)</div>`
+          : (isCapped
+              ? `<div class="text-[11px] mt-0.5 text-red-400 font-bold">🔒 Über Wochen-Cap</div>`
+              : `<div class="text-[11px] mt-0.5 text-emerald-400 font-semibold">🌾 Noch farmen</div>`);
 
         return `
-          <div class="p-3 rounded-xl border ${isNow ? 'bg-wow-card border-cyan-500/50' : 'bg-wow-card/60 border-wow-border'} flex items-center justify-between gap-3">
+          <div class="p-3 rounded-xl border ${isNow ? 'bg-wow-card border-cyan-500/50' : (isCapped ? 'bg-red-950/15 border-red-800/50 opacity-85' : 'bg-wow-card/60 border-wow-border')} flex items-center justify-between gap-3">
             <div class="flex items-center gap-2.5 min-w-0">
-              <div class="w-6 h-6 rounded-lg ${isNow ? 'bg-cyan-400 text-slate-950' : 'bg-slate-700 text-slate-200'} font-black text-xs flex items-center justify-center shrink-0">${i + 1}</div>
+              <div class="w-6 h-6 rounded-lg ${isNow ? 'bg-cyan-400 text-slate-950' : (isCapped ? 'bg-red-800 text-red-100' : 'bg-slate-700 text-slate-200')} font-black text-xs flex items-center justify-center shrink-0">${i + 1}</div>
               <div class="min-w-0">
                 <div class="text-xs font-bold text-white truncate">
                   ${escapeHtml(g.slotLabel)} ${g.itemName ? `<span class="text-amber-200 font-normal">„${escapeHtml(g.itemName)}“</span>` : ''}
@@ -889,11 +1081,11 @@
             <div class="flex items-center gap-2 shrink-0">
               <div class="text-right">
                 ${costBadge}
-                <div class="text-[10px] mt-0.5 ${isNow ? 'text-cyan-300 font-bold' : 'text-emerald-400'}">${isNow ? '🟢 Sofort (Beutel)' : '🌾 Noch farmen'}</div>
+                ${statusText}
               </div>
-              <button onclick="completeUpgradeStep(${charIdx}, '${g.slotKey}', ${g.toIlvl}, '${g.markType}', ${g.markCost})"
-                      class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black text-xs transition"
-                      title="Im Spiel erledigt? Klicke hier, um Slot & Wappen automatisch zu aktualisieren">
+              <button onclick="completeUpgradeStep(${charIdx}, '${g.slotKey}', ${g.toIlvl}, '${g.markType}', ${g.markCost}, '${g.availability}')"
+                      class="px-2.5 py-1.5 rounded-lg ${isCapped ? 'bg-slate-700 hover:bg-slate-600 text-slate-300' : 'bg-emerald-600 hover:bg-emerald-500 text-slate-950'} font-black text-xs transition"
+                      title="Im Spiel erledigt? Klicke hier, um Slot & Wappen zu aktualisieren">
                 ✅
               </button>
             </div>
@@ -911,15 +1103,15 @@
         <div class="space-y-2">${stepsHtml || '<div class="text-xs text-emerald-400">🎉 Ziel bereits erreicht!</div>'}</div>
       `;
 
-      // 2. Rechts: 3-Zonen-Ampel mit echten Item-Namen
+      // 2. Rechts: 3-Zonen-Ampel
       const zone1 = [], zone2 = [], zone3 = [];
       SLOTS.forEach(s => {
         const eq = getEquippedSlotIlvl(char, s.key);
         const bag = getBagSlotIlvl(char, s.key);
         const meta = char.slotMeta?.[s.key] || {};
-        const hasMythInBag = Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
-        const maxUpgradable = hasMythInBag ? 334 : (meta.maxUpgradable || 321);
-        const entry = { slot: s, eq, bag, meta, hasMythInBag };
+        const hasMythInBag = rules.includeBags && Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
+        const maxUpgradable = getEffectiveSlotMaxUpgradable(char, s.key);
+        const entry = { slot: s, eq, bag, meta, hasMythInBag, maxUpgradable };
 
         if (eq >= sim.targetAvg && bag <= eq) zone3.push(entry);
         else if (bag > eq || maxUpgradable > 321) zone1.push(entry);
@@ -927,7 +1119,7 @@
       });
 
       const renderSlotCard = (it, type) => {
-        const { slot, eq, bag, meta, hasMythInBag } = it;
+        const { slot, eq, bag, meta, hasMythInBag, maxUpgradable } = it;
         const startMyth = hasMythInBag ? Math.max(eq, meta.bagMythIlvl) : Math.max(eq, bag);
         const steps334 = MYTH_UPGRADE_STEPS.filter(st => st > Math.max(startMyth, 318) && st <= 334).length;
 
@@ -943,13 +1135,15 @@
           }
         } else if (type === 'blocked') {
           border = 'border-amber-700/50 bg-amber-950/10';
-          sub = `<div class="text-[11px] text-red-300">🔒 Held 6/6 Limit: „${escapeHtml(meta.eqName || slot.label)}“ (321 Max)</div>`;
+          sub = `<div class="text-[11px] text-red-300">🔒 Limit (${maxUpgradable} Max): „${escapeHtml(meta.eqName || slot.label)}“</div>`;
         } else {
-          sub = `<div class="text-[10px] text-emerald-300">✔️ ${escapeHtml(meta.eqName || meta.label || 'Fertig')}</div>`;
+          sub = `<div class="text-[11px] text-emerald-300">✔️ ${escapeHtml(meta.eqName || meta.label || 'Fertig')}</div>`;
         }
 
         return `
           <div onclick="openEditSlotModal(${charIdx}, '${slot.key}', '${slot.label}')"
+               role="button" tabindex="0"
+               onkeydown="if(event.key==='Enter'||event.key===' ')openEditSlotModal(${charIdx},'${slot.key}','${slot.label}')"
                class="p-2.5 rounded-xl border ${border} hover:bg-slate-800/70 cursor-pointer transition flex items-center justify-between gap-2">
             <div class="min-w-0">
               <div class="text-xs font-bold text-white">${slot.label}</div>
@@ -972,7 +1166,7 @@
         </div>
 
         <div class="space-y-2 pt-2 border-t border-wow-border/60">
-          <div class="text-xs font-bold uppercase text-amber-300">🔒 Zone 2: Auf Held 6/6 (321) blockiert (${zone2.length})</div>
+          <div class="text-xs font-bold uppercase text-amber-300">🔒 Zone 2: Am Spur-Limit blockiert (${zone2.length})</div>
           <div class="space-y-1.5">${zone2.map(x => renderSlotCard(x, 'blocked')).join('')}</div>
         </div>
 
@@ -1056,14 +1250,21 @@
 
     function setMilestoneTarget(val) {
       milestoneTarget = val;
+      const b321 = document.getElementById('milestoneBtn321');
+      const b331 = document.getElementById('milestoneBtn331');
+      if (b321 && b331) {
+        b321.className = val === 321
+          ? 'px-3 py-1.5 rounded-lg bg-wow-gold text-slate-950 text-xs font-black shadow transition'
+          : 'px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-purple-300 font-bold transition';
+        b331.className = val === 331
+          ? 'px-3 py-1.5 rounded-lg bg-wow-gold text-slate-950 text-xs font-black shadow transition'
+          : 'px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs text-wow-gold font-bold transition';
+      }
       renderMilestoneView();
     }
 
     function renderMilestoneView() {
-      const benchmarks = {};
-      SLOTS.forEach(s => {
-        benchmarks[s.key] = Math.max(...characters.map(c => Math.max(getEquippedSlotIlvl(c, s.key), getBagSlotIlvl(c, s.key))));
-      });
+      const benchmarks = calculateMilestoneBenchmarks();
       const missing = SLOTS.filter(s => benchmarks[s.key] < milestoneTarget);
       const banner = document.getElementById('crestStatusBanner');
       banner.className = missing.length === 0
@@ -1081,31 +1282,56 @@
     }
 
     // =========================================================================
-    // 5. AKTIONEN: 1-KLICK ERLEDIGT, SIMC IMPORT & RAIDER.IO
+    // 5. AKTIONEN: 1-KLICK ERLEDIGT (MIT BEUTEL- & CAP-PRÜFUNG!), SIMC & RAIDER.IO
     // =========================================================================
-    function completeUpgradeStep(charIdx, slotKey, toIlvl, markType, markCost) {
+    function completeUpgradeStep(charIdx, slotKey, toIlvl, markType, markCost, availability) {
       const char = characters[charIdx];
       if (!char) return;
       const meta = char.slotMeta[slotKey] || {};
 
+      if (availability === 'capped') {
+        showToast('⚠️ Dieser Schritt liegt über deinem aktuellen Wochen-Cap und kann erst nächste ID erledigt werden.', 'error');
+        return;
+      }
+
+      if (markCost > 0 && (markType === 'myth' || markType === 'hero' || markType === 'champ')) {
+        const capInfo = getCharCrestCapNumbers(char, markType);
+        const wallet = capInfo.wallet;
+        if (markCost > wallet) {
+          const diffToFarm = markCost - wallet;
+          if (diffToFarm > capInfo.farmable) {
+            showToast(`⚠️ Nicht genug Cap frei! Es fehlen ${diffToFarm} Wappen, aber du kannst nur noch ${capInfo.farmable} farmen.`, 'error');
+            return;
+          }
+          if (!confirm(`Dir fehlen für diesen Schritt noch ${diffToFarm} Wappen im Beutel. Hast du diese ${diffToFarm} Wappen gerade im Spiel gefarmt und das Upgrade durchgeführt?`)) {
+            return;
+          }
+        }
+      }
+
       char.slots[slotKey] = toIlvl;
+      if (!char.charWatermarks) char.charWatermarks = {};
+      char.charWatermarks[slotKey] = Math.max(Number(char.charWatermarks[slotKey] || 0), toIlvl);
+
       if (markType === 'bag' && meta.bagName) {
         meta.eqName = meta.bagName;
+        meta.eqMaxUpgradable = meta.bagMaxUpgradable || 321;
         char.bagSlots[slotKey] = 0;
       } else if (meta.bagMythIlvl && toIlvl > 321) {
         meta.track = 'myth';
-        meta.maxUpgradable = 334;
+        meta.eqMaxUpgradable = 334;
         if (meta.bagMythName) meta.eqName = meta.bagMythName;
         delete meta.bagMythIlvl;
+      } else if (toIlvl > 321) {
+        meta.track = 'myth';
+        meta.eqMaxUpgradable = 334;
       }
 
       if (markCost > 0) {
-        if (markType === 'myth') {
-          char.mythMarks = Math.max(0, Number(char.mythMarks || 0) - markCost);
-          char.mythSpent = Number(char.mythSpent || 0) + markCost;
-        } else if (markType === 'hero') {
-          char.heroMarks = Math.max(0, Number(char.heroMarks || 0) - markCost);
-          char.heroSpent = Number(char.heroSpent || 0) + markCost;
+        const tier = CREST_TIERS_META.find(t => t.key === markType);
+        if (tier) {
+          char[tier.walletField] = Math.max(0, Number(char[tier.walletField] || 0) - markCost);
+          char[tier.spentField] = Number(char[tier.spentField] || 0) + markCost;
         }
       }
 
@@ -1117,43 +1343,64 @@
     function onCrestInputUpdate(charIdx, tierKey, mode, rawVal) {
       const char = characters[charIdx];
       if (!char) return;
-      const seasonCap = (rules.seasonWeek || 9) * WEEKLY_CAP_PER_WEEK;
+      const seasonCap = getEffectiveSeasonWeek() * WEEKLY_CAP_PER_WEEK;
       const tier = CREST_TIERS_META.find(t => t.key === tierKey);
       const val = Math.max(0, parseInt(rawVal || '0', 10));
       const wallet = Number(char[tier.walletField] || 0);
 
       if (mode === 'wallet') char[tier.walletField] = val;
-      else if (mode === 'spent') char[tier.spentField] = val;
-      else if (mode === 'farmable') {
+      else if (mode === 'spent') {
+        char[tier.spentField] = val;
+        char.spentManuallyEdited = true;
+      } else if (mode === 'farmable') {
         const targetEarned = Math.max(wallet, seasonCap - Math.min(seasonCap, val));
         char[tier.spentField] = Math.max(0, targetEarned - wallet);
+        char.spentManuallyEdited = true;
       }
       saveCharsToStorage();
       renderAll();
     }
 
+    // Erkennt jetzt ALLE 5 Spuren (Abenteurer, Veteran, Champion, Held, Mythos) mit exaktem eqMaxUpgradable!
     function classifyItemTrackFromBonusIds(bonusStr, isCrafted) {
-      if (isCrafted) return { track: 'crafted', label: 'Handwerk', maxUpgradable: 331 };
+      if (isCrafted) return { track: 'crafted', label: 'Handwerk', eqMaxUpgradable: 331, tierKey: 'myth', stepsSpent: 4 };
       const ids = String(bonusStr || '').split('/').map(n => parseInt(n, 10));
       for (const id of ids) {
-        if (MYTH_BONUS_IDS[id]) return { track: 'myth', label: MYTH_BONUS_IDS[id], maxUpgradable: 334 };
-        if (HERO_BONUS_IDS[id]) return { track: id === 12846 ? 'hero_max' : 'hero', label: HERO_BONUS_IDS[id], maxUpgradable: 321 };
+        if (MYTH_BONUS_IDS[id]) {
+          const rank = id - 12848; // 1..6
+          return { track: 'myth', label: MYTH_BONUS_IDS[id], eqMaxUpgradable: 334, tierKey: 'myth', stepsSpent: Math.max(0, rank - 2) };
+        }
+        if (HERO_BONUS_IDS[id]) {
+          const rank = id - 12840; // 1..6
+          return { track: id === 12846 ? 'hero_max' : 'hero', label: HERO_BONUS_IDS[id], eqMaxUpgradable: 321, tierKey: 'hero', stepsSpent: Math.max(0, rank - 2) };
+        }
+        if (CHAMP_BONUS_IDS[id]) {
+          const rank = id - 12832; // 1..6
+          return { track: id === 12838 ? 'champ_max' : 'champ', label: CHAMP_BONUS_IDS[id], eqMaxUpgradable: 308, tierKey: 'champ', stepsSpent: Math.max(0, rank - 2) };
+        }
+        if (VET_BONUS_IDS[id]) {
+          return { track: 'vet', label: 'Veteran', eqMaxUpgradable: 295, tierKey: 'vet', stepsSpent: Math.max(0, VET_BONUS_IDS[id] - 2) };
+        }
+        if (ADV_BONUS_IDS[id]) {
+          return { track: 'adv', label: 'Abenteurer', eqMaxUpgradable: 282, tierKey: 'adv', stepsSpent: Math.max(0, ADV_BONUS_IDS[id] - 2) };
+        }
       }
-      return { track: 'hero_max', label: 'Max 321', maxUpgradable: 321 };
+      return { track: 'hero_max', label: 'Max 321', eqMaxUpgradable: 321, tierKey: 'hero', stepsSpent: 0 };
     }
 
     function parseSimcString(rawText) {
       const lines = (rawText || '').split(/\r?\n/);
-      let charName = '', realm = 'Unbekannt', className = '';
+      let charName = '', realm = 'Unbekannt', region = 'eu', className = '', has331Achievement = false;
       let advMarks = 0, vetMarks = 0, champMarks = 0, heroMarks = 0, mythMarks = 0;
 
       const equippedSlots = {}, bagSlots = {}, slotMeta = {}, charWatermarks = {};
       SLOTS.forEach(s => {
         equippedSlots[s.key] = 0;
         bagSlots[s.key] = 0;
-        slotMeta[s.key] = { track: 'hero_max', label: '', maxUpgradable: 321, eqName: '' };
+        slotMeta[s.key] = { track: 'hero_max', label: '', eqMaxUpgradable: 321, eqName: '' };
       });
 
+      let mythCrafted = 0, mythSteps = 0, heroSteps = 0, champSteps = 0, vetSteps = 0, advSteps = 0;
       const bagRings = [], bagTrinkets = [], bagMythRings = [], bagMythTrinkets = [];
       let section = 'equipped', lastIlvl = 0, lastName = '';
 
@@ -1166,6 +1413,15 @@
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
         if (!line || /^#\s*(?:Saved Loadout|talents=)/i.test(line)) continue;
+
+        if (i === 0 && line.startsWith('#')) {
+          const hp = line.replace(/^#\s*/, '').split(' - ');
+          if (hp.length >= 4 && hp[hp.length - 1].includes('/')) {
+            const [rReg, rName] = hp[hp.length - 1].trim().split('/');
+            if (rReg) region = rReg.toLowerCase().trim();
+            if (rName) realm = rName.trim();
+          }
+        }
 
         if (line.startsWith('###')) {
           section = line.toLowerCase().includes('gear from bags') ? 'bags' : 'other';
@@ -1182,11 +1438,31 @@
           continue;
         }
 
+        if (/^#\s*slot_high_watermarks=/i.test(line)) {
+          const rawWm = line.replace(/^#\s*slot_high_watermarks=/i, '').trim();
+          const charMap = {};
+          rawWm.split('/').forEach(entry => {
+            const parts = entry.split(':').map(n => parseInt(n, 10));
+            if (parts.length >= 3 && !isNaN(parts[0])) charMap[parts[0]] = parts[1] || 0;
+          });
+          SLOTS.forEach(s => {
+            if (charMap[s.redundancyId] !== undefined) charWatermarks[s.key] = charMap[s.redundancyId];
+          });
+          continue;
+        }
+
+        if (/^#\s*upgrade_achievements=/i.test(line)) {
+          if (/\b(62413|62415)\b/.test(line)) has331Achievement = true;
+          continue;
+        }
+
         if (section === 'equipped') {
           const cm = line.match(/^(warrior|paladin|hunter|rogue|priest|deathknight|shaman|mage|warlock|monk|druid|demonhunter|evoker)="?([^"\n]+)"?/i);
           if (cm) { className = cm[1].toLowerCase(); charName = cm[2].trim(); continue; }
           const sm = line.match(/^server=(.+)$/i);
           if (sm) { realm = sm[1].trim().replace(/_/g, ' '); continue; }
+          const rm = line.match(/^region=(.+)$/i);
+          if (rm) { region = rm[1].trim().toLowerCase(); continue; }
 
           if (line.startsWith('#')) {
             const im = line.replace(/^#\s*/, '').match(/^(.*?)\s*\((\d+)\)\s*$/);
@@ -1198,9 +1474,19 @@
           if (slm) {
             const key = mapKey[slm[1].toLowerCase()];
             const bonus = (line.match(/bonus_id=([0-9/]+)/i) || [])[1] || '';
+            const isCrafted = /crafting_quality=/i.test(line);
             if (key && lastIlvl > 0) {
               equippedSlots[key] = lastIlvl;
-              slotMeta[key] = { ...classifyItemTrackFromBonusIds(bonus, /crafting_quality=/i.test(line)), eqName: lastName };
+              const info = classifyItemTrackFromBonusIds(bonus, isCrafted);
+              slotMeta[key] = { ...info, eqName: lastName };
+
+              // Verbrauchte Wappen NUR aus tatsächlich aufgewerteten angelegten Items zählen!
+              if (info.track === 'crafted' && lastIlvl >= 331) mythCrafted++;
+              else if (info.tierKey === 'myth') mythSteps += info.stepsSpent;
+              else if (info.tierKey === 'hero') heroSteps += info.stepsSpent;
+              else if (info.tierKey === 'champ') champSteps += info.stepsSpent;
+              else if (info.tierKey === 'vet') vetSteps += info.stepsSpent;
+              else if (info.tierKey === 'adv') advSteps += info.stepsSpent;
             }
             lastIlvl = 0; lastName = '';
           }
@@ -1214,14 +1500,22 @@
             const trackInfo = classifyItemTrackFromBonusIds(bonus, /crafting_quality=/i.test(stripped));
             if (key && lastIlvl > 0) {
               if (raw === 'finger1' || raw === 'finger2') {
-                bagRings.push({ ilvl: lastIlvl, name: lastName });
+                bagRings.push({ ilvl: lastIlvl, name: lastName, maxUp: trackInfo.eqMaxUpgradable });
                 if (trackInfo.track === 'myth') bagMythRings.push({ ilvl: lastIlvl, name: lastName });
               } else if (raw === 'trinket1' || raw === 'trinket2') {
-                bagTrinkets.push({ ilvl: lastIlvl, name: lastName });
+                bagTrinkets.push({ ilvl: lastIlvl, name: lastName, maxUp: trackInfo.eqMaxUpgradable });
                 if (trackInfo.track === 'myth') bagMythTrinkets.push({ ilvl: lastIlvl, name: lastName });
               } else {
-                if (lastIlvl > (bagSlots[key] || 0)) { bagSlots[key] = lastIlvl; slotMeta[key].bagName = lastName; }
-                if (trackInfo.track === 'myth') { slotMeta[key].bagMythIlvl = lastIlvl; slotMeta[key].bagMythName = lastName; slotMeta[key].maxUpgradable = 334; }
+                if (lastIlvl > (bagSlots[key] || 0)) {
+                  bagSlots[key] = lastIlvl;
+                  slotMeta[key].bagName = lastName;
+                  slotMeta[key].bagMaxUpgradable = trackInfo.eqMaxUpgradable;
+                }
+                if (trackInfo.track === 'myth') {
+                  slotMeta[key].bagMythIlvl = lastIlvl;
+                  slotMeta[key].bagMythName = lastName;
+                  slotMeta[key].bagMaxUpgradable = 334;
+                }
               }
             }
             lastIlvl = 0; lastName = '';
@@ -1234,47 +1528,45 @@
 
       if (bagRings.length > 0) {
         bagRings.sort((a, b) => b.ilvl - a.ilvl);
-        bagSlots.finger1 = bagRings[0].ilvl; slotMeta.finger1.bagName = bagRings[0].name;
-        bagSlots.finger2 = (bagRings[1] || bagRings[0]).ilvl; slotMeta.finger2.bagName = (bagRings[1] || bagRings[0]).name;
+        bagSlots.finger1 = bagRings[0].ilvl; slotMeta.finger1.bagName = bagRings[0].name; slotMeta.finger1.bagMaxUpgradable = bagRings[0].maxUp;
+        const r2 = bagRings[1] || bagRings[0];
+        bagSlots.finger2 = r2.ilvl; slotMeta.finger2.bagName = r2.name; slotMeta.finger2.bagMaxUpgradable = r2.maxUp;
       }
       if (bagMythRings.length > 0) {
         bagMythRings.sort((a, b) => b.ilvl - a.ilvl);
-        slotMeta.finger1.bagMythIlvl = bagMythRings[0].ilvl; slotMeta.finger1.bagMythName = bagMythRings[0].name; slotMeta.finger1.maxUpgradable = 334;
-        if (bagMythRings[1]) { slotMeta.finger2.bagMythIlvl = bagMythRings[1].ilvl; slotMeta.finger2.bagMythName = bagMythRings[1].name; slotMeta.finger2.maxUpgradable = 334; }
+        slotMeta.finger1.bagMythIlvl = bagMythRings[0].ilvl; slotMeta.finger1.bagMythName = bagMythRings[0].name; slotMeta.finger1.bagMaxUpgradable = 334;
+        if (bagMythRings[1]) { slotMeta.finger2.bagMythIlvl = bagMythRings[1].ilvl; slotMeta.finger2.bagMythName = bagMythRings[1].name; slotMeta.finger2.bagMaxUpgradable = 334; }
       }
       if (bagTrinkets.length > 0) {
         bagTrinkets.sort((a, b) => b.ilvl - a.ilvl);
-        bagSlots.trinket1 = bagTrinkets[0].ilvl; slotMeta.trinket1.bagName = bagTrinkets[0].name;
-        bagSlots.trinket2 = (bagTrinkets[1] || bagTrinkets[0]).ilvl; slotMeta.trinket2.bagName = (bagTrinkets[1] || bagTrinkets[0]).name;
+        bagSlots.trinket1 = bagTrinkets[0].ilvl; slotMeta.trinket1.bagName = bagTrinkets[0].name; slotMeta.trinket1.bagMaxUpgradable = bagTrinkets[0].maxUp;
+        const t2 = bagTrinkets[1] || bagTrinkets[0];
+        bagSlots.trinket2 = t2.ilvl; slotMeta.trinket2.bagName = t2.name; slotMeta.trinket2.bagMaxUpgradable = t2.maxUp;
       }
       if (bagMythTrinkets.length > 0) {
         bagMythTrinkets.sort((a, b) => b.ilvl - a.ilvl);
-        slotMeta.trinket1.bagMythIlvl = bagMythTrinkets[0].ilvl; slotMeta.trinket1.bagMythName = bagMythTrinkets[0].name; slotMeta.trinket1.maxUpgradable = 334;
-        if (bagMythTrinkets[1]) { slotMeta.trinket2.bagMythIlvl = bagMythTrinkets[1].ilvl; slotMeta.trinket2.bagMythName = bagMythTrinkets[1].name; slotMeta.trinket2.maxUpgradable = 334; }
+        slotMeta.trinket1.bagMythIlvl = bagMythTrinkets[0].ilvl; slotMeta.trinket1.bagMythName = bagMythTrinkets[0].name; slotMeta.trinket1.bagMaxUpgradable = 334;
+        if (bagMythTrinkets[1]) { slotMeta.trinket2.bagMythIlvl = bagMythTrinkets[1].ilvl; slotMeta.trinket2.bagMythName = bagMythTrinkets[1].name; slotMeta.trinket2.bagMaxUpgradable = 334; }
       }
 
-      // Verbrauchte Wappen aus Items berechnen
-      let mythCrafted = 0, mythSteps = 0;
-      SLOTS.forEach(s => {
-        const best = Math.max(equippedSlots[s.key] || 0, bagSlots[s.key] || 0);
-        if (slotMeta[s.key].track === 'crafted' && best >= 331) mythCrafted++;
-        else if (best > 321) mythSteps += MYTH_UPGRADE_STEPS.filter(st => st <= best).length;
-      });
-      const mythSpent = mythCrafted * 80 + mythSteps * 20;
-
       return {
-        name: charName, realm, className,
+        name: charName, realm, region, className, has331Achievement,
         hasTwoHand: equippedSlots.mainhand > 0 && equippedSlots.offhand === 0,
         slots: equippedSlots, bagSlots, slotMeta, charWatermarks,
         advMarks, vetMarks, champMarks, heroMarks, mythMarks,
-        advSpent: 0, vetSpent: 0, champSpent: 120, heroSpent: 360, mythSpent,
-        mythSpentNote: `${mythCrafted}× Handwerk (331) + ${mythSteps}× Mythos-Stufen`
+        advSpent: advSteps * 10,
+        vetSpent: vetSteps * 10,
+        champSpent: champSteps * 10,
+        heroSpent: heroSteps * 15,
+        mythSpent: mythCrafted * 80 + mythSteps * 20,
+        mythSpentNote: `${mythCrafted}× Handwerk (331) + ${mythSteps}× angelegte Mythos-Stufen`
       };
     }
 
     function openSimcModal() {
       document.getElementById('simcTextarea').value = '';
       document.getElementById('simcPreviewBox').classList.add('hidden');
+      document.getElementById('simcForceRecalcSpent').checked = false;
       openModal('simcModal');
     }
 
@@ -1284,7 +1576,7 @@
       if (!raw.trim()) { box.classList.add('hidden'); return; }
       const p = parseSimcString(raw);
       box.classList.remove('hidden');
-      box.innerHTML = `<div class="font-bold text-purple-300">✔️ ${escapeHtml(p.name || 'Unbekannt')} (${escapeHtml(p.realm)})</div><div>🟠 Beutel: ${p.mythMarks} | 🔨 Verbraucht: ${p.mythSpent}</div>`;
+      box.innerHTML = `<div class="font-bold text-purple-300">✔️ ${escapeHtml(p.name || 'Unbekannt')} (${escapeHtml(p.realm)} - ${p.region.toUpperCase()})</div><div>🟠 Beutel: ${p.mythMarks} | 🟣 Held: ${p.heroMarks} | 🔨 Geschätzt verbraucht: ${p.mythSpent} Mythisch</div>`;
     }
 
     function importSimcProfile() {
@@ -1292,28 +1584,53 @@
       if (!raw.trim()) return;
       const p = parseSimcString(raw);
       if (!p.name) { showToast('Kein Charakter im SimC erkannt.', 'error'); return; }
+
+      const forceRecalc = document.getElementById('simcForceRecalcSpent').checked;
       const idx = characters.findIndex(c => c.name.toLowerCase() === p.name.toLowerCase());
-      if (idx >= 0) { characters[idx] = { ...characters[idx], ...p }; activeCharIndex = idx; }
-      else { characters.push(p); activeCharIndex = characters.length - 1; }
+
+      if (idx >= 0) {
+        const ex = characters[idx];
+        // Bewahre manuell eingestellte Verbraucht-Zahlen, außer der Nutzer erzwingt die Neuberechnung!
+        const keepSpent = ex.spentManuallyEdited && !forceRecalc;
+        characters[idx] = {
+          ...ex,
+          ...p,
+          mythSpent: keepSpent ? ex.mythSpent : p.mythSpent,
+          heroSpent: keepSpent ? ex.heroSpent : p.heroSpent,
+          champSpent: keepSpent ? ex.champSpent : p.champSpent,
+          vetSpent: keepSpent ? ex.vetSpent : p.vetSpent,
+          advSpent: keepSpent ? ex.advSpent : p.advSpent,
+          mythSpentNote: keepSpent ? ex.mythSpentNote : p.mythSpentNote,
+          spentManuallyEdited: keepSpent
+        };
+        activeCharIndex = idx;
+      } else {
+        characters.push(p);
+        activeCharIndex = characters.length - 1;
+      }
+
       saveCharsToStorage();
       renderAll();
       closeModal('simcModal');
-      showToast(`${p.name} importiert!`, 'success');
+      showToast(`${p.name} erfolgreich importiert!`, 'success');
     }
 
+    // RAIDER.IO: Überschreibt NIEMALS mehr Taschen-Items (bagMythIlvl, bagName) und nutzt char.region!
     async function fetchCharacterFromRaiderIO(name, realm, region = 'eu') {
       const res = await fetch(`https://raider.io/api/v1/characters/profile?region=${region}&realm=${encodeURIComponent(realm.trim())}&name=${encodeURIComponent(name.trim())}&fields=gear`);
-      if (!res.ok) throw new Error(`Charakter "${name}" nicht gefunden.`);
+      if (!res.ok) throw new Error(`Charakter "${name}" auf "${realm}" (${region.toUpperCase()}) nicht gefunden.`);
       const data = await res.json();
       const items = data.gear?.items || {};
-      const slots = {}, slotMeta = {};
+      const slots = {}, eqMeta = {};
+
       SLOTS.forEach(s => {
         const it = items[s.key];
         slots[s.key] = it?.item_level || 0;
-        slotMeta[s.key] = { ...classifyItemTrackFromBonusIds((it?.bonuses || []).join('/'), false), eqName: it?.name || '' };
-        if (slots[s.key] > 321) slotMeta[s.key].maxUpgradable = 334;
+        const info = classifyItemTrackFromBonusIds((it?.bonuses || []).join('/'), false);
+        if (slots[s.key] > 321) info.eqMaxUpgradable = 334;
+        eqMeta[s.key] = { ...info, eqName: it?.name || '' };
       });
-      return { name: data.name || name, realm: data.realm || realm, className: data.class || '', slots, slotMeta };
+      return { name: data.name || name, realm: data.realm || realm, region, className: data.class || '', slots, eqMeta };
     }
 
     async function addSingleCharacterRaiderIO() {
@@ -1323,12 +1640,17 @@
       if (!name || !realm) return;
       try {
         const c = await fetchCharacterFromRaiderIO(name, realm, region);
-        characters.push({ ...c, bagSlots: {}, mythMarks: 0, mythSpent: 0 });
+        characters.push({
+          name: c.name, realm: c.realm, region: c.region, className: c.className,
+          slots: c.slots, bagSlots: {}, slotMeta: c.eqMeta, charWatermarks: { ...c.slots },
+          mythMarks: 0, heroMarks: 0, champMarks: 0, vetMarks: 0, advMarks: 0,
+          mythSpent: 0, heroSpent: 0, champSpent: 0, vetSpent: 0, advSpent: 0
+        });
         activeCharIndex = characters.length - 1;
         saveCharsToStorage();
         renderAll();
         closeModal('addCharModal');
-        showToast(`${c.name} geladen!`, 'success');
+        showToast(`${c.name} (${region.toUpperCase()}) geladen!`, 'success');
       } catch (e) { showToast(e.message, 'error'); }
     }
 
@@ -1336,16 +1658,34 @@
       const char = characters[activeCharIndex];
       if (!char) return;
       try {
-        const updated = await fetchCharacterFromRaiderIO(char.name, char.realm, 'eu');
-        characters[activeCharIndex] = { ...char, ...updated };
+        const region = char.region || 'eu';
+        const updated = await fetchCharacterFromRaiderIO(char.name, char.realm, region);
+        // Deep-Merge für slotMeta: Aktualisiert nur angelegte Infos, behält alle Taschen-Infos (bagMythIlvl, bagName) bei!
+        const mergedSlotMeta = {};
+        SLOTS.forEach(s => {
+          const oldMeta = char.slotMeta?.[s.key] || {};
+          const newEqMeta = updated.eqMeta[s.key] || {};
+          mergedSlotMeta[s.key] = {
+            ...oldMeta,
+            track: newEqMeta.track,
+            label: newEqMeta.label,
+            eqMaxUpgradable: newEqMeta.eqMaxUpgradable,
+            eqName: newEqMeta.eqName || oldMeta.eqName
+          };
+        });
+        characters[activeCharIndex] = {
+          ...char,
+          slots: updated.slots,
+          slotMeta: mergedSlotMeta
+        };
         saveCharsToStorage();
         renderAll();
-        showToast(`${char.name} aktualisiert!`, 'success');
+        showToast(`${char.name} über Raider.IO aktualisiert (Taschen-Daten blieben erhalten)!`, 'success');
       } catch (e) { showToast(e.message, 'error'); }
     }
 
     function removeCharacter(idx) {
-      if (!confirm(`"${characters[idx]?.name}" entfernen?`)) return;
+      if (!confirm(`"${characters[idx]?.name}" wirklich entfernen?`)) return;
       characters.splice(idx, 1);
       activeCharIndex = 0;
       saveCharsToStorage();
@@ -1365,8 +1705,13 @@
       if (!currentEditingCell) return;
       const { charIdx, slotKey } = currentEditingCell;
       const char = characters[charIdx];
-      char.slots[slotKey] = Math.max(0, parseInt(document.getElementById('editSlotEquippedInput').value || '0', 10));
-      char.bagSlots[slotKey] = Math.max(0, parseInt(document.getElementById('editSlotBagInput').value || '0', 10));
+      const newEq = Math.max(0, parseInt(document.getElementById('editSlotEquippedInput').value || '0', 10));
+      const newBag = Math.max(0, parseInt(document.getElementById('editSlotBagInput').value || '0', 10));
+      char.slots[slotKey] = newEq;
+      char.bagSlots[slotKey] = newBag;
+      if (!char.slotMeta[slotKey]) char.slotMeta[slotKey] = {};
+      if (newEq > 321) char.slotMeta[slotKey].eqMaxUpgradable = 334;
+      if (newBag > 321) char.slotMeta[slotKey].bagMaxUpgradable = 334;
       saveCharsToStorage();
       renderAll();
       closeModal('editSlotModal');
@@ -1385,7 +1730,8 @@
     function closeModal(id) { const el = document.getElementById(id); el.classList.add('hidden'); el.classList.remove('flex'); }
 
     function exportJsonBackup() {
-      const blob = new Blob([JSON.stringify(characters, null, 2)], { type: 'application/json' });
+      const payload = { schemaVersion: CURRENT_SCHEMA_VERSION, exportedAt: new Date().toISOString(), characters };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
       a.download = `wow-kriegsmeute-backup.json`;
@@ -1398,11 +1744,20 @@
       const reader = new FileReader();
       reader.onload = (e) => {
         try {
-          characters = JSON.parse(e.target.result);
+          const parsed = JSON.parse(e.target.result);
+          const candidateChars = Array.isArray(parsed) ? parsed : parsed?.characters;
+          if (!isValidCharacterArray(candidateChars)) {
+            throw new Error('JSON-Struktur ungültig: Keine gültigen Charakter-Objekte gefunden.');
+          }
+          characters = candidateChars.map(migrateCharacterObject);
+          activeCharIndex = 0;
           saveCharsToStorage();
           renderAll();
           closeModal('backupModal');
-        } catch (err) { showToast('Ungültige Datei', 'error'); }
+          showToast(`Backup (${characters.length} Charaktere) erfolgreich geladen!`, 'success');
+        } catch (err) {
+          showToast(err.message || 'Ungültige JSON-Datei.', 'error');
+        }
       };
       reader.readAsText(file);
     }
