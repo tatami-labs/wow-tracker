@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>WoW Kriegsmeuten-Tracker v12.0</title>
+  <title>WoW Kriegsmeuten-Tracker v12.1</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -47,7 +47,7 @@
         <div>
           <h1 class="text-sm font-bold text-white flex items-center gap-2">
             Kriegsmeuten-Upgrade-Tracker
-            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v12.0</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v12.1</span>
           </h1>
         </div>
       </div>
@@ -317,7 +317,6 @@
     const STORAGE_KEY_RULES = 'wow_warband_tracker_rules';
     const CURRENT_SCHEMA_VERSION = 12;
     const WEEKLY_CAP_PER_WEEK = 100;
-    // Offizieller EU Season 2 Start: Mittwoch, 19.08.2026, 07:00 UTC
     const EU_SEASON2_START_UTC = Date.UTC(2026, 7, 19, 7, 0, 0);
 
     const MPLUS_KEY_REWARDS = {
@@ -366,14 +365,12 @@
     const HERO_UPGRADE_STEPS  = [311, 315, 318, 321];
     const MYTH_UPGRADE_STEPS  = [325, 328, 331, 334];
 
-    // Bonus-IDs für Abenteurer, Veteran, Champion, Held und Mythos
     const ADV_BONUS_IDS   = { 12817: 1, 12818: 2, 12819: 3, 12820: 4, 12821: 5, 12826: 6 };
     const VET_BONUS_IDS   = { 12827: 1, 12828: 2, 12829: 3, 12830: 4, 12831: 5, 12832: 6 };
     const CHAMP_BONUS_IDS = { 12833: 'Champion 1/6', 12834: 'Champion 2/6', 12835: 'Champion 3/6', 12836: 'Champion 4/6', 12837: 'Champion 5/6', 12838: 'Champion 6/6 (Max 308)' };
     const HERO_BONUS_IDS  = { 12841: 'Held 1/6', 12842: 'Held 2/6', 12843: 'Held 3/6', 12844: 'Held 4/6', 12845: 'Held 5/6', 12846: 'Held 6/6 (Max 321)' };
     const MYTH_BONUS_IDS  = { 12849: 'Mythos 1/6', 12850: 'Mythos 2/6', 12851: 'Mythos 3/6', 12852: 'Mythos 4/6', 12853: 'Mythos 5/6', 12854: 'Mythos 6/6 (Max 334)' };
 
-    // Saubere Trennung zwischen eqMaxUpgradable (angelegtes Item) und bagMaxUpgradable (Taschen-Item)!
     const INITIAL_CHARS = [
       {
         name: 'Lexinê', realm: 'Blackmoore', region: 'eu', className: 'demonhunter', hasTwoHand: false,
@@ -382,6 +379,7 @@
         mythSpentNote: '3× Handwerk (331) + 6× Mythos 6/6 (334)',
         heroSpentNote: 'Held-Upgrades bis 321',
         champSpentNote: 'Champion-Upgrades bis 308',
+        completedHistory: [],
         slots: { head: 334, neck: 334, shoulder: 321, back: 321, chest: 331, wrist: 331, hands: 321, waist: 321, legs: 321, feet: 321, finger1: 321, finger2: 321, trinket1: 334, trinket2: 334, mainhand: 334, offhand: 331 },
         bagSlots: { head: 321, neck: 321, shoulder: 0, back: 321, chest: 321, wrist: 321, hands: 0, waist: 321, legs: 334, feet: 321, finger1: 321, finger2: 321, trinket1: 321, trinket2: 321, mainhand: 321, offhand: 0 },
         slotMeta: {
@@ -411,6 +409,7 @@
         mythSpentNote: '1× Handwerk (331 Laterne = 80) + 1× Mythos 6/6 (334 Waffe = 80)',
         heroSpentNote: 'Held-Upgrades bis 321 (50%-Rabatt aktiv)',
         champSpentNote: 'Champion-Upgrades bis 308',
+        completedHistory: [],
         slots: { head: 321, neck: 321, shoulder: 321, back: 321, chest: 321, wrist: 321, hands: 321, waist: 321, legs: 308, feet: 321, finger1: 321, finger2: 321, trinket1: 321, trinket2: 321, mainhand: 334, offhand: 331 },
         bagSlots: { head: 0, neck: 0, shoulder: 0, back: 311, chest: 321, wrist: 285, hands: 321, waist: 285, legs: 321, feet: 321, finger1: 321, finger2: 321, trinket1: 321, trinket2: 321, mainhand: 295, offhand: 311 },
         slotMeta: {
@@ -422,7 +421,6 @@
           wrist:    { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Knabbernde Armbinden' },
           hands:    { track: 'myth', label: 'Mythos 2/6', eqMaxUpgradable: 334, eqName: 'Himmlischer Handschutz des kosmischen Büßers' },
           waist:    { track: 'myth', label: 'Mythos 2/6', eqMaxUpgradable: 334, eqName: 'Gürtung der abyssischen Grotte' },
-          // WICHTIG: Tatamis angezogene Hose ist Champion 6/6 (eqMaxUpgradable: 308!), nur die Taschen-Hose hat bagMaxUpgradable: 321!
           legs:     { track: 'champ_max', label: 'Champion 6/6', eqMaxUpgradable: 308, eqName: 'Treter des Lohenwandlers (308)', bagName: 'Opferstrumpfhose des Eingeweihten', bagMaxUpgradable: 321 },
           feet:     { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Sandalen des weisen Voodoo', bagMythIlvl: 321, bagMythName: "Nek'zalis Geistwandler", bagMaxUpgradable: 334 },
           finger1:  { track: 'hero_max', label: 'Held 6/6', eqMaxUpgradable: 321, eqName: 'Geladenes Sandsteinband' },
@@ -446,7 +444,8 @@
       keyTimedMode: true,
       seasonWeek: 'auto',
       stepCost: 'auto',
-      includeBags: true
+      includeBags: true,
+      showCompletedSteps: true
     };
 
     // =========================================================================
@@ -463,7 +462,6 @@
       return parseInt(rules.seasonWeek, 10) || 9;
     }
 
-    // Prüft den Meilenstein anhand angelegter Items + charWatermarks (inkl. 2-Ring- & 2-Trinket-Regel!)
     function calculateMilestoneBenchmarks() {
       const benchmarks = {};
       SLOTS.forEach(s => { benchmarks[s.key] = 0; });
@@ -475,7 +473,6 @@
         benchmarks[s.key] = Math.max(...characters.map(c => getEarnedSlotIlvl(c, s.key)));
       });
 
-      // Paar-Regel für Ringe, Schmuckstücke und Waffen
       let bestRingMin = 0, bestTrinketMin = 0, bestWeaponMin = 0;
       characters.forEach(c => {
         bestRingMin = Math.max(bestRingMin, Math.min(getEarnedSlotIlvl(c, 'finger1'), getEarnedSlotIlvl(c, 'finger2')));
@@ -517,6 +514,7 @@
 
     function migrateCharacterObject(c) {
       if (!c.slotMeta) c.slotMeta = {};
+      if (!Array.isArray(c.completedHistory)) c.completedHistory = [];
       SLOTS.forEach(s => {
         const m = c.slotMeta[s.key] || {};
         if (!m.eqMaxUpgradable) {
@@ -532,7 +530,6 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       try {
-        // 1. Lade aus permanentem Haupt-Key oder migriere automatisch aus v11 / v10 / v9
         let loadedChars = null;
         const mainRaw = localStorage.getItem(STORAGE_KEY_MAIN);
         if (mainRaw) {
@@ -594,6 +591,14 @@
       rules.stepCost = document.getElementById('crestStepCostSelect').value;
       rules.keyTimedMode = document.getElementById('keyTimedToggle').checked;
       rules.includeBags = document.getElementById('includeBagsToggle').checked;
+      try {
+        localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules));
+      } catch (e) {}
+      renderAll();
+    }
+
+    function toggleShowCompletedSteps() {
+      rules.showCompletedSteps = !rules.showCompletedSteps;
       try {
         localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules));
       } catch (e) {}
@@ -709,7 +714,6 @@
       const targetTotalPoints = Math.ceil(targetAvg * 16);
       const mythStepCost = getEffectiveMythStepCost();
 
-      // Update Auto-Cost Label in Sidebar
       const autoCostOpt = document.getElementById('autoCostOption');
       if (autoCostOpt) {
         autoCostOpt.textContent = `Auto (${mythStepCost} Wappen – ${mythStepCost === 10 ? '331 aktiv' : 'Standard'})`;
@@ -747,7 +751,7 @@
 
       const avgWithBagsOnly = getSum() / 16;
 
-      // Phase 2: Eigener Charakter-Watermark (0 Wappen bis zum eigenen charWatermarks-Wert)
+      // Phase 2: Eigener Charakter-Watermark (0 Wappen)
       SLOTS.forEach(s => {
         const curVal = simSlots[s.key];
         const maxUpgradable = getEffectiveSlotMaxUpgradable(char, s.key);
@@ -764,7 +768,7 @@
         }
       });
 
-      // Phase 3: Aufwertbare Items mit Wappen hochziehen (beachtet strikt eqMaxUpgradable vs. bagMaxUpgradable!)
+      // Phase 3: Aufwertbare Items mit Wappen hochziehen
       let safety = 0;
       while (getSum() < targetTotalPoints && safety < 200) {
         safety++;
@@ -811,7 +815,7 @@
         planSteps.push(best);
       }
 
-      // Phase 4: Blockierte Slots (Champion 308 oder Held 321) durch Handwerk/Mythos-Drop ersetzen
+      // Phase 4: Blockierte Slots durch Handwerk/Mythos-Drop ersetzen
       const replaceTarget = targetAvg >= 334 ? 334 : 331;
       while (getSum() < targetTotalPoints && safety < 230) {
         safety++;
@@ -831,7 +835,6 @@
         });
       }
 
-      // Verfügbarkeit prüfen (inkl. echtem 'capped'-Status!)
       let usedMyth = 0, usedHero = 0, reachableWalletPts = startPoints;
       planSteps.forEach((st, idx) => {
         if (st.markType === 'bag' || st.markType === 'free') {
@@ -873,7 +876,7 @@
     }
 
     // =========================================================================
-    // 4. DARSTELLUNG (INKL. CAPPED-ANZEIGE & AKTIVEN MEILENSTEIN-BUTTONS)
+    // 4. DARSTELLUNG (INKL. EIN-/AUSBLENDEN & ZURÜCKHOLEN FÜR ERLEDIGTE ITEMS!)
     // =========================================================================
     function renderAll() {
       if (!isValidCharacterArray(characters)) {
@@ -1034,8 +1037,10 @@
       const char = sim.char;
       const charIdx = sim.charIdx;
       const stepCost = sim.mythStepCost;
+      const completedList = Array.isArray(char.completedHistory) ? char.completedHistory : [];
+      const completedCount = completedList.length;
 
-      // 1. Links: Gruppierte Upgrade-Schritte (inkl. 'now', 'farmable' UND 'capped'!)
+      // 1. Links: Gruppierte Upgrade-Schritte
       const grouped = [];
       sim.planSteps.forEach(st => {
         const last = grouped[grouped.length - 1];
@@ -1083,7 +1088,7 @@
                 ${costBadge}
                 ${statusText}
               </div>
-              <button onclick="completeUpgradeStep(${charIdx}, '${g.slotKey}', ${g.toIlvl}, '${g.markType}', ${g.markCost}, '${g.availability}')"
+              <button onclick="completeUpgradeStep(${charIdx}, '${g.slotKey}', ${g.toIlvl}, '${g.markType}', ${g.markCost}, '${g.availability}', '${escapeHtml(g.itemName || '')}')"
                       class="px-2.5 py-1.5 rounded-lg ${isCapped ? 'bg-slate-700 hover:bg-slate-600 text-slate-300' : 'bg-emerald-600 hover:bg-emerald-500 text-slate-950'} font-black text-xs transition"
                       title="Im Spiel erledigt? Klicke hier, um Slot & Wappen zu aktualisieren">
                 ✅
@@ -1093,14 +1098,77 @@
         `;
       }).join('');
 
+      // NEU: Ein-/ausblendbare Liste der bereits abgehakten Schritte inkl. "↩️ Zurückholen"-Button!
+      let completedSectionHtml = '';
+      if (rules.showCompletedSteps && completedCount > 0) {
+        const historyItemsHtml = completedList.map((h, hIdx) => {
+          const costText = h.markCost > 0 ? `${h.markCost} Wappen verbucht` : '0 Wappen (Tasche)';
+          return `
+            <div class="p-2.5 rounded-xl bg-emerald-950/20 border border-emerald-700/40 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="px-1.5 py-0.5 rounded bg-emerald-700/60 text-emerald-100 text-[10px] font-bold shrink-0">✔️ Erledigt</span>
+                <div class="min-w-0">
+                  <div class="text-xs font-bold text-emerald-200 truncate">
+                    <span class="line-through opacity-80">${escapeHtml(h.slotLabel)} ${h.itemName ? `„${escapeHtml(h.itemName)}“` : ''}: ${h.fromIlvl} &rarr; ${h.toIlvl}</span>
+                    <span class="text-emerald-400 ml-1">(+${h.pointGain} Pkt)</span>
+                  </div>
+                  <div class="text-[11px] text-slate-400">${costText} ${h.timestamp ? `• ${h.timestamp} Uhr` : ''}</div>
+                </div>
+              </div>
+              <button onclick="undoCompletedStep(${charIdx}, ${hIdx})"
+                      class="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-950 border border-amber-500/50 text-xs font-bold shrink-0 transition flex items-center gap-1"
+                      title="Diesen Schritt rückgängig machen (stellt altes Item-Level & Wappen wieder her)">
+                ↩️ Zurückholen
+              </button>
+            </div>
+          `;
+        }).join('');
+
+        completedSectionHtml = `
+          <div class="pt-3 mt-3 border-t border-wow-border space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                ✔️ Bereits abgehakte Schritte (${completedCount})
+              </span>
+              <button onclick="clearCompletedHistory(${charIdx})" class="text-[11px] text-slate-400 hover:text-red-300 transition">
+                🗑️ Verlauf leeren
+              </button>
+            </div>
+            <div class="space-y-1.5">${historyItemsHtml}</div>
+          </div>
+        `;
+      }
+
       document.getElementById('planLeftColumn').innerHTML = `
-        <div class="flex items-center justify-between border-b border-wow-border pb-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-wow-border pb-2.5">
           <div>
             <h3 class="text-sm font-bold text-white">🎯 Schritt-für-Schritt auf Ø ${sim.targetAvg}</h3>
             <p class="text-xs text-slate-400">Klicke rechts auf <strong>✅</strong>, sobald du einen Schritt im Spiel ausgeführt hast.</p>
           </div>
+
+          <!-- NEU DIREKT NEBEN DER ÜBERSCHRIFT: EIN-/AUSBLENDEN & LETZTEN SCHRITT ZURÜCKHOLEN -->
+          <div class="flex flex-wrap items-center gap-1.5">
+            ${completedCount > 0 ? `
+              <button onclick="undoCompletedStep(${charIdx}, 0)"
+                      class="px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black shadow transition flex items-center gap-1"
+                      title="Macht den zuletzt abgehakten Schritt sofort wieder rückgängig">
+                ↩️ Letzten zurückholen
+              </button>
+            ` : ''}
+            <button onclick="toggleShowCompletedSteps()"
+                    class="px-2.5 py-1.5 rounded-lg border text-xs font-bold transition flex items-center gap-1.5 ${
+                      rules.showCompletedSteps && completedCount > 0
+                        ? 'bg-emerald-950/80 text-emerald-300 border-emerald-600/60'
+                        : 'bg-wow-card hover:bg-slate-700 text-slate-300 border-wow-border'
+                    }">
+              <span>${rules.showCompletedSteps ? '👁️' : '🙈'}</span>
+              <span>Abgehakte (${completedCount}) ${rules.showCompletedSteps ? 'ausblenden' : 'einblenden'}</span>
+            </button>
+          </div>
         </div>
-        <div class="space-y-2">${stepsHtml || '<div class="text-xs text-emerald-400">🎉 Ziel bereits erreicht!</div>'}</div>
+
+        <div class="space-y-2">${stepsHtml || '<div class="text-xs text-emerald-400 py-2">🎉 Alle Schritte für dieses Ziel sind bereits erledigt!</div>'}</div>
+        ${completedSectionHtml}
       `;
 
       // 2. Rechts: 3-Zonen-Ampel
@@ -1282,11 +1350,12 @@
     }
 
     // =========================================================================
-    // 5. AKTIONEN: 1-KLICK ERLEDIGT (MIT BEUTEL- & CAP-PRÜFUNG!), SIMC & RAIDER.IO
+    // 5. AKTIONEN: ABHAKEN, ZURÜCKHOLEN (UNDO), SIMC & RAIDER.IO
     // =========================================================================
-    function completeUpgradeStep(charIdx, slotKey, toIlvl, markType, markCost, availability) {
+    function completeUpgradeStep(charIdx, slotKey, toIlvl, markType, markCost, availability, stepItemName = '') {
       const char = characters[charIdx];
       if (!char) return;
+      if (!char.slotMeta) char.slotMeta = {};
       const meta = char.slotMeta[slotKey] || {};
 
       if (availability === 'capped') {
@@ -1308,6 +1377,32 @@
           }
         }
       }
+
+      // SNAPSHOT SPEICHERN, DAMIT MAN DAS ITEM JEDERZEIT ZURÜCKHOLEN KANN!
+      const prevEqIlvl = Number(char.slots?.[slotKey] || 0);
+      const slotLabel = SLOTS.find(s => s.key === slotKey)?.label || slotKey;
+      if (!Array.isArray(char.completedHistory)) char.completedHistory = [];
+
+      char.completedHistory.unshift({
+        timestamp: new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }),
+        slotKey,
+        slotLabel,
+        itemName: stepItemName || meta.eqName || '',
+        fromIlvl: prevEqIlvl,
+        toIlvl,
+        pointGain: toIlvl - prevEqIlvl,
+        markType,
+        markCost,
+        prevSlotEq: prevEqIlvl,
+        prevSlotBag: Number(char.bagSlots?.[slotKey] || 0),
+        prevSlotMeta: JSON.parse(JSON.stringify(meta)),
+        prevWatermark: Number(char.charWatermarks?.[slotKey] || 0),
+        prevCurrencies: {
+          mythMarks: char.mythMarks, mythSpent: char.mythSpent,
+          heroMarks: char.heroMarks, heroSpent: char.heroSpent,
+          champMarks: char.champMarks, champSpent: char.champSpent
+        }
+      });
 
       char.slots[slotKey] = toIlvl;
       if (!char.charWatermarks) char.charWatermarks = {};
@@ -1337,7 +1432,47 @@
 
       saveCharsToStorage();
       renderAll();
-      showToast(`✅ ${char.name}: Slot auf ${toIlvl} aktualisiert!`, 'success');
+      showToast(`✅ ${char.name}: ${slotLabel} auf ${toIlvl} abgehakt! (Über „↩️ Zurückholen“ jederzeit umkehrbar)`, 'success');
+    }
+
+    // Stellt einen abgehakten Schritt zu 100% wieder her (inkl. Item-Level, Rucksack & Wappen)
+    function undoCompletedStep(charIdx, historyIdx) {
+      const char = characters[charIdx];
+      if (!char || !Array.isArray(char.completedHistory) || !char.completedHistory[historyIdx]) return;
+
+      const entry = char.completedHistory[historyIdx];
+      const { slotKey } = entry;
+
+      char.slots[slotKey] = entry.prevSlotEq;
+      if (!char.bagSlots) char.bagSlots = {};
+      char.bagSlots[slotKey] = entry.prevSlotBag;
+      if (!char.slotMeta) char.slotMeta = {};
+      char.slotMeta[slotKey] = JSON.parse(JSON.stringify(entry.prevSlotMeta || {}));
+      if (!char.charWatermarks) char.charWatermarks = {};
+      char.charWatermarks[slotKey] = entry.prevWatermark;
+
+      // Wappen exakt zurückbuchen
+      if (entry.markCost > 0) {
+        const tier = CREST_TIERS_META.find(t => t.key === entry.markType);
+        if (tier) {
+          char[tier.walletField] = Number(char[tier.walletField] || 0) + entry.markCost;
+          char[tier.spentField] = Math.max(0, Number(char[tier.spentField] || 0) - entry.markCost);
+        }
+      }
+
+      char.completedHistory.splice(historyIdx, 1);
+      saveCharsToStorage();
+      renderAll();
+      showToast(`↩️ Zurückgeholt: ${entry.slotLabel} ist wieder auf ${entry.fromIlvl} iLvl${entry.markCost > 0 ? ` (+${entry.markCost} Wappen zurück im Beutel)` : ''}!`, 'info');
+    }
+
+    function clearCompletedHistory(charIdx) {
+      const char = characters[charIdx];
+      if (!char || !Array.isArray(char.completedHistory) || char.completedHistory.length === 0) return;
+      if (!confirm('Möchtest du die Liste der abgehakten Schritte leeren? (Deine aktuellen Item-Level bleiben dabei erhalten.)')) return;
+      char.completedHistory = [];
+      saveCharsToStorage();
+      renderAll();
     }
 
     function onCrestInputUpdate(charIdx, tierKey, mode, rawVal) {
@@ -1361,21 +1496,20 @@
       renderAll();
     }
 
-    // Erkennt jetzt ALLE 5 Spuren (Abenteurer, Veteran, Champion, Held, Mythos) mit exaktem eqMaxUpgradable!
     function classifyItemTrackFromBonusIds(bonusStr, isCrafted) {
       if (isCrafted) return { track: 'crafted', label: 'Handwerk', eqMaxUpgradable: 331, tierKey: 'myth', stepsSpent: 4 };
       const ids = String(bonusStr || '').split('/').map(n => parseInt(n, 10));
       for (const id of ids) {
         if (MYTH_BONUS_IDS[id]) {
-          const rank = id - 12848; // 1..6
+          const rank = id - 12848;
           return { track: 'myth', label: MYTH_BONUS_IDS[id], eqMaxUpgradable: 334, tierKey: 'myth', stepsSpent: Math.max(0, rank - 2) };
         }
         if (HERO_BONUS_IDS[id]) {
-          const rank = id - 12840; // 1..6
+          const rank = id - 12840;
           return { track: id === 12846 ? 'hero_max' : 'hero', label: HERO_BONUS_IDS[id], eqMaxUpgradable: 321, tierKey: 'hero', stepsSpent: Math.max(0, rank - 2) };
         }
         if (CHAMP_BONUS_IDS[id]) {
-          const rank = id - 12832; // 1..6
+          const rank = id - 12832;
           return { track: id === 12838 ? 'champ_max' : 'champ', label: CHAMP_BONUS_IDS[id], eqMaxUpgradable: 308, tierKey: 'champ', stepsSpent: Math.max(0, rank - 2) };
         }
         if (VET_BONUS_IDS[id]) {
@@ -1480,7 +1614,6 @@
               const info = classifyItemTrackFromBonusIds(bonus, isCrafted);
               slotMeta[key] = { ...info, eqName: lastName };
 
-              // Verbrauchte Wappen NUR aus tatsächlich aufgewerteten angelegten Items zählen!
               if (info.track === 'crafted' && lastIlvl >= 331) mythCrafted++;
               else if (info.tierKey === 'myth') mythSteps += info.stepsSpent;
               else if (info.tierKey === 'hero') heroSteps += info.stepsSpent;
@@ -1559,7 +1692,8 @@
         champSpent: champSteps * 10,
         heroSpent: heroSteps * 15,
         mythSpent: mythCrafted * 80 + mythSteps * 20,
-        mythSpentNote: `${mythCrafted}× Handwerk (331) + ${mythSteps}× angelegte Mythos-Stufen`
+        mythSpentNote: `${mythCrafted}× Handwerk (331) + ${mythSteps}× angelegte Mythos-Stufen`,
+        completedHistory: []
       };
     }
 
@@ -1590,11 +1724,11 @@
 
       if (idx >= 0) {
         const ex = characters[idx];
-        // Bewahre manuell eingestellte Verbraucht-Zahlen, außer der Nutzer erzwingt die Neuberechnung!
         const keepSpent = ex.spentManuallyEdited && !forceRecalc;
         characters[idx] = {
           ...ex,
           ...p,
+          completedHistory: ex.completedHistory || [],
           mythSpent: keepSpent ? ex.mythSpent : p.mythSpent,
           heroSpent: keepSpent ? ex.heroSpent : p.heroSpent,
           champSpent: keepSpent ? ex.champSpent : p.champSpent,
@@ -1615,7 +1749,6 @@
       showToast(`${p.name} erfolgreich importiert!`, 'success');
     }
 
-    // RAIDER.IO: Überschreibt NIEMALS mehr Taschen-Items (bagMythIlvl, bagName) und nutzt char.region!
     async function fetchCharacterFromRaiderIO(name, realm, region = 'eu') {
       const res = await fetch(`https://raider.io/api/v1/characters/profile?region=${region}&realm=${encodeURIComponent(realm.trim())}&name=${encodeURIComponent(name.trim())}&fields=gear`);
       if (!res.ok) throw new Error(`Charakter "${name}" auf "${realm}" (${region.toUpperCase()}) nicht gefunden.`);
@@ -1643,6 +1776,7 @@
         characters.push({
           name: c.name, realm: c.realm, region: c.region, className: c.className,
           slots: c.slots, bagSlots: {}, slotMeta: c.eqMeta, charWatermarks: { ...c.slots },
+          completedHistory: [],
           mythMarks: 0, heroMarks: 0, champMarks: 0, vetMarks: 0, advMarks: 0,
           mythSpent: 0, heroSpent: 0, champSpent: 0, vetSpent: 0, advSpent: 0
         });
@@ -1660,7 +1794,6 @@
       try {
         const region = char.region || 'eu';
         const updated = await fetchCharacterFromRaiderIO(char.name, char.realm, region);
-        // Deep-Merge für slotMeta: Aktualisiert nur angelegte Infos, behält alle Taschen-Infos (bagMythIlvl, bagName) bei!
         const mergedSlotMeta = {};
         SLOTS.forEach(s => {
           const oldMeta = char.slotMeta?.[s.key] || {};
