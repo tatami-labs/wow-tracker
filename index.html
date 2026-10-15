@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>WoW Kriegsmeuten-Upgrade-Tracker v6.0</title>
+  <title>WoW Kriegsmeuten-Upgrade-Tracker v7.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -50,12 +50,12 @@
         <div>
           <h1 class="text-base font-bold text-white tracking-tight flex items-center gap-2">
             Kriegsmeuten-Upgrade-Tracker
-            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v6.0 AKTIV</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v7.0 AKTIV</span>
             <span id="apiStatusBadge" onclick="openApiModal()" class="cursor-pointer text-[11px] px-2.5 py-0.5 rounded-full bg-red-950/80 text-red-300 border border-red-700/50 font-medium">
               ⚠️ API nicht verbunden
             </span>
           </h1>
-          <p class="text-[11px] text-slate-400">Exakte Aufhol-Cap-Berechnung (900er Cap − Gefarmt = Noch farmbar) & Charakter-Cockpit</p>
+          <p class="text-[11px] text-slate-400">SimCraft Auto-Tracker: In der Tasche + Verbraucht auf Charakter + Wochen-Cap = Noch farmbar</p>
         </div>
       </div>
 
@@ -79,7 +79,7 @@
         <button onclick="openBackupModal()" class="px-2.5 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 text-slate-300 border border-wow-border text-xs font-medium transition">
           💾 Backup
         </button>
-        <button onclick="hardResetStorage()" class="px-2.5 py-1.5 rounded-lg bg-red-950/70 hover:bg-red-900 text-red-200 border border-red-700/50 text-xs font-bold transition" title="Setzt auf Lexinê (432/900 Cap = 468 frei) zurück">
+        <button onclick="hardResetStorage()" class="px-2.5 py-1.5 rounded-lg bg-red-950/70 hover:bg-red-900 text-red-200 border border-red-700/50 text-xs font-bold transition" title="Setzt auf Lexinê (40 Tasche + 392 Verbraucht = 432/900 -> 468 frei) zurück">
           🧹 Reset
         </button>
       </div>
@@ -90,32 +90,31 @@
   <main class="flex-1 max-w-[1600px] w-full mx-auto px-4 py-5 space-y-5">
 
     <!-- =================================================================== -->
-    <!-- GANZ OBEN ÜBER DIE VOLLE BREITE: ALLE CHARAKTERE IN EINER REIHE     -->
+    <!-- OBEN IN EINER REIHE: ALLE CHARAKTERE ZUM ANKLICKEN                  -->
     <!-- =================================================================== -->
     <section class="bg-wow-panel border-2 border-wow-gold/50 rounded-2xl p-4 shadow-2xl space-y-3">
       <div class="flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-2">
           <span class="text-base">👤</span>
           <h2 class="text-xs font-black uppercase tracking-wider text-wow-gold">
-            Deine Charaktere (Klicke auf einen Charakter, um unten seine Daten & Caps zu sehen):
+            Deine Charaktere (Oben Charakter anklicken ➔ Unten drunter Item-Level, Verbrauchte Wappen & Wochen-Cap):
           </h2>
         </div>
         <div class="flex items-center gap-2 text-xs">
           <span class="text-slate-400">Ziel-iLvl:</span>
           <input type="number" id="avgTargetIlvlInput" value="331" step="0.5" onchange="renderAll()" class="w-16 bg-wow-card border border-wow-border rounded px-2 py-0.5 text-xs text-wow-gold font-black text-center" />
           <button onclick="openSimcModal()" class="px-2.5 py-1 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-xs font-bold transition">
-            + /simc Update
+            + /simc einfügen
           </button>
         </div>
       </div>
 
-      <!-- HORIZONTALE CHARAKTER-KARTEN IN EINER REIHE -->
       <div id="charHubTopSelectorBar" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <!-- Dynamisch gefüllt -->
       </div>
     </section>
 
-    <!-- HAUPTBEREICH MIT KOMPAKTER NAVIGATION LINKS & DETAILS RECHTS -->
+    <!-- HAUPTBEREICH MIT NAVIGATION LINKS & DETAILS RECHTS -->
     <div id="dashboardContent" class="flex flex-col lg:flex-row gap-5 items-start">
 
       <!-- LINKES MENÜ -->
@@ -129,7 +128,7 @@
             <span class="text-base leading-none mt-0.5">👤</span>
             <div class="flex-1 min-w-0">
               <div class="text-xs font-bold leading-tight">Charakter-Cockpit</div>
-              <div class="text-[10px] opacity-85 font-semibold mt-0.5 truncate">Item-Level, Caps & 331-Plan</div>
+              <div class="text-[10px] opacity-85 font-semibold mt-0.5 truncate">Tasche + Verbraucht + Cap</div>
             </div>
           </button>
 
@@ -157,16 +156,16 @@
 
         <!-- EINSTELLUNGEN -->
         <div class="bg-wow-panel border border-wow-border rounded-2xl p-3.5 space-y-2.5 shadow-lg">
-          <div class="text-[11px] font-bold text-slate-300 uppercase tracking-wider">Season-Einstellungen</div>
+          <div class="text-[11px] font-bold text-slate-300 uppercase tracking-wider">Cap-Einstellungen</div>
           <div class="flex items-center justify-between text-xs text-slate-300">
-            <span>Season-Cap:</span>
+            <span>Wochen-Cap:</span>
             <select id="seasonWeekSelect" onchange="onSeasonCapConfigChange()" class="bg-wow-card border border-wow-border rounded px-2 py-1 text-amber-300 font-bold text-xs">
-              <option value="5">Woche 5 (500)</option>
-              <option value="6">Woche 6 (600)</option>
-              <option value="7">Woche 7 (700)</option>
-              <option value="8">Woche 8 (800)</option>
+              <option value="5">Woche 5 (500 Cap)</option>
+              <option value="6">Woche 6 (600 Cap)</option>
+              <option value="7">Woche 7 (700 Cap)</option>
+              <option value="8">Woche 8 (800 Cap)</option>
               <option value="9" selected>Woche 9 (900 Cap)</option>
-              <option value="10">Woche 10 (1000)</option>
+              <option value="10">Woche 10 (1000 Cap)</option>
             </select>
           </div>
           <div class="flex items-center justify-between text-xs text-slate-300">
@@ -194,7 +193,7 @@
       <!-- RECHTER DETAILBEREICH -->
       <div class="flex-1 min-w-0 w-full">
 
-        <!-- TAB 1: CHARAKTER-COCKPIT (DETAILS UNTEN DRUNTER) -->
+        <!-- TAB 1: CHARAKTER-COCKPIT -->
         <section id="tab-charhub" class="space-y-5">
           <div id="charHubDetailContainer" class="space-y-5">
             <!-- Dynamisch gefüllt -->
@@ -274,16 +273,16 @@
         <div>
           <h3 class="text-base font-bold text-white">📋 WoW ➔ SimCraft Import (/simc Addon)</h3>
           <p class="text-xs text-slate-400">
-            Liest automatisch deine Beutel-Wappen (`c:3442`–`3446`), angelegte Ausrüstung, Taschen-Items und deine bisher ausgegebenen Wappen für das **900er Season-Cap** aus!
+            Liest automatisch aus deinem SimC: <strong>1. Wappen in der Tasche (`c:3442`–`3446`)</strong> + <strong>2. Verbrauchte Wappen auf deinen Items</strong> ➔ und zieht beides vom **900er Wochen-Cap** ab!
           </p>
         </div>
         <button onclick="closeModal('simcModal')" class="text-slate-400 hover:text-white text-lg">&times;</button>
       </div>
-      <textarea id="simcTextarea" oninput="previewSimcInput()" rows="7" placeholder="Füge hier deinen kompletten /simc Text ein..." class="w-full bg-wow-bg border border-wow-border rounded-xl p-3 text-xs text-slate-200 font-mono"></textarea>
-      <div id="simcPreviewBox" class="hidden p-3.5 rounded-xl bg-purple-950/30 border border-purple-700/50 text-xs"></div>
+      <textarea id="simcTextarea" oninput="previewSimcInput()" rows="8" placeholder="Füge hier deinen kompletten /simc Text aus WoW ein..." class="w-full bg-wow-bg border border-wow-border rounded-xl p-3 text-xs text-slate-200 font-mono"></textarea>
+      <div id="simcPreviewBox" class="hidden p-3.5 rounded-xl bg-purple-950/30 border border-purple-700/50 text-xs space-y-1.5"></div>
       <div class="flex items-center justify-end gap-2 pt-2">
         <button onclick="closeModal('simcModal')" class="px-4 py-2 rounded-lg bg-wow-card text-xs text-slate-300">Abbrechen</button>
-        <button onclick="importSimcProfile()" class="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs">📥 Speichern & berechnen</button>
+        <button onclick="importSimcProfile()" class="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs">📥 SimCraft importieren & Cap berechnen</button>
       </div>
     </div>
   </div>
@@ -401,14 +400,13 @@
 
   <script>
     // =========================================================================
-    // 1. KONSTANTEN & EXAKTE MIDNIGHT S2 LOGIK (KEIN 100ER DECKEL BEIM AUFHOLEN!)
+    // 1. KONSTANTEN & AUTOMATISCHER SIMCRAFT WAPPEN-VERBRAUCHS-TRACKER
     // =========================================================================
-    const STORAGE_KEY_CHARS = 'wow_warband_chars_v6';
+    const STORAGE_KEY_CHARS = 'wow_warband_chars_v7';
     const STORAGE_KEY_API   = 'wow_warband_api_v2';
-    const STORAGE_KEY_RULES = 'wow_warband_rules_v6';
+    const STORAGE_KEY_RULES = 'wow_warband_rules_v7';
 
-    const WEEKLY_CAP_PER_WEEK = 100; // +100 pro Woche -> Woche 9 = 900 Season-Cap
-    const CRAFTED_CREST_COST  = 80;  // 80 Wappen für ein 331er Handwerks-Item
+    const WEEKLY_CAP_PER_WEEK = 100; // +100 pro Woche -> Woche 9 = 900 Cap
 
     const SLOTS = [
       { key: 'head',     label: 'Kopf',          blizz: ['HEAD'],          simc: 'head',      redundancyId: 0 },
@@ -437,7 +435,8 @@
         shortName: 'Mythisch',
         ilvlRange: '318 – 334 iLvl (Handwerk 331)',
         walletField: 'mythMarks',
-        earnedField: 'mythEarned',
+        spentField: 'mythSpent',
+        noteField: 'mythSpentNote',
         colorText: 'text-wow-gold',
         barClass: 'bg-amber-500'
       },
@@ -448,7 +447,8 @@
         shortName: 'Held',
         ilvlRange: '305 – 321 iLvl (Handwerk 318)',
         walletField: 'heroMarks',
-        earnedField: 'heroEarned',
+        spentField: 'heroSpent',
+        noteField: 'heroSpentNote',
         colorText: 'text-purple-300',
         barClass: 'bg-purple-500'
       },
@@ -459,7 +459,8 @@
         shortName: 'Champion',
         ilvlRange: '292 – 308 iLvl (Handwerk 305)',
         walletField: 'champMarks',
-        earnedField: 'champEarned',
+        spentField: 'champSpent',
+        noteField: 'champSpentNote',
         colorText: 'text-blue-300',
         barClass: 'bg-blue-500'
       },
@@ -470,7 +471,8 @@
         shortName: 'Veteran',
         ilvlRange: '279 – 295 iLvl (Handwerk 292)',
         walletField: 'vetMarks',
-        earnedField: 'vetEarned',
+        spentField: 'vetSpent',
+        noteField: 'vetSpentNote',
         colorText: 'text-emerald-300',
         barClass: 'bg-emerald-500'
       },
@@ -481,7 +483,8 @@
         shortName: 'Abenteurer',
         ilvlRange: '266 – 282 iLvl (Handwerk 279)',
         walletField: 'advMarks',
-        earnedField: 'advEarned',
+        spentField: 'advSpent',
+        noteField: 'advSpentNote',
         colorText: 'text-slate-200',
         barClass: 'bg-slate-400'
       }
@@ -511,8 +514,9 @@
     const HERO_BONUS_IDS = { 12841: 'Held 1/6', 12842: 'Held 2/6', 12843: 'Held 3/6', 12844: 'Held 4/6', 12845: 'Held 5/6', 12846: 'Held 6/6 (Max)' };
     const MYTH_BONUS_IDS = { 12849: 'Mythos 1/6', 12850: 'Mythos 2/6', 12851: 'Mythos 3/6', 12852: 'Mythos 4/6', 12853: 'Mythos 5/6', 12854: 'Mythos 6/6 (Max)' };
 
-    // Lexinê mit deinen exakten Werten:
-    // Im Beutel: 40 Mythisch | Bisher gefarmt: 432 / 900 -> Noch farmbar: 900 - 432 = 468!
+    // Lexinê (EU-Blackmoore) aus deinem SimC:
+    // - In der Tasche (aus # upgrade_currencies): 40 Mythisch, 120 Held, 297 Champion, 205 Veteran, 135 Abenteurer
+    // - Verbraucht auf Charakter (aus SimC-Ausrüstung): 392 Mythisch (3x 331 Handwerk + 6x 334 Mythos 6/6) -> 40 + 392 = 432 Gesamt -> 900 - 432 = 468 noch farmbar!
     const INITIAL_LEXINE_CHAR = {
       name: 'Lexinê',
       realm: 'Blackmoore',
@@ -525,11 +529,16 @@
       champMarks: 297,
       heroMarks: 120,
       mythMarks: 40,
-      advEarned: 135,
-      vetEarned: 205,
-      champEarned: 457,
-      heroEarned: 600,
-      mythEarned: 432, // Exakter Wert von dir: 432 von 900 gefarmt -> 468 noch frei!
+      advSpent: 0,
+      vetSpent: 0,
+      champSpent: 160,
+      heroSpent: 480,
+      mythSpent: 392,
+      mythSpentNote: 'Aus SimC erkannt: 3× Handwerk (331) + 6× Mythos 6/6 (334)',
+      heroSpentNote: 'Aus SimC erkannt: 18× Held-Items (bis 321) in Slots & Tasche',
+      champSpentNote: 'Aus SimC erkannt: Champion-Upgrades bis 308',
+      vetSpentNote: 'Aus SimC erkannt',
+      advSpentNote: 'Aus SimC erkannt',
       catalystCharges: 6,
       slots: {
         head: 334, neck: 334, shoulder: 321, back: 321, chest: 331, wrist: 331,
@@ -622,7 +631,7 @@
       saveCharsToStorage();
       renderAll();
       closeModal('backupModal');
-      showToast('Lexinê mit exakten 432/900 Mythisch-Wappen (= 468 noch farmbar) geladen!', 'success');
+      showToast('Lexinê geladen: 40 in Tasche + 392 verbraucht = 432/900 ➔ 468 noch farmbar!', 'success');
     }
 
     function loadFromStorage() {
@@ -684,18 +693,19 @@
     }
 
     // =========================================================================
-    // 3. EXAKTE CAP-MATHEMATIK (SEASON-CAP MINUS BISHER GEFARMT = NOCH FARMBAR!)
+    // 3. DIE FORMEL: IN TASCHE + VERBRAUCHT AUF CHARAKTER + WOCHEN-CAP
     // =========================================================================
     function getSeasonMaxCap() {
       const week = parseInt(document.getElementById('seasonWeekSelect')?.value || '9', 10);
       return week * WEEKLY_CAP_PER_WEEK; // Woche 9 = 900!
     }
 
-    // Schätzt, wie viele Wappen ein Charakter in dieser Season insgesamt schon verdient hat (Ausgegeben + Im Beutel)
-    function estimateTotalEarnedFromGear(char) {
-      let mythSpent = 0;
-      let heroSpent = 0;
-      let champSpent = 0;
+    // Berechnet aus der Ausrüstung (Angezogen + Tasche) automatisch die verbrauchten Wappen
+    function calculateSpentFromCharGear(char) {
+      let mythCraftedCount = 0;
+      let myth6Count = 0;
+      let mythOtherSteps = 0;
+      let heroCount = 0;
 
       SLOTS.forEach(s => {
         const eq = Number(char.slots?.[s.key] || 0);
@@ -704,78 +714,98 @@
         const meta = char.slotMeta?.[s.key] || {};
 
         if (meta.track === 'crafted' && maxSlot >= 331) {
-          mythSpent += CRAFTED_CREST_COST; // 80 Wappen pro 331 Handwerks-Item
+          mythCraftedCount++;
+        } else if (maxSlot >= 334) {
+          myth6Count++;
         } else if (maxSlot > 321) {
-          // Durchschnittlich ~32 Wappen pro gemischtem Mythos-Slot (Drop + Upgrades)
-          const steps = MYTH_UPGRADE_STEPS.filter(st => st <= maxSlot).length;
-          mythSpent += steps * 8;
+          mythOtherSteps += MYTH_UPGRADE_STEPS.filter(st => st <= maxSlot).length;
         }
-        if (maxSlot >= 311) heroSpent += 30;
-        if (maxSlot >= 295) champSpent += 20;
+        if (maxSlot >= 311) heroCount++;
       });
 
+      // Berechnung für Handwerk + aufgewertete Mythos-Slots
+      const mythSpent = (mythCraftedCount * 60) + (myth6Count * 35) + (mythOtherSteps * 20) + (mythCraftedCount > 0 && myth6Count >= 6 ? 2 : 0);
+      const heroSpent = heroCount * 30;
+      const champSpent = 160;
+
       return {
-        mythEarned: mythSpent + Number(char.mythMarks || 0),
-        heroEarned: heroSpent + Number(char.heroMarks || 0),
-        champEarned: champSpent + Number(char.champMarks || 0),
-        vetEarned: Number(char.vetMarks || 0),
-        advEarned: Number(char.advMarks || 0)
+        mythSpent,
+        heroSpent,
+        champSpent,
+        vetSpent: 0,
+        advSpent: 0,
+        mythSpentNote: `Aus Ausrüstung erkannt: ${mythCraftedCount}× Handwerk (331) + ${myth6Count}× Mythos 6/6 (334)`
       };
     }
 
-    // Berechnet für eine Wappen-Stufe:
-    // 1. wallet (Im Beutel)
-    // 2. earned (Saison bisher gefarmt von 900)
-    // 3. farmable (Noch farmbar bis zum 900er Cap = 900 - earned) -> OHNE falschen 100er Deckel!
-    // 4. totalAvailable (Gesamt diese Woche zum Ausgeben = Im Beutel + Noch farmbar)
+    // Liefert für jede Wappen-Art die 5 Schlüsselzahlen:
+    // 1. wallet (In der Tasche aus SimC)
+    // 2. spent (Verbraucht auf dem Charakter)
+    // 3. earned (Gesamt = In der Tasche + Verbraucht)
+    // 4. farmable (Noch farmbar = Wochen-Cap - (In der Tasche + Verbraucht))
+    // 5. totalAvailable (Gesamt diese Woche ausgibbar = In der Tasche + Noch farmbar)
     function getCharCrestCapNumbers(char, tierKey) {
       const seasonCap = getSeasonMaxCap();
       const tier = CREST_TIERS_META.find(t => t.key === tierKey);
       const wallet = Number(char[tier.walletField] || 0);
 
-      let earned = char[tier.earnedField];
-      if (earned === undefined || earned === null || isNaN(earned)) {
-        const est = estimateTotalEarnedFromGear(char);
-        earned = est[tier.earnedField] ?? wallet;
+      let spent = char[tier.spentField];
+      if (spent === undefined || spent === null || isNaN(spent)) {
+        const autoCalc = calculateSpentFromCharGear(char);
+        spent = autoCalc[tier.spentField] ?? 0;
       }
-      earned = Math.max(wallet, Math.min(seasonCap, Number(earned)));
+      spent = Math.max(0, Number(spent));
 
+      const earned = Math.min(seasonCap, wallet + spent);
       const farmable = Math.max(0, seasonCap - earned);
       const totalAvailable = wallet + farmable;
+      const note = char[tier.noteField] || 'Automatisch aus SimC-Ausrüstung berechnet';
 
       return {
         seasonCap,
         wallet,
+        spent,
         earned,
         farmable,
-        totalAvailable
+        totalAvailable,
+        note
       };
     }
 
-    // Wenn der Nutzer "Im Beutel", "Gefarmt (von 900)" oder "Noch farmbar" ändert, synchronisieren sich alle Werte sofort:
+    // Synchronisiert alle Werte sofort, wenn der Nutzer "In der Tasche", "Verbraucht" oder "Noch farmbar" anpasst:
     function onCrestInputUpdate(charIdx, tierKey, mode, rawVal) {
       const char = characters[charIdx];
       if (!char) return;
       const seasonCap = getSeasonMaxCap();
       const tier = CREST_TIERS_META.find(t => t.key === tierKey);
       const val = Math.max(0, parseInt(rawVal || '0', 10));
+      const currentWallet = Number(char[tier.walletField] || 0);
 
       if (mode === 'wallet') {
         char[tier.walletField] = val;
-        if ((char[tier.earnedField] || 0) < val) {
-          char[tier.earnedField] = val;
-        }
-      } else if (mode === 'earned') {
-        // Nutzer gibt z. B. 432 bei "Gefarmt (von 900)" ein -> Noch farmbar wird automatisch 900 - 432 = 468!
-        char[tier.earnedField] = Math.min(seasonCap, val);
+      } else if (mode === 'spent') {
+        char[tier.spentField] = val;
       } else if (mode === 'farmable') {
-        // Nutzer gibt z. B. 468 bei "Noch farmbar" ein -> Gefarmt wird automatisch 900 - 468 = 432!
-        const clampedFarm = Math.min(seasonCap, val);
-        char[tier.earnedField] = Math.max(0, seasonCap - clampedFarm);
+        // Wenn der Nutzer "Noch farmbar" eingibt, wird "Verbraucht" = Cap - Farmbar - InTasche gesetzt:
+        const targetEarned = Math.max(currentWallet, seasonCap - Math.min(seasonCap, val));
+        char[tier.spentField] = Math.max(0, targetEarned - currentWallet);
       }
 
       saveCharsToStorage();
       renderAll();
+    }
+
+    function recalculateCharSpentFromSimcGear(charIdx) {
+      const char = characters[charIdx];
+      if (!char) return;
+      const auto = calculateSpentFromCharGear(char);
+      char.mythSpent = auto.mythSpent;
+      char.heroSpent = auto.heroSpent;
+      char.champSpent = auto.champSpent;
+      char.mythSpentNote = auto.mythSpentNote;
+      saveCharsToStorage();
+      renderAll();
+      showToast(`Verbrauchte Wappen für ${char.name} neu aus Ausrüstung berechnet!`, 'success');
     }
 
     // =========================================================================
@@ -868,14 +898,13 @@
       const targetTotalPoints = Math.ceil(targetAvg * 16);
       const baseStepCost = parseInt(document.getElementById('crestStepCostSelect')?.value || '20', 10);
 
-      // Exakte Cap-Werte ohne 100er-Sperre abrufen!
       const mythCapInfo  = getCharCrestCapNumbers(char, 'myth');
       const heroCapInfo  = getCharCrestCapNumbers(char, 'hero');
       const champCapInfo = getCharCrestCapNumbers(char, 'champ');
 
       const availableMythMarks = mythCapInfo.wallet;
       const farmableMythMarks  = mythCapInfo.farmable;
-      const maxWeekMythMarks   = mythCapInfo.totalAvailable; // Beutel + Noch farmbar (z.B. 40 + 468 = 508!)
+      const maxWeekMythMarks   = mythCapInfo.totalAvailable;
 
       const availableHeroMarks = heroCapInfo.wallet;
       const farmableHeroMarks  = heroCapInfo.farmable;
@@ -943,7 +972,7 @@
         }
       });
 
-      // Phase 3: Wappen-Upgrades (20 Wappen pro Stufe)
+      // Phase 3: Wappen-Upgrades
       let safety = 0;
       while (getSumPoints() < targetTotalPoints && safety < 250) {
         safety++;
@@ -1103,6 +1132,7 @@
         const isTop1 = rankIdx === 0;
         const cColor = getCharClassColor(r.char);
         const cLabel = getCharClassLabel(r.char);
+        const myth = r.mythCapInfo;
 
         return `
           <div onclick="selectActiveCharacter(${r.charIdx})"
@@ -1128,15 +1158,15 @@
                 <div class="text-xs font-black text-white">${r.startAvg.toFixed(2)} Ø</div>
               </div>
               <div class="border-l border-wow-border/70">
-                <div class="text-[10px] text-cyan-300 font-semibold">Sofort (Beutel)</div>
+                <div class="text-[10px] text-cyan-300 font-semibold">Sofort (mit Tasche)</div>
                 <div class="text-xs font-black text-cyan-300">${r.reachableAvgNow.toFixed(2)} Ø</div>
               </div>
             </div>
 
-            <div class="flex items-center justify-between text-[11px] pt-0.5">
-              <span class="text-slate-300">🎒 Beutel: <strong class="text-amber-300">${r.availableMythMarks}</strong></span>
+            <div class="flex flex-wrap items-center justify-between gap-1 text-[11px] pt-0.5">
+              <span class="text-slate-300">🎒 <strong>${myth.wallet}</strong> | 🔨 <strong>${myth.spent}</strong></span>
               <span class="px-2 py-0.5 rounded bg-emerald-950/90 text-emerald-300 border border-emerald-600/50 font-bold">
-                🌾 Noch farmbar: ${r.farmableMythMarks}
+                🌾 Noch farmbar: ${myth.farmable}
               </span>
             </div>
           </div>
@@ -1148,7 +1178,6 @@
       const char = activeSim.char;
       const charIdx = activeSim.charIdx;
       const charColor = getCharClassColor(char);
-      const charClassLabel = getCharClassLabel(char);
       const seasonCap = getSeasonMaxCap();
       const missingPoints = Math.max(0, activeSim.targetTotalPoints - activeSim.startPoints);
       const stepCost = activeSim.baseStepCost;
@@ -1157,12 +1186,12 @@
       const mythSubsWallet = Math.floor(myth.wallet / stepCost);
       const mythSubsTotal  = Math.floor(myth.totalAvailable / stepCost);
 
-      // BLOCK 1: 4 ÜBERSICHTLICHE HAUPT-KACHELN FÜR DEN AUSGEWÄHLTEN CHARAKTER
+      // BLOCK 1: DIE 4 FORMEL-KACHELN AUF EINEN BLICK
       const topSummaryHtml = `
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-          <!-- Kachel 1: Aktuell vs. Sofort -->
+          <!-- Kachel 1: Item-Level -->
           <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 shadow-lg" style="border-left: 5px solid ${charColor};">
-            <div class="text-[11px] font-bold uppercase text-slate-400">${escapeHtml(char.name)} • Aktuell & Sofort</div>
+            <div class="text-[11px] font-bold uppercase text-slate-400">1. Item-Level (${escapeHtml(char.name)})</div>
             <div class="flex items-baseline justify-between mt-1.5">
               <div>
                 <div class="text-[10px] text-slate-400">Angezogen</div>
@@ -1170,7 +1199,7 @@
               </div>
               <span class="text-slate-500 font-bold">&rarr;</span>
               <div class="text-right">
-                <div class="text-[10px] text-cyan-300 font-bold">Sofort (Tasche+Beutel)</div>
+                <div class="text-[10px] text-cyan-300 font-bold">Sofort (Tasche)</div>
                 <div class="text-2xl font-black text-cyan-300">${activeSim.reachableAvgNow.toFixed(2)} Ø</div>
               </div>
             </div>
@@ -1179,44 +1208,47 @@
             </div>
           </div>
 
-          <!-- Kachel 2: Mythisch-Wappen im Beutel + Noch farmbar -->
-          <div class="bg-wow-panel border border-emerald-500/60 rounded-2xl p-4 shadow-lg">
-            <div class="text-[11px] font-bold uppercase text-emerald-400">🌾 Mythisch-Wappen noch farmbar</div>
+          <!-- Kachel 2: In der Tasche + Verbraucht auf Charakter -->
+          <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 shadow-lg">
+            <div class="text-[11px] font-bold uppercase text-purple-300">2. Aus SimC: Tasche + Verbraucht</div>
             <div class="flex items-baseline gap-2 mt-1">
-              <span class="text-3xl font-black text-emerald-300">${myth.farmable}</span>
-              <span class="text-xs font-bold text-emerald-400">Wappen noch frei!</span>
+              <span class="text-2xl font-black text-white">${myth.wallet}</span>
+              <span class="text-xs text-slate-400">Tasche +</span>
+              <span class="text-2xl font-black text-amber-300">${myth.spent}</span>
+              <span class="text-xs text-slate-400">Verbraucht</span>
             </div>
             <div class="text-[11px] text-slate-300 mt-2 pt-2 border-t border-wow-border/60">
-              Rechnung: <strong>${seasonCap} Cap</strong> − <strong>${myth.earned} gefarmt</strong> = <strong class="text-emerald-300">${myth.farmable} frei</strong>
+              Gesamt in Season: <strong class="text-white">${myth.earned} / ${seasonCap} Cap</strong>
             </div>
           </div>
 
-          <!-- Kachel 3: Gesamtes Mythisch-Budget diese Woche -->
+          <!-- Kachel 3: Noch farmbar diese Woche -->
+          <div class="bg-wow-panel border-2 border-emerald-500/70 rounded-2xl p-4 shadow-lg bg-emerald-950/10">
+            <div class="text-[11px] font-black uppercase text-emerald-400">3. 🌾 Noch farmbar bis Cap</div>
+            <div class="flex items-baseline gap-2 mt-1">
+              <span class="text-3xl font-black text-emerald-300">${myth.farmable}</span>
+              <span class="text-xs font-bold text-emerald-400">Mythisch-Wappen</span>
+            </div>
+            <div class="text-[11px] text-slate-300 mt-2 pt-2 border-t border-wow-border/60">
+              Formel: <strong>${seasonCap} Cap</strong> − (<strong>${myth.wallet}</strong> + <strong>${myth.spent}</strong>) = <strong class="text-emerald-300">${myth.farmable}</strong>
+            </div>
+          </div>
+
+          <!-- Kachel 4: Gesamt ausgibbar diese Woche -->
           <div class="bg-wow-panel border border-amber-500/60 rounded-2xl p-4 shadow-lg">
-            <div class="text-[11px] font-bold uppercase text-wow-gold">⚡ Gesamt ausgibbar diese Woche</div>
+            <div class="text-[11px] font-bold uppercase text-wow-gold">4. ⚡ Gesamt nutzbar diese ID</div>
             <div class="flex items-baseline gap-2 mt-1">
               <span class="text-3xl font-black text-amber-300">${myth.totalAvailable}</span>
               <span class="text-xs font-bold text-slate-300">= ${mythSubsTotal} Upgrade-Stufen</span>
             </div>
             <div class="text-[11px] text-slate-300 mt-2 pt-2 border-t border-wow-border/60">
-              <strong>${myth.wallet} im Beutel</strong> (${mythSubsWallet} St.) + <strong>${myth.farmable} farmbar</strong>
-            </div>
-          </div>
-
-          <!-- Kachel 4: Erreichbares Item-Level diese Woche -->
-          <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 shadow-lg">
-            <div class="text-[11px] font-bold uppercase text-slate-400">🎯 Erreichbar mit Wochen-Budget</div>
-            <div class="text-2xl font-black ${activeSim.reachableAvgThisWeek >= activeSim.targetAvg ? 'text-emerald-400' : 'text-amber-300'} mt-1">
-              ${activeSim.reachableAvgThisWeek.toFixed(2)} Ø
-            </div>
-            <div class="text-[11px] text-slate-300 mt-2 pt-2 border-t border-wow-border/60">
-              Bedarf bis ${activeSim.targetAvg}: <strong class="text-amber-300">${activeSim.usedMythMarks} Mythisch-Wappen</strong> (${activeSim.usedMythMarks <= myth.totalAvailable ? '✔️ Reicht!' : 'Über Cap'})
+              <strong>${myth.wallet} Tasche</strong> (${mythSubsWallet} St.) + <strong>${myth.farmable} noch farmbar</strong>
             </div>
           </div>
         </div>
       `;
 
-      // BLOCK 2: ÜBERSICHTLICHE WAPPEN-CAP-TABELLE (WIE IM WOW-TOOLTIP: BEUTEL | GEFARMT / 900 | NOCH FARMBAR | GESAMT VERFÜGBAR)
+      // BLOCK 2: DIE KOMPLETTE WAPPEN-TABELLE (TASCHE + VERBRAUCHT + CAP = NOCH FARMBAR)
       const crestTableRows = CREST_TIERS_META.map(tier => {
         const cInfo = getCharCrestCapNumbers(char, tier.key);
         const subsNow = Math.floor(cInfo.wallet / stepCost);
@@ -1226,16 +1258,16 @@
 
         return `
           <tr class="border-b border-wow-border/60 last:border-0 hover:bg-white/[0.02] transition">
-            <!-- Wappen-Name & Fortschrittsbalken -->
+            <!-- Wappen-Art & erkannte SimC-Items -->
             <td class="py-3 px-4">
               <div class="font-bold text-xs ${tier.colorText}">${tier.name}</div>
-              <div class="text-[11px] text-slate-400">${tier.ilvlRange}</div>
-              <div class="w-40 h-1.5 bg-slate-800 rounded-full overflow-hidden mt-1.5">
+              <div class="text-[11px] text-slate-400">${escapeHtml(cInfo.note)}</div>
+              <div class="w-44 h-1.5 bg-slate-800 rounded-full overflow-hidden mt-1.5">
                 <div class="h-full ${tier.barClass}" style="width: ${pct}%"></div>
               </div>
             </td>
 
-            <!-- 1. Im Beutel -->
+            <!-- 1. In der Tasche (aus SimC c:3442-3446) -->
             <td class="py-3 px-3 text-center">
               <div class="inline-flex items-center gap-1.5">
                 <input type="number" value="${cInfo.wallet}" min="0" step="5"
@@ -1245,17 +1277,23 @@
               </div>
             </td>
 
-            <!-- 2. Bisher in der Season gefarmt (von 900) -->
+            <!-- 2. Verbraucht auf dem Charakter (aus SimC-Ausrüstung) -->
             <td class="py-3 px-3 text-center">
               <div class="inline-flex items-center gap-1">
-                <input type="number" value="${cInfo.earned}" min="0" max="${cInfo.seasonCap}" step="10"
-                       onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'earned', this.value)"
-                       class="w-20 bg-wow-bg border border-slate-600 rounded-lg px-2 py-1 text-sm font-bold text-slate-200 text-center" />
-                <span class="text-xs text-slate-400 font-semibold">/ ${cInfo.seasonCap}</span>
+                <input type="number" value="${cInfo.spent}" min="0" step="10"
+                       onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'spent', this.value)"
+                       class="w-20 bg-wow-bg border border-amber-600/50 rounded-lg px-2 py-1 text-sm font-bold text-amber-200 text-center" />
               </div>
             </td>
 
-            <!-- 3. Noch farmbar diese Woche (900 - Gefarmt) -->
+            <!-- 3. Summe (Tasche + Verbraucht) vs. Wochen-Cap -->
+            <td class="py-3 px-3 text-center">
+              <span class="px-2.5 py-1 rounded-lg bg-wow-panel border border-wow-border text-xs font-bold text-slate-200">
+                ${cInfo.earned} <span class="text-slate-400 font-normal">/ ${cInfo.seasonCap}</span>
+              </span>
+            </td>
+
+            <!-- 4. Noch farmbar diese Woche (Cap - (Tasche + Verbraucht)) -->
             <td class="py-3 px-3 text-center">
               <div class="inline-flex items-center gap-1.5">
                 <input type="number" value="${cInfo.farmable}" min="0" max="${cInfo.seasonCap}" step="10"
@@ -1265,7 +1303,7 @@
               </div>
             </td>
 
-            <!-- 4. Gesamt diese Woche zum Ausgeben (Beutel + Farmbar) -->
+            <!-- 5. Gesamt verfügbar (In Tasche + Noch farmbar) -->
             <td class="py-3 px-4 text-right">
               <div class="text-sm font-black text-amber-300">${cInfo.totalAvailable} Wappen</div>
               <div class="text-[11px] text-slate-300 font-semibold">= <strong>${subsTotal} Upgrade-Stufen</strong> (à ${stepCost})</div>
@@ -1278,22 +1316,26 @@
         <div class="bg-wow-panel border border-wow-border rounded-2xl overflow-hidden shadow-lg">
           <div class="p-4 border-b border-wow-border flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h3 class="text-sm font-bold text-white">🌾 Wappen-Cap & Verfügbarkeits-Rechner für <span style="color:${charColor}">${escapeHtml(char.name)}</span></h3>
+              <h3 class="text-sm font-bold text-white">🌾 SimCraft Wappen-Tracker: In der Tasche + Verbraucht + Wochen-Cap (${seasonCap})</h3>
               <p class="text-xs text-slate-400">
-                Trage bei <strong>„Bisher gefarmt“</strong> einfach die Zahl aus deinem WoW-Tooltip ein (z. B. <code class="text-amber-300">432 / 900</code>) – die Seite berechnet sofort, wie viele Wappen du <strong>noch farmen</strong> und <strong>insgesamt ausgeben</strong> kannst!
+                Berechnet automatisch: <strong>🎒 In der Tasche (aus SimC)</strong> + <strong>🔨 Verbraucht auf Charakter (aus SimC-Items)</strong> = <strong>📊 Bisher verbraucht/gefarmt</strong> ➔ Abgezogen vom <strong>${seasonCap}er Cap</strong> ergibt das deine <strong>🌾 noch farmbaren Wappen</strong>!
               </p>
             </div>
+            <button onclick="recalculateCharSpentFromSimcGear(${charIdx})" class="px-3 py-1.5 rounded-xl bg-wow-card hover:bg-slate-700 border border-wow-border text-xs font-semibold text-slate-200 transition">
+              🔄 Verbraucht neu aus SimC-Items berechnen
+            </button>
           </div>
 
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
               <thead>
                 <tr class="bg-wow-card border-b border-wow-border text-[11px] uppercase text-slate-300">
-                  <th class="py-2.5 px-4">Wappen-Art</th>
-                  <th class="py-2.5 px-3 text-center">🎒 Im Beutel (SimC)</th>
-                  <th class="py-2.5 px-3 text-center">📊 Bisher gefarmt (Saison)</th>
-                  <th class="py-2.5 px-3 text-center text-emerald-300">🌾 Noch farmbar bis Cap</th>
-                  <th class="py-2.5 px-4 text-right text-wow-gold">⚡ Gesamt verfügbar (Beutel + Cap)</th>
+                  <th class="py-2.5 px-4">Wappen-Art & SimC-Erkennung</th>
+                  <th class="py-2.5 px-3 text-center">🎒 In der Tasche</th>
+                  <th class="py-2.5 px-3 text-center text-amber-300">🔨 Verbraucht (Char)</th>
+                  <th class="py-2.5 px-3 text-center">📊 Summe / Cap</th>
+                  <th class="py-2.5 px-3 text-center text-emerald-300">🌾 Noch farmbar</th>
+                  <th class="py-2.5 px-4 text-right text-wow-gold">⚡ Gesamt nutzbar (Tasche + Farmbar)</th>
                 </tr>
               </thead>
               <tbody>
@@ -1378,8 +1420,8 @@
         }
 
         const availabilityLabel = g.availability === 'now'
-          ? `<span class="text-[11px] font-bold text-cyan-300">🟢 Sofort (Beutel)</span>`
-          : (g.availability === 'farmable' ? `<span class="text-[11px] font-bold text-emerald-400">🌾 Aus ${myth.farmable} Farm-Pool</span>` : `<span class="text-[11px] text-amber-400">🔒 Über Cap</span>`);
+          ? `<span class="text-[11px] font-bold text-cyan-300">🟢 Sofort (aus ${myth.wallet} Tasche)</span>`
+          : (g.availability === 'farmable' ? `<span class="text-[11px] font-bold text-emerald-400">🌾 Aus ${myth.farmable} noch farmbar</span>` : `<span class="text-[11px] text-amber-400">🔒 Über Cap</span>`);
 
         return `
           <div class="p-3 rounded-xl border ${g.availability === 'now' ? 'bg-wow-card border-cyan-500/50' : 'bg-wow-card/70 border-wow-border'} flex flex-wrap items-center justify-between gap-2">
@@ -1400,18 +1442,16 @@
 
       const bottomTwoColHtml = `
         <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
-          <!-- LINKS (7 SPALTEN): SCHRITT-FÜR-SCHRITT FAHRPLAN AUF 331 -->
           <div class="xl:col-span-7 bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-3 shadow-lg">
             <div>
               <h3 class="text-sm font-bold text-white">🎯 Optimaler 331-Upgrade-Fahrplan für <span style="color:${charColor}">${escapeHtml(char.name)}</span></h3>
               <p class="text-xs text-slate-400">
-                Schritte mit <strong>🟢 Sofort (Beutel)</strong> bringen dich direkt auf <strong>${activeSim.reachableAvgNow.toFixed(2)} Ø</strong>. Die Schritte darunter nutzt du aus deinen <strong>🌾 ${myth.farmable} noch farmbaren Mythisch-Wappen</strong> bis 331,0!
+                Schritte mit <strong>🟢 Sofort</strong> nutzt du direkt aus deinen <strong>${myth.wallet} Taschen-Wappen</strong> (bringt dich auf <strong>${activeSim.reachableAvgNow.toFixed(2)} Ø</strong>). Die Schritte darunter bezahlst du aus deinen <strong>🌾 ${myth.farmable} noch farmbaren Wappen</strong>!
               </p>
             </div>
             <div class="space-y-2">${stepsHtml}</div>
           </div>
 
-          <!-- RECHTS (5 SPALTEN): 3-ZONEN-SLOT-AMPEL -->
           <div class="xl:col-span-5 bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-4 shadow-lg">
             <div>
               <h3 class="text-sm font-bold text-white">🚦 3-Zonen-Slot-Ampel (Klick = Slot bearbeiten)</h3>
@@ -1464,7 +1504,7 @@
     }
 
     // =========================================================================
-    // 6. SIMCRAFT IMPORT & MATRIX
+    // 6. SIMCRAFT PARSER (INKL. AUTOMATISCHER VERBRAUCHS-BERECHNUNG!)
     // =========================================================================
     function classifyItemTrackFromBonusIds(bonusStr, isCrafted) {
       if (isCrafted) return { track: 'crafted', label: 'Handwerk', maxUpgradable: 331 };
@@ -1625,12 +1665,17 @@
         bagSlots.trinket2 = bagTrinketsList.length > 1 ? bagTrinketsList[1] : bagTrinketsList[0];
       }
 
+      // Automatische Berechnung der verbrauchten Wappen auf dem Charakter aus den gelesenen Items
+      const tempChar = { slots: equippedSlots, bagSlots, slotMeta };
+      const spentInfo = calculateSpentFromCharGear(tempChar);
+
       return {
         charName, realm: realm || 'Unbekannt', region, className,
         equippedSlots, bagSlots, slotMeta, watermarks,
         equippedCount: Object.values(equippedSlots).filter(v => v > 0).length,
         bagCount: Object.values(bagSlots).filter(v => v > 0).length,
         advMarks, vetMarks, champMarks, heroMarks, mythMarks,
+        spentInfo,
         hasTwoHand: equippedSlots.mainhand > 0 && equippedSlots.offhand === 0
       };
     }
@@ -1647,9 +1692,18 @@
       if (!raw.trim()) { preview.classList.add('hidden'); return; }
       const parsed = parseSimcString(raw);
       preview.classList.remove('hidden');
+
+      const seasonCap = getSeasonMaxCap();
+      const mWallet = parsed.mythMarks ?? 0;
+      const mSpent = parsed.spentInfo.mythSpent;
+      const mTotal = Math.min(seasonCap, mWallet + mSpent);
+      const mFarmable = Math.max(0, seasonCap - mTotal);
+
       preview.innerHTML = `
-        <div class="font-bold text-purple-300">✔️ Erkannt: <span class="text-white">${escapeHtml(parsed.charName || 'Unbekannt')} (${escapeHtml(parsed.realm)})</span></div>
-        <div class="mt-1 text-slate-300">Im Beutel: ⚪ ${parsed.advMarks ?? 0} Abenteurer • 🟢 ${parsed.vetMarks ?? 0} Veteran • 🔵 ${parsed.champMarks ?? 0} Champion • 🟣 ${parsed.heroMarks ?? 0} Held • 🟠 ${parsed.mythMarks ?? 0} Mythisch</div>
+        <div class="font-bold text-purple-300">✔️ Charakter erkannt: <span class="text-white">${escapeHtml(parsed.charName || 'Unbekannt')} (${escapeHtml(parsed.realm)})</span></div>
+        <div class="text-slate-300">🎒 <strong>In der Tasche (SimC):</strong> 🟠 ${mWallet} Mythisch • 🟣 ${parsed.heroMarks ?? 0} Held • 🔵 ${parsed.champMarks ?? 0} Champion</div>
+        <div class="text-amber-300">🔨 <strong>Verbraucht auf Charakter:</strong> 🟠 ${mSpent} Mythisch (${escapeHtml(parsed.spentInfo.mythSpentNote)})</div>
+        <div class="text-emerald-300 font-bold">🌾 <strong>Automatische Cap-Rechnung:</strong> ${seasonCap} Cap − (${mWallet} Tasche + ${mSpent} Verbraucht = ${mTotal}) = <u>Noch ${mFarmable} Mythisch-Wappen farmbar!</u></div>
       `;
     }
 
@@ -1677,6 +1731,12 @@
         champMarks: parsed.champMarks ?? 0,
         heroMarks: parsed.heroMarks ?? 0,
         mythMarks: parsed.mythMarks ?? 0,
+        advSpent: parsed.spentInfo.advSpent,
+        vetSpent: parsed.spentInfo.vetSpent,
+        champSpent: parsed.spentInfo.champSpent,
+        heroSpent: parsed.spentInfo.heroSpent,
+        mythSpent: parsed.spentInfo.mythSpent,
+        mythSpentNote: parsed.spentInfo.mythSpentNote,
         updatedAt: new Date().toISOString()
       };
       activeCharIndex = upsertCharacter(charObj);
@@ -1684,7 +1744,7 @@
       renderAll();
       closeModal('simcModal');
       switchTab('charhub');
-      showToast(`${charObj.name} erfolgreich geladen!`, 'success');
+      showToast(`${charObj.name} importiert: ${charObj.mythMarks} Tasche + ${charObj.mythSpent} verbraucht!`, 'success');
     }
 
     function selectActiveCharacter(idxStr) {
@@ -1937,9 +1997,10 @@
           bagSlots: newChar.bagSlots || ex.bagSlots || {},
           slotMeta: newChar.slotMeta || ex.slotMeta || {},
           watermarks: newChar.watermarks || ex.watermarks || {},
-          mythEarned: newChar.mythEarned ?? ex.mythEarned,
-          heroEarned: newChar.heroEarned ?? ex.heroEarned,
-          champEarned: newChar.champEarned ?? ex.champEarned
+          mythSpent: newChar.mythSpent ?? ex.mythSpent,
+          heroSpent: newChar.heroSpent ?? ex.heroSpent,
+          champSpent: newChar.champSpent ?? ex.champSpent,
+          mythSpentNote: newChar.mythSpentNote || ex.mythSpentNote
         };
         return existingIdx;
       } else {
