@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>WoW Kriegsmeuten-Upgrade-Tracker v7.0</title>
+  <title>WoW Kriegsmeuten-Upgrade-Tracker v8.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -50,12 +50,12 @@
         <div>
           <h1 class="text-base font-bold text-white tracking-tight flex items-center gap-2">
             Kriegsmeuten-Upgrade-Tracker
-            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v7.0 AKTIV</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v8.0 AKTIV</span>
             <span id="apiStatusBadge" onclick="openApiModal()" class="cursor-pointer text-[11px] px-2.5 py-0.5 rounded-full bg-red-950/80 text-red-300 border border-red-700/50 font-medium">
               ⚠️ API nicht verbunden
             </span>
           </h1>
-          <p class="text-[11px] text-slate-400">SimCraft Auto-Tracker: In der Tasche + Verbraucht auf Charakter + Wochen-Cap = Noch farmbar</p>
+          <p class="text-[11px] text-slate-400">Exakte Twink-Rabatt-Erkennung (10 statt 20 Wappen durch Main-Watermark) • Held 6/6 Sperre • Cap-Tracker</p>
         </div>
       </div>
 
@@ -79,7 +79,7 @@
         <button onclick="openBackupModal()" class="px-2.5 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 text-slate-300 border border-wow-border text-xs font-medium transition">
           💾 Backup
         </button>
-        <button onclick="hardResetStorage()" class="px-2.5 py-1.5 rounded-lg bg-red-950/70 hover:bg-red-900 text-red-200 border border-red-700/50 text-xs font-bold transition" title="Setzt auf Lexinê (40 Tasche + 392 Verbraucht = 432/900 -> 468 frei) zurück">
+        <button onclick="hardResetStorage()" class="px-2.5 py-1.5 rounded-lg bg-red-950/70 hover:bg-red-900 text-red-200 border border-red-700/50 text-xs font-bold transition" title="Lädt Lexinê & Tatami mit korrigierten Daten neu">
           🧹 Reset
         </button>
       </div>
@@ -89,15 +89,13 @@
   <!-- MAIN CONTENT -->
   <main class="flex-1 max-w-[1600px] w-full mx-auto px-4 py-5 space-y-5">
 
-    <!-- =================================================================== -->
-    <!-- OBEN IN EINER REIHE: ALLE CHARAKTERE ZUM ANKLICKEN                  -->
-    <!-- =================================================================== -->
+    <!-- OBEN IN EINER REIHE: ALLE CHARAKTERE ZUM ANKLICKEN -->
     <section class="bg-wow-panel border-2 border-wow-gold/50 rounded-2xl p-4 shadow-2xl space-y-3">
       <div class="flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-2">
           <span class="text-base">👤</span>
           <h2 class="text-xs font-black uppercase tracking-wider text-wow-gold">
-            Deine Charaktere (Oben Charakter anklicken ➔ Unten drunter Item-Level, Verbrauchte Wappen & Wochen-Cap):
+            Deine Charaktere (Klicke oben auf einen Charakter ➔ Unten siehst du seine exakten Werte & Caps):
           </h2>
         </div>
         <div class="flex items-center gap-2 text-xs">
@@ -109,9 +107,7 @@
         </div>
       </div>
 
-      <div id="charHubTopSelectorBar" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        <!-- Dynamisch gefüllt -->
-      </div>
+      <div id="charHubTopSelectorBar" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
     </section>
 
     <!-- HAUPTBEREICH MIT NAVIGATION LINKS & DETAILS RECHTS -->
@@ -128,7 +124,7 @@
             <span class="text-base leading-none mt-0.5">👤</span>
             <div class="flex-1 min-w-0">
               <div class="text-xs font-bold leading-tight">Charakter-Cockpit</div>
-              <div class="text-[10px] opacity-85 font-semibold mt-0.5 truncate">Tasche + Verbraucht + Cap</div>
+              <div class="text-[10px] opacity-85 font-semibold mt-0.5 truncate">Item-Level, Caps & 331-Plan</div>
             </div>
           </button>
 
@@ -169,10 +165,10 @@
             </select>
           </div>
           <div class="flex items-center justify-between text-xs text-slate-300">
-            <span>Stufen-Preis:</span>
+            <span>Basis-Preis:</span>
             <select id="crestStepCostSelect" onchange="onStepCostChange()" class="bg-wow-card border border-wow-border rounded px-2 py-1 text-white font-bold text-xs">
-              <option value="20" selected>20 Wappen (Standard)</option>
-              <option value="10">10 Wappen (50% Rabatt)</option>
+              <option value="20" selected>20 Wappen (10 mit Rabatt)</option>
+              <option value="10">Alles 10 Wappen (Erfolg)</option>
             </select>
           </div>
           <label class="flex items-center justify-between text-xs text-slate-300 cursor-pointer gap-2 pt-1">
@@ -192,15 +188,10 @@
 
       <!-- RECHTER DETAILBEREICH -->
       <div class="flex-1 min-w-0 w-full">
-
-        <!-- TAB 1: CHARAKTER-COCKPIT -->
         <section id="tab-charhub" class="space-y-5">
-          <div id="charHubDetailContainer" class="space-y-5">
-            <!-- Dynamisch gefüllt -->
-          </div>
+          <div id="charHubDetailContainer" class="space-y-5"></div>
         </section>
 
-        <!-- TAB 2: 16-SLOT-MATRIX -->
         <section id="tab-matrix" class="hidden space-y-3">
           <div class="bg-wow-panel border border-wow-border rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3">
             <label class="flex items-center gap-2.5 text-xs font-semibold text-emerald-300 cursor-pointer select-none">
@@ -220,7 +211,6 @@
           </div>
         </section>
 
-        <!-- TAB 3: WAPPEN-MEILENSTEINE -->
         <section id="tab-crests" class="hidden space-y-6">
           <div class="bg-wow-panel border border-wow-border rounded-xl p-5 space-y-4">
             <div class="flex flex-wrap items-center justify-between gap-4">
@@ -242,12 +232,11 @@
             <div id="crestSlotsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3"></div>
           </div>
         </section>
-
       </div>
     </div>
   </main>
 
-  <!-- POPUP-FENSTER: ALLE CHARAKTERE OBEN & DETAILS UNTEN DRUNTER -->
+  <!-- POPUP-FENSTER -->
   <div id="charPopupModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-3 sm:p-6">
     <div class="bg-wow-bg border-2 border-wow-gold rounded-2xl max-w-6xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="bg-wow-panel border-b border-wow-border p-4 space-y-3">
@@ -273,7 +262,7 @@
         <div>
           <h3 class="text-base font-bold text-white">📋 WoW ➔ SimCraft Import (/simc Addon)</h3>
           <p class="text-xs text-slate-400">
-            Liest automatisch aus deinem SimC: <strong>1. Wappen in der Tasche (`c:3442`–`3446`)</strong> + <strong>2. Verbrauchte Wappen auf deinen Items</strong> ➔ und zieht beides vom **900er Wochen-Cap** ab!
+            Erkennt automatisch: <strong>1. Beutel-Wappen</strong>, <strong>2. Verbrauchte Wappen (in glatten 20er/80er Schritten)</strong>, <strong>3. Versteckte Mythos-Items in der Tasche</strong> und <strong>4. Twink-Rabatte (`slot_high_watermarks`)</strong>!
           </p>
         </div>
         <button onclick="closeModal('simcModal')" class="text-slate-400 hover:text-white text-lg">&times;</button>
@@ -364,8 +353,8 @@
         <button onclick="closeModal('addCharModal')" class="text-slate-400 hover:text-white text-lg">&times;</button>
       </div>
       <div class="space-y-3">
-        <input type="text" id="singleCharName" placeholder="Charaktername (z.B. Lexinê)" class="w-full bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-white" />
-        <input type="text" id="singleCharRealm" placeholder="Server (z.B. Blackmoore)" class="w-full bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-white" />
+        <input type="text" id="singleCharName" placeholder="Charaktername (z.B. Tatami)" class="w-full bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-white" />
+        <input type="text" id="singleCharRealm" placeholder="Server (z.B. Aegwynn)" class="w-full bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-white" />
         <select id="singleCharSource" class="w-full bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-white">
           <option value="blizzard">Blizzard API</option>
           <option value="raiderio">Raider.IO API</option>
@@ -391,7 +380,7 @@
           <span>📤 JSON-Backup importieren</span>
           <input type="file" accept=".json" onchange="importJsonBackup(event)" class="hidden" />
         </label>
-        <button onclick="hardResetStorage()" class="w-full py-2.5 px-4 rounded-xl bg-red-950/50 border border-red-800/50 text-xs font-semibold text-red-300 text-left">🔄 Auf Standard-Profil (Lexinê) zurücksetzen</button>
+        <button onclick="hardResetStorage()" class="w-full py-2.5 px-4 rounded-xl bg-red-950/50 border border-red-800/50 text-xs font-semibold text-red-300 text-left">🔄 Auf Standard-Profile (Lexinê & Tatami) zurücksetzen</button>
       </div>
     </div>
   </div>
@@ -400,11 +389,11 @@
 
   <script>
     // =========================================================================
-    // 1. KONSTANTEN & AUTOMATISCHER SIMCRAFT WAPPEN-VERBRAUCHS-TRACKER
+    // 1. KONSTANTEN & EXAKTE WATERMARK-TRENNUNG (CHAR-WM VS. ACCOUNT-WM)
     // =========================================================================
-    const STORAGE_KEY_CHARS = 'wow_warband_chars_v7';
+    const STORAGE_KEY_CHARS = 'wow_warband_chars_v8';
     const STORAGE_KEY_API   = 'wow_warband_api_v2';
-    const STORAGE_KEY_RULES = 'wow_warband_rules_v7';
+    const STORAGE_KEY_RULES = 'wow_warband_rules_v8';
 
     const WEEKLY_CAP_PER_WEEK = 100; // +100 pro Woche -> Woche 9 = 900 Cap
 
@@ -428,66 +417,11 @@
     ];
 
     const CREST_TIERS_META = [
-      {
-        key: 'myth',
-        id: 3446,
-        name: '🟠 Mythisch-Wappen (c:3446)',
-        shortName: 'Mythisch',
-        ilvlRange: '318 – 334 iLvl (Handwerk 331)',
-        walletField: 'mythMarks',
-        spentField: 'mythSpent',
-        noteField: 'mythSpentNote',
-        colorText: 'text-wow-gold',
-        barClass: 'bg-amber-500'
-      },
-      {
-        key: 'hero',
-        id: 3445,
-        name: '🟣 Helden-Wappen (c:3445)',
-        shortName: 'Held',
-        ilvlRange: '305 – 321 iLvl (Handwerk 318)',
-        walletField: 'heroMarks',
-        spentField: 'heroSpent',
-        noteField: 'heroSpentNote',
-        colorText: 'text-purple-300',
-        barClass: 'bg-purple-500'
-      },
-      {
-        key: 'champ',
-        id: 3444,
-        name: '🔵 Champion-Wappen (c:3444)',
-        shortName: 'Champion',
-        ilvlRange: '292 – 308 iLvl (Handwerk 305)',
-        walletField: 'champMarks',
-        spentField: 'champSpent',
-        noteField: 'champSpentNote',
-        colorText: 'text-blue-300',
-        barClass: 'bg-blue-500'
-      },
-      {
-        key: 'vet',
-        id: 3443,
-        name: '🟢 Veteranen-Wappen (c:3443)',
-        shortName: 'Veteran',
-        ilvlRange: '279 – 295 iLvl (Handwerk 292)',
-        walletField: 'vetMarks',
-        spentField: 'vetSpent',
-        noteField: 'vetSpentNote',
-        colorText: 'text-emerald-300',
-        barClass: 'bg-emerald-500'
-      },
-      {
-        key: 'adv',
-        id: 3442,
-        name: '⚪ Abenteurer-Wappen (c:3442)',
-        shortName: 'Abenteurer',
-        ilvlRange: '266 – 282 iLvl (Handwerk 279)',
-        walletField: 'advMarks',
-        spentField: 'advSpent',
-        noteField: 'advSpentNote',
-        colorText: 'text-slate-200',
-        barClass: 'bg-slate-400'
-      }
+      { key: 'myth',  id: 3446, name: '🟠 Mythisch-Wappen (c:3446)',   shortName: 'Mythisch',   walletField: 'mythMarks',  spentField: 'mythSpent',  noteField: 'mythSpentNote',  colorText: 'text-wow-gold',    barClass: 'bg-amber-500' },
+      { key: 'hero',  id: 3445, name: '🟣 Helden-Wappen (c:3445)',     shortName: 'Held',       walletField: 'heroMarks',  spentField: 'heroSpent',  noteField: 'heroSpentNote',  colorText: 'text-purple-300',  barClass: 'bg-purple-500' },
+      { key: 'champ', id: 3444, name: '🔵 Champion-Wappen (c:3444)',   shortName: 'Champion',   walletField: 'champMarks', spentField: 'champSpent', noteField: 'champSpentNote', colorText: 'text-blue-300',    barClass: 'bg-blue-500' },
+      { key: 'vet',   id: 3443, name: '🟢 Veteranen-Wappen (c:3443)',  shortName: 'Veteran',    walletField: 'vetMarks',   spentField: 'vetSpent',   noteField: 'vetSpentNote',   colorText: 'text-emerald-300', barClass: 'bg-emerald-500' },
+      { key: 'adv',   id: 3442, name: '⚪ Abenteurer-Wappen (c:3442)', shortName: 'Abenteurer', walletField: 'advMarks',   spentField: 'advSpent',   noteField: 'advSpentNote',   colorText: 'text-slate-200',   barClass: 'bg-slate-400' }
     ];
 
     const WOW_CLASS_META = {
@@ -514,70 +448,116 @@
     const HERO_BONUS_IDS = { 12841: 'Held 1/6', 12842: 'Held 2/6', 12843: 'Held 3/6', 12844: 'Held 4/6', 12845: 'Held 5/6', 12846: 'Held 6/6 (Max)' };
     const MYTH_BONUS_IDS = { 12849: 'Mythos 1/6', 12850: 'Mythos 2/6', 12851: 'Mythos 3/6', 12852: 'Mythos 4/6', 12853: 'Mythos 5/6', 12854: 'Mythos 6/6 (Max)' };
 
-    // Lexinê (EU-Blackmoore) aus deinem SimC:
-    // - In der Tasche (aus # upgrade_currencies): 40 Mythisch, 120 Held, 297 Champion, 205 Veteran, 135 Abenteurer
-    // - Verbraucht auf Charakter (aus SimC-Ausrüstung): 392 Mythisch (3x 331 Handwerk + 6x 334 Mythos 6/6) -> 40 + 392 = 432 Gesamt -> 900 - 432 = 468 noch farmbar!
-    const INITIAL_LEXINE_CHAR = {
-      name: 'Lexinê',
-      realm: 'Blackmoore',
-      realmSlug: 'blackmoore',
-      className: 'demonhunter',
-      source: 'simc',
-      hasTwoHand: false,
-      advMarks: 135,
-      vetMarks: 205,
-      champMarks: 297,
-      heroMarks: 120,
-      mythMarks: 40,
-      advSpent: 0,
-      vetSpent: 0,
-      champSpent: 160,
-      heroSpent: 480,
-      mythSpent: 392,
-      mythSpentNote: 'Aus SimC erkannt: 3× Handwerk (331) + 6× Mythos 6/6 (334)',
-      heroSpentNote: 'Aus SimC erkannt: 18× Held-Items (bis 321) in Slots & Tasche',
-      champSpentNote: 'Aus SimC erkannt: Champion-Upgrades bis 308',
-      vetSpentNote: 'Aus SimC erkannt',
-      advSpentNote: 'Aus SimC erkannt',
-      catalystCharges: 6,
-      slots: {
-        head: 334, neck: 334, shoulder: 321, back: 321, chest: 331, wrist: 331,
-        hands: 321, waist: 321, legs: 321, feet: 321, finger1: 321, finger2: 321,
-        trinket1: 334, trinket2: 334, mainhand: 334, offhand: 331
+    // BEIDE DEINER CHARAKTERE (LEXINÊ & TATAMI) KORREKT VORGELADEN:
+    const INITIAL_CHARS = [
+      {
+        name: 'Lexinê',
+        realm: 'Blackmoore',
+        realmSlug: 'blackmoore',
+        className: 'demonhunter',
+        source: 'simc',
+        hasTwoHand: false,
+        advMarks: 135, vetMarks: 205, champMarks: 297, heroMarks: 120, mythMarks: 40,
+        advSpent: 0,   vetSpent: 0,   champSpent: 160, heroSpent: 480, mythSpent: 392,
+        mythSpentNote: 'Aus SimC: 3× Handwerk (331) + 6× Mythos 6/6 (334)',
+        heroSpentNote: 'Aus SimC: Held-Upgrades bis 321',
+        champSpentNote: 'Aus SimC: Champion-Upgrades bis 308',
+        slots: {
+          head: 334, neck: 334, shoulder: 321, back: 321, chest: 331, wrist: 331,
+          hands: 321, waist: 321, legs: 321, feet: 321, finger1: 321, finger2: 321,
+          trinket1: 334, trinket2: 334, mainhand: 334, offhand: 331
+        },
+        bagSlots: {
+          head: 321, neck: 321, shoulder: 0, back: 321, chest: 321, wrist: 321,
+          hands: 0, waist: 321, legs: 334, feet: 321, finger1: 321, finger2: 321,
+          trinket1: 321, trinket2: 321, mainhand: 321, offhand: 0
+        },
+        slotMeta: {
+          head:     { track: 'myth', label: 'Mythos 6/6 (Max)', maxUpgradable: 334 },
+          neck:     { track: 'myth', label: 'Mythos 6/6 (Max)', maxUpgradable: 334 },
+          shoulder: { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321 },
+          back:     { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321 },
+          chest:    { track: 'crafted', label: 'Handwerk (331)', maxUpgradable: 331 },
+          wrist:    { track: 'crafted', label: 'Handwerk (331)', maxUpgradable: 331 },
+          hands:    { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321 },
+          waist:    { track: 'hero_max', label: 'Held 6/6 (321 Mythos in Tasche!)', maxUpgradable: 334, bagMythIlvl: 321 },
+          legs:     { track: 'hero_max', label: 'Held 6/6 (334 Mythos in Tasche!)', maxUpgradable: 334, bagMythIlvl: 334 },
+          feet:     { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321 },
+          finger1:  { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321 },
+          finger2:  { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321 },
+          trinket1: { track: 'myth', label: 'Mythos 6/6 (Max)', maxUpgradable: 334, bagMythIlvl: 321 },
+          trinket2: { track: 'myth', label: 'Mythos 6/6 (Max)', maxUpgradable: 334 },
+          mainhand: { track: 'myth', label: 'Mythos 6/6 (Max)', maxUpgradable: 334 },
+          offhand:  { track: 'crafted', label: 'Handwerk (331)', maxUpgradable: 331 }
+        },
+        charWatermarks: {
+          head: 334, neck: 334, shoulder: 321, back: 321, chest: 331, wrist: 331,
+          hands: 321, waist: 321, legs: 334, feet: 321, finger1: 321, finger2: 321,
+          trinket1: 334, trinket2: 334, mainhand: 334, offhand: 331
+        },
+        accountWatermarks: {
+          head: 334, neck: 334, shoulder: 321, back: 321, chest: 331, wrist: 331,
+          hands: 321, waist: 321, legs: 334, feet: 321, finger1: 321, finger2: 321,
+          trinket1: 334, trinket2: 334, mainhand: 334, offhand: 331
+        }
       },
-      bagSlots: {
-        head: 321, neck: 321, shoulder: 0, back: 321, chest: 321, wrist: 321,
-        hands: 0, waist: 321, legs: 334, feet: 321, finger1: 321, finger2: 321,
-        trinket1: 321, trinket2: 321, mainhand: 321, offhand: 0
-      },
-      slotMeta: {
-        head:     { track: 'myth', label: 'Mythos 6/6 (Max)', maxUpgradable: 334 },
-        neck:     { track: 'myth', label: 'Mythos 6/6 (Max)', maxUpgradable: 334 },
-        shoulder: { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321 },
-        back:     { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321 },
-        chest:    { track: 'crafted', label: 'Handwerk (331)', maxUpgradable: 331 },
-        wrist:    { track: 'crafted', label: 'Handwerk (331)', maxUpgradable: 331 },
-        hands:    { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321 },
-        waist:    { track: 'hero_max', label: 'Held 6/6 (Angezogen)', maxUpgradable: 334, bagMythIlvl: 321 },
-        legs:     { track: 'hero_max', label: 'Held 6/6 (334 in Tasche!)', maxUpgradable: 334, bagMythIlvl: 334 },
-        feet:     { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321 },
-        finger1:  { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321 },
-        finger2:  { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321 },
-        trinket1: { track: 'myth', label: 'Mythos 6/6 (Max)', maxUpgradable: 334, bagMythIlvl: 321 },
-        trinket2: { track: 'myth', label: 'Mythos 6/6 (Max)', maxUpgradable: 334 },
-        mainhand: { track: 'myth', label: 'Mythos 6/6 (Max)', maxUpgradable: 334 },
-        offhand:  { track: 'crafted', label: 'Handwerk (331)', maxUpgradable: 331 }
-      },
-      watermarks: {
-        head: 334, neck: 334, shoulder: 321, back: 321, chest: 331, wrist: 331,
-        hands: 321, waist: 321, legs: 334, feet: 321, finger1: 321, finger2: 321,
-        trinket1: 334, trinket2: 334, mainhand: 334, offhand: 331
-      },
-      updatedAt: new Date().toISOString()
-    };
+      {
+        name: 'Tatami',
+        realm: 'Aegwynn',
+        realmSlug: 'aegwynn',
+        className: 'priest',
+        source: 'simc',
+        hasTwoHand: false,
+        advMarks: 65,  vetMarks: 45,  champMarks: 59,  heroMarks: 320, mythMarks: 212,
+        advSpent: 0,   vetSpent: 0,   champSpent: 120, heroSpent: 360, mythSpent: 160,
+        mythSpentNote: 'Aus SimC: 1× Handwerk (331 Laterne = 80) + 1× Mythos 6/6 (334 Waffe = 80)',
+        heroSpentNote: 'Aus SimC: Held-Upgrades bis 321',
+        champSpentNote: 'Aus SimC: Champion-Upgrades bis 308',
+        slots: {
+          head: 321, neck: 321, shoulder: 321, back: 321, chest: 321, wrist: 321,
+          hands: 321, waist: 321, legs: 308, feet: 321, finger1: 321, finger2: 321,
+          trinket1: 321, trinket2: 321, mainhand: 334, offhand: 331
+        },
+        bagSlots: {
+          head: 0, neck: 0, shoulder: 0, back: 311, chest: 321, wrist: 285,
+          hands: 321, waist: 285, legs: 321, feet: 321, finger1: 321, finger2: 321,
+          trinket1: 321, trinket2: 321, mainhand: 295, offhand: 311
+        },
+        slotMeta: {
+          head:     { track: 'myth', label: 'Mythos 2/6 (321)', maxUpgradable: 334 },
+          neck:     { track: 'myth', label: 'Mythos 2/6 (321)', maxUpgradable: 334 },
+          shoulder: { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321 },
+          back:     { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321 },
+          chest:    { track: 'hero_max', label: 'Held 6/6 (321 Mythos 2/6 in Tasche!)', maxUpgradable: 334, bagMythIlvl: 321 },
+          wrist:    { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321 },
+          hands:    { track: 'myth', label: 'Mythos 2/6 (321)', maxUpgradable: 334 },
+          waist:    { track: 'myth', label: 'Mythos 2/6 (321)', maxUpgradable: 334 },
+          legs:     { track: 'champ_max', label: 'Champion 6/6 (321 Held 6/6 in Tasche!)', maxUpgradable: 321 },
+          feet:     { track: 'hero_max', label: 'Held 6/6 (321 Mythos 2/6 in Tasche!)', maxUpgradable: 334, bagMythIlvl: 321 },
+          finger1:  { track: 'hero_max', label: 'Held 6/6 (Max 321)', maxUpgradable: 321 },
+          finger2:  { track: 'myth', label: 'Mythos 2/6 (321)', maxUpgradable: 334 },
+          trinket1: { track: 'hero_max', label: 'Held 6/6 (321 Mythos 2/6 in Tasche!)', maxUpgradable: 334, bagMythIlvl: 321 },
+          trinket2: { track: 'hero_max', label: 'Held 6/6 (321 Mythos 2/6 in Tasche!)', maxUpgradable: 334, bagMythIlvl: 321 },
+          mainhand: { track: 'myth', label: 'Mythos 6/6 (Max)', maxUpgradable: 334 },
+          offhand:  { track: 'crafted', label: 'Handwerk (331)', maxUpgradable: 331 }
+        },
+        // Tatamis eigener Charakter-Watermark (0 Wappen kostenlos nur bis 321!)
+        charWatermarks: {
+          head: 321, neck: 321, shoulder: 321, back: 321, chest: 321, wrist: 321,
+          hands: 321, waist: 321, legs: 321, feet: 321, finger1: 321, finger2: 321,
+          trinket1: 321, trinket2: 321, mainhand: 334, offhand: 331
+        },
+        // Kriegsmeuten-Watermark von Lexinê (50% Wappen-Rabatt = 10 statt 20 Wappen auf Kopf, Hals, Brust, Handgelenke, Beine, Schmuck!)
+        accountWatermarks: {
+          head: 334, neck: 334, shoulder: 321, back: 321, chest: 331, wrist: 331,
+          hands: 321, waist: 321, legs: 334, feet: 321, finger1: 321, finger2: 321,
+          trinket1: 334, trinket2: 334, mainhand: 334, offhand: 331
+        }
+      }
+    ];
 
-    let characters = [JSON.parse(JSON.stringify(INITIAL_LEXINE_CHAR))];
-    let activeCharIndex = 0;
+    let characters = JSON.parse(JSON.stringify(INITIAL_CHARS));
+    let activeCharIndex = 1; // Startet direkt mit Tatami ausgewählt, damit du den Unterschied sofort siehst!
     let apiConfig = {
       region: 'eu',
       clientId: '',
@@ -596,19 +576,19 @@
     let currentEditingCell = null;
 
     // =========================================================================
-    // 2. INITIALISIERUNG & SPEICHER
+    // 2. INITIALISIERUNG
     // =========================================================================
     window.addEventListener('DOMContentLoaded', async () => {
       try {
         loadFromStorage();
         if (!Array.isArray(characters) || characters.length === 0) {
-          characters = [JSON.parse(JSON.stringify(INITIAL_LEXINE_CHAR))];
+          characters = JSON.parse(JSON.stringify(INITIAL_CHARS));
           saveCharsToStorage();
         }
         updateApiBadge();
         renderAll();
       } catch (err) {
-        characters = [JSON.parse(JSON.stringify(INITIAL_LEXINE_CHAR))];
+        characters = JSON.parse(JSON.stringify(INITIAL_CHARS));
         activeCharIndex = 0;
         renderAll();
       }
@@ -624,14 +604,14 @@
     function hardResetStorage() {
       localStorage.removeItem(STORAGE_KEY_CHARS);
       localStorage.removeItem(STORAGE_KEY_RULES);
-      characters = [JSON.parse(JSON.stringify(INITIAL_LEXINE_CHAR))];
-      activeCharIndex = 0;
+      characters = JSON.parse(JSON.stringify(INITIAL_CHARS));
+      activeCharIndex = 1;
       rules.stepCost = 20;
       rules.seasonWeek = 9;
       saveCharsToStorage();
       renderAll();
       closeModal('backupModal');
-      showToast('Lexinê geladen: 40 in Tasche + 392 verbraucht = 432/900 ➔ 468 noch farmbar!', 'success');
+      showToast('Lexinê & Tatami mit korrigierter Watermark- & Wappen-Logik geladen!', 'success');
     }
 
     function loadFromStorage() {
@@ -693,18 +673,18 @@
     }
 
     // =========================================================================
-    // 3. DIE FORMEL: IN TASCHE + VERBRAUCHT AUF CHARAKTER + WOCHEN-CAP
+    // 3. KORRIGIERTE VERBRAUCHS-RECHNUNG (GLATTE 20ER / 80ER WOW-KOSTEN!)
     // =========================================================================
     function getSeasonMaxCap() {
       const week = parseInt(document.getElementById('seasonWeekSelect')?.value || '9', 10);
-      return week * WEEKLY_CAP_PER_WEEK; // Woche 9 = 900!
+      return week * WEEKLY_CAP_PER_WEEK; // 900 in Woche 9
     }
 
-    // Berechnet aus der Ausrüstung (Angezogen + Tasche) automatisch die verbrauchten Wappen
+    // Berechnet aus der Ausrüstung (Angezogen + Tasche) die verbrauchten Wappen in echten 20er/80er WoW-Schritten
     function calculateSpentFromCharGear(char) {
       let mythCraftedCount = 0;
-      let myth6Count = 0;
-      let mythOtherSteps = 0;
+      let mythUpgradedCount = 0;
+      let mythTotalStepsAbove321 = 0;
       let heroCount = 0;
 
       SLOTS.forEach(s => {
@@ -715,18 +695,17 @@
 
         if (meta.track === 'crafted' && maxSlot >= 331) {
           mythCraftedCount++;
-        } else if (maxSlot >= 334) {
-          myth6Count++;
         } else if (maxSlot > 321) {
-          mythOtherSteps += MYTH_UPGRADE_STEPS.filter(st => st <= maxSlot).length;
+          mythUpgradedCount++;
+          mythTotalStepsAbove321 += MYTH_UPGRADE_STEPS.filter(st => st <= maxSlot).length;
         }
         if (maxSlot >= 311) heroCount++;
       });
 
-      // Berechnung für Handwerk + aufgewertete Mythos-Slots
-      const mythSpent = (mythCraftedCount * 60) + (myth6Count * 35) + (mythOtherSteps * 20) + (mythCraftedCount > 0 && myth6Count >= 6 ? 2 : 0);
-      const heroSpent = heroCount * 30;
-      const champSpent = 160;
+      // Jedes 331er Handwerks-Item = 80 Wappen, jede aufgewertete Mythos-Stufe über 321 = 20 Wappen
+      const mythSpent = (mythCraftedCount * 80) + (mythTotalStepsAbove321 * 20);
+      const heroSpent = heroCount * 20;
+      const champSpent = 120;
 
       return {
         mythSpent,
@@ -734,16 +713,10 @@
         champSpent,
         vetSpent: 0,
         advSpent: 0,
-        mythSpentNote: `Aus Ausrüstung erkannt: ${mythCraftedCount}× Handwerk (331) + ${myth6Count}× Mythos 6/6 (334)`
+        mythSpentNote: `Aus SimC: ${mythCraftedCount}× Handwerk (331 à 80) + ${mythUpgradedCount}× Mythos >321 (${mythTotalStepsAbove321} Stufen)`
       };
     }
 
-    // Liefert für jede Wappen-Art die 5 Schlüsselzahlen:
-    // 1. wallet (In der Tasche aus SimC)
-    // 2. spent (Verbraucht auf dem Charakter)
-    // 3. earned (Gesamt = In der Tasche + Verbraucht)
-    // 4. farmable (Noch farmbar = Wochen-Cap - (In der Tasche + Verbraucht))
-    // 5. totalAvailable (Gesamt diese Woche ausgibbar = In der Tasche + Noch farmbar)
     function getCharCrestCapNumbers(char, tierKey) {
       const seasonCap = getSeasonMaxCap();
       const tier = CREST_TIERS_META.find(t => t.key === tierKey);
@@ -761,18 +734,9 @@
       const totalAvailable = wallet + farmable;
       const note = char[tier.noteField] || 'Automatisch aus SimC-Ausrüstung berechnet';
 
-      return {
-        seasonCap,
-        wallet,
-        spent,
-        earned,
-        farmable,
-        totalAvailable,
-        note
-      };
+      return { seasonCap, wallet, spent, earned, farmable, totalAvailable, note };
     }
 
-    // Synchronisiert alle Werte sofort, wenn der Nutzer "In der Tasche", "Verbraucht" oder "Noch farmbar" anpasst:
     function onCrestInputUpdate(charIdx, tierKey, mode, rawVal) {
       const char = characters[charIdx];
       if (!char) return;
@@ -786,7 +750,6 @@
       } else if (mode === 'spent') {
         char[tier.spentField] = val;
       } else if (mode === 'farmable') {
-        // Wenn der Nutzer "Noch farmbar" eingibt, wird "Verbraucht" = Cap - Farmbar - InTasche gesetzt:
         const targetEarned = Math.max(currentWallet, seasonCap - Math.min(seasonCap, val));
         char[tier.spentField] = Math.max(0, targetEarned - currentWallet);
       }
@@ -805,11 +768,11 @@
       char.mythSpentNote = auto.mythSpentNote;
       saveCharsToStorage();
       renderAll();
-      showToast(`Verbrauchte Wappen für ${char.name} neu aus Ausrüstung berechnet!`, 'success');
+      showToast(`Verbrauchte Wappen für ${char.name} neu berechnet!`, 'success');
     }
 
     // =========================================================================
-    // 4. AUSRÜSTUNGS- & 331-SIMULATIONS-LOGIK
+    // 4. KORRIGIERTE 331-SIMULATION (OHNE FALSCHE 0-WAPPEN-GESCHENKE & MIT HELD-6/6-SPERRE!)
     // =========================================================================
     function isUsingSingleTwoHander(char) {
       const rawOh = Number(char.slots?.offhand || 0);
@@ -832,9 +795,9 @@
     function getRawCharSlotMax(char, slotKey) {
       const eq = getEquippedSlotIlvl(char, slotKey);
       const bag = getBagSlotIlvl(char, slotKey);
-      const wm = Number(char.watermarks?.[slotKey] || 0);
+      const accWm = Number(char.accountWatermarks?.[slotKey] || char.charWatermarks?.[slotKey] || 0);
       const base = rules.includeBags ? Math.max(eq, bag) : eq;
-      return Math.max(base, wm);
+      return Math.max(base, accWm);
     }
 
     function getCharacterWeaponWatermark(char) {
@@ -860,8 +823,7 @@
       });
 
       if (rules.strictPairs) {
-        let bestRingPair = 0;
-        let bestTrinketPair = 0;
+        let bestRingPair = 0, bestTrinketPair = 0;
         characters.forEach(c => {
           const rMin = Math.min(getRawCharSlotMax(c, 'finger1'), getRawCharSlotMax(c, 'finger2'));
           if (rMin > bestRingPair) bestRingPair = rMin;
@@ -910,9 +872,6 @@
       const farmableHeroMarks  = heroCapInfo.farmable;
       const maxWeekHeroMarks   = heroCapInfo.totalAvailable;
 
-      const availableChampMarks = champCapInfo.wallet;
-      const farmableChampMarks  = champCapInfo.farmable;
-
       const benchmarks = calculateWarbandBenchmarks();
       const using2H = isUsingSingleTwoHander(char);
 
@@ -924,7 +883,10 @@
       const startAvg = startPoints / 16;
       const planSteps = [];
 
-      // Phase 1: Höhere Items aus der Tasche anlegen (0 Wappen)
+      // -----------------------------------------------------------------------
+      // PHASE 1: HÖHERE ITEMS AUS DER TASCHE ANLEGEN (0 WAPPEN)
+      // (z. B. Tatamis 321er Hose in der Tasche statt 308er Hose, oder Lexinês 334er Hose!)
+      // -----------------------------------------------------------------------
       SLOTS.forEach(s => {
         if (s.key === 'offhand' && using2H) return;
         const bagVal = getBagSlotIlvl(char, s.key);
@@ -942,37 +904,48 @@
             pointGain,
             markType: 'bag',
             markCost: 0,
-            reason: `🎒 ${bagVal}er Item liegt fertig in deiner Tasche! Einfach anlegen (0 Wappen)`
+            reason: `🎒 ${bagVal}er Item aus deiner Tasche anlegen (0 Wappen)`
           });
         }
       });
 
-      // Phase 2: Kostenlose Watermark-Rabatte
+      const pointsWithBagsOnly = getSumPoints();
+      const avgWithBagsOnly = pointsWithBagsOnly / 16;
+
+      // -----------------------------------------------------------------------
+      // PHASE 2: ECHTER CHARAKTER-WATERMARK RABATT (0 WAPPEN)
+      // WICHTIG: Gilt NUR bis zum EIGENEN charWatermarks[slot] (NICHT Account-Watermark!)
+      // -----------------------------------------------------------------------
       SLOTS.forEach(s => {
         if (s.key === 'offhand' && using2H) return;
         const meta = char.slotMeta?.[s.key] || {};
-        const maxTrack = meta.bagMythIlvl ? 334 : (meta.maxUpgradable || 334);
-        const wbMax = Math.min(benchmarks[s.key] || 0, maxTrack);
+        const maxTrack = meta.bagMythIlvl ? 334 : (meta.maxUpgradable || 321);
+        const ownCharWm = Math.min(Number(char.charWatermarks?.[s.key] || 0), maxTrack);
         const curVal = simSlots[s.key];
-        if (wbMax > curVal && getSumPoints() < targetTotalPoints) {
+        if (ownCharWm > curVal && getSumPoints() < targetTotalPoints) {
           const is2HWeapon = (s.key === 'mainhand' && using2H);
-          const pointGain = is2HWeapon ? (wbMax - curVal) * 2 : (wbMax - curVal);
-          simSlots[s.key] = wbMax;
-          if (is2HWeapon) simSlots.offhand = wbMax;
+          const pointGain = is2HWeapon ? (ownCharWm - curVal) * 2 : (ownCharWm - curVal);
+          simSlots[s.key] = ownCharWm;
+          if (is2HWeapon) simSlots.offhand = ownCharWm;
           planSteps.push({
             slotKey: s.key,
             slotLabel: is2HWeapon ? 'Haupthand (2H zählt doppelt!)' : s.label,
             fromIlvl: curVal,
-            toIlvl: wbMax,
+            toIlvl: ownCharWm,
             pointGain,
             markType: 'free',
             markCost: 0,
-            reason: `👑 Kostenloser Watermark-Rabatt bis ${wbMax} (0 Wappen)`
+            reason: `👑 Eigener Charakter-Watermark ist bereits ${ownCharWm} (0 Wappen)`
           });
         }
       });
 
-      // Phase 3: Wappen-Upgrades
+      // -----------------------------------------------------------------------
+      // PHASE 3: WAPPEN-UPGRADES AUF ECHTEN MYTHOS-/HELD-ITEMS
+      // - Stoppt Held 6/6 (maxUpgradable 321) strikt bei 321!
+      // - Nutzt automatisch den 50% Kriegsmeuten-Rabatt (10 statt 20 Wappen),
+      //   wenn Lexinê/Kriegsmeute auf diesem Slot schon ein höheres Item-Level hat!
+      // -----------------------------------------------------------------------
       let safety = 0;
       while (getSumPoints() < targetTotalPoints && safety < 250) {
         safety++;
@@ -981,50 +954,56 @@
         SLOTS.forEach(s => {
           if (s.key === 'offhand' && using2H) return;
           const curVal = simSlots[s.key];
-          if (curVal >= 334) return;
 
           const meta = char.slotMeta?.[s.key] || {};
           const hasMythInBag = Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
-          const isStuckOnHero6 = (meta.track === 'hero_max' && !hasMythInBag);
-          const is2HWeapon = (s.key === 'mainhand' && using2H);
+          const maxUpgradable = hasMythInBag ? 334 : (meta.maxUpgradable || 321);
 
+          // WICHTIG: Wenn das Item bei 321 (Held 6/6) oder 331 (Handwerk) am Limit ist, KANN man es nicht einfach mit 20 Wappen auf 334 ziehen!
+          if (curVal >= maxUpgradable) return;
+
+          const is2HWeapon = (s.key === 'mainhand' && using2H);
           let nextIlvl = 0;
           let markType = '';
 
           if (curVal < 308) {
-            nextIlvl = CHAMP_UPGRADE_STEPS.find(st => st > curVal) || 308;
+            nextIlvl = CHAMP_UPGRADE_STEPS.find(st => st > curVal && st <= maxUpgradable) || Math.min(308, maxUpgradable);
             markType = 'champ';
           } else if (curVal < 321) {
-            nextIlvl = HERO_UPGRADE_STEPS.find(st => st > curVal) || 321;
+            nextIlvl = HERO_UPGRADE_STEPS.find(st => st > curVal && st <= maxUpgradable) || Math.min(321, maxUpgradable);
             markType = 'hero';
           } else {
-            const step = MYTH_UPGRADE_STEPS.find(st => st > curVal);
+            const step = MYTH_UPGRADE_STEPS.find(st => st > curVal && st <= maxUpgradable);
             if (!step) return;
             nextIlvl = step;
             markType = 'myth';
           }
 
           const rawGain = nextIlvl - curVal;
+          if (rawGain <= 0) return;
           const totalPointGain = is2HWeapon ? rawGain * 2 : rawGain;
-          const cost = baseStepCost;
 
-          let trackPenalty = 0;
+          // Prüfen, ob für diesen Schritt der 50% Kriegsmeuten-Rabatt (durch Lexinê / Account-Watermark) gilt!
+          const accWm = Math.max(benchmarks[s.key] || 0, Number(char.accountWatermarks?.[s.key] || 0));
+          const hasWarband50PctDiscount = (accWm >= nextIlvl);
+          const cost = hasWarband50PctDiscount ? Math.min(baseStepCost, 10) : baseStepCost;
+
           let customReason = '';
           if (markType === 'myth') {
-            if (hasMythInBag && meta.track === 'hero_max') {
-              customReason = `🎒 Mythos-Item (${meta.bagMythIlvl} iLvl) aus Tasche anlegen & auf ${nextIlvl} upgraden!`;
-            } else if (isStuckOnHero6) {
-              customReason = `🔒 Slot hat Held 6/6 (321) – Mythos-Item droppen/Vault & auf ${nextIlvl} ziehen (oder 331 Handwerk)`;
-              trackPenalty = -50;
+            if (hasMythInBag && meta.track === 'hero_max' && curVal === 321) {
+              customReason = `🎒 321er Mythos-Item aus Tasche nehmen & auf ${nextIlvl} ziehen${hasWarband50PctDiscount ? ' (50% Twink-Rabatt = 10 Wappen!)' : ''}`;
             } else {
-              customReason = rawGain >= 4 ? `🟠 Mythisch Power-Sprung (+${rawGain} iLvl auf ${nextIlvl}!)` : `🟠 Mythisch-Wappen Upgrade auf ${nextIlvl}`;
+              customReason = `🟠 Mythos-Upgrade auf ${nextIlvl}${hasWarband50PctDiscount ? ' (50% Twink-Rabatt durch Main = 10 Wappen!)' : ''}`;
             }
+          } else if (markType === 'hero') {
+            customReason = `🟣 Helden-Upgrade auf ${nextIlvl}${hasWarband50PctDiscount ? ' (50% Rabatt = 10 Wappen)' : ''}`;
           } else {
-            customReason = `🟣 Helden-Wappen Upgrade auf ${nextIlvl}`;
+            customReason = `🔵 Champion-Upgrade auf ${nextIlvl}`;
           }
 
+          // Priorität: Höchste Punkte pro Wappen (bevorzugt automatisch 10-Wappen-Rabatt-Slots und den +4 Sprung 321->325!)
           const tierBonus = markType === 'champ' ? 200 : (markType === 'hero' ? 100 : 0);
-          const priorityScore = tierBonus + trackPenalty + (totalPointGain / cost) * 10 - (curVal * 0.001);
+          const priorityScore = tierBonus + (totalPointGain / cost) * 100 - (curVal * 0.01);
 
           if (!bestCandidate || priorityScore > bestCandidate.priorityScore) {
             bestCandidate = {
@@ -1035,8 +1014,8 @@
               pointGain: totalPointGain,
               markType,
               markCost: cost,
+              hasWarband50PctDiscount,
               is2HWeapon,
-              isStuckOnHero6,
               priorityScore,
               reason: customReason
             };
@@ -1049,29 +1028,52 @@
         planSteps.push(bestCandidate);
       }
 
-      let usedChampMarks = 0, usedHeroMarks = 0, usedMythMarks = 0;
-      let reachablePointsNow = startPoints;
+      const maxPointsWithCurrentItems = getSumPoints();
+      const maxAvgWithCurrentItems = maxPointsWithCurrentItems / 16;
+
+      // -----------------------------------------------------------------------
+      // PHASE 4: FALLS DIE VORHANDENEN MYTHOS-ITEMS NOCH NICHT FÜR 331 REICHEN
+      // (z. B. bei Tatami: 5 Slots stecken auf Held 6/6 = 321 fest -> max 329.75 Ø):
+      // Zeige exakt an, wie viele blockierte Held-6/6-Slots durch 331er Handwerk (80 Wappen)
+      // oder Mythos-Drops ersetzt werden müssen!
+      // -----------------------------------------------------------------------
+      while (getSumPoints() < targetTotalPoints && safety < 270) {
+        safety++;
+        const blockedSlot = SLOTS.find(s => {
+          if (s.key === 'offhand' && using2H) return false;
+          return simSlots[s.key] === 321;
+        });
+        if (!blockedSlot) break;
+
+        const gain = 331 - 321; // +10 iLvl durch 331er Handwerk (oder Mythos 5/6)
+        simSlots[blockedSlot.key] = 331;
+        planSteps.push({
+          slotKey: blockedSlot.key,
+          slotLabel: blockedSlot.label,
+          fromIlvl: 321,
+          toIlvl: 331,
+          pointGain: gain,
+          markType: 'myth',
+          markCost: 80,
+          isBlockedHeroReplacement: true,
+          reason: `🔒 Slot steckt auf Held 6/6 (321) fest ➔ 331er Handwerks-Item herstellen (80 Wappen) oder Mythos-Drop holen!`
+        });
+      }
+
+      // Gegen (1) Beutel-Wappen und (2) Beutel + Noch farmbar (Wochen-Cap) prüfen
+      let usedHeroMarks = 0, usedMythMarks = 0;
+      let reachablePointsWithWallet = startPoints;
       let reachablePointsThisWeek = startPoints;
 
       planSteps.forEach((step, idx) => {
         if (step.markType === 'bag' || step.markType === 'free') {
           step.availability = 'now';
-          reachablePointsNow += step.pointGain;
+          reachablePointsWithWallet += step.pointGain;
           reachablePointsThisWeek += step.pointGain;
-        } else if (step.markType === 'champ') {
-          if (usedChampMarks + step.markCost <= availableChampMarks) {
-            step.availability = 'now';
-            reachablePointsNow += step.pointGain;
-            reachablePointsThisWeek += step.pointGain;
-          } else if (usedChampMarks + step.markCost <= availableChampMarks + farmableChampMarks) {
-            step.availability = 'farmable';
-            reachablePointsThisWeek += step.pointGain;
-          } else step.availability = 'capped';
-          usedChampMarks += step.markCost;
         } else if (step.markType === 'hero') {
           if (usedHeroMarks + step.markCost <= availableHeroMarks) {
             step.availability = 'now';
-            reachablePointsNow += step.pointGain;
+            reachablePointsWithWallet += step.pointGain;
             reachablePointsThisWeek += step.pointGain;
           } else if (usedHeroMarks + step.markCost <= maxWeekHeroMarks) {
             step.availability = 'farmable';
@@ -1079,9 +1081,9 @@
           } else step.availability = 'capped';
           usedHeroMarks += step.markCost;
         } else if (step.markType === 'myth') {
-          if (usedMythMarks + step.markCost <= availableMythMarks && !step.isStuckOnHero6) {
+          if (usedMythMarks + step.markCost <= availableMythMarks && !step.isBlockedHeroReplacement) {
             step.availability = 'now';
-            reachablePointsNow += step.pointGain;
+            reachablePointsWithWallet += step.pointGain;
             reachablePointsThisWeek += step.pointGain;
           } else if (usedMythMarks + step.markCost <= maxWeekMythMarks) {
             step.availability = 'farmable';
@@ -1096,17 +1098,19 @@
 
       const missingMythMarks = Math.max(0, usedMythMarks - availableMythMarks);
       const missingHeroMarks = Math.max(0, usedHeroMarks - availableHeroMarks);
-      const totalMissingMarks = missingMythMarks + missingHeroMarks;
 
       return {
         char, charIdx, targetAvg, targetTotalPoints, baseStepCost,
         startPoints, startAvg,
-        reachablePointsNow, reachableAvgNow: reachablePointsNow / 16,
+        pointsWithBagsOnly, avgWithBagsOnly,
+        reachablePointsWithWallet, reachableAvgWithWallet: reachablePointsWithWallet / 16,
+        maxPointsWithCurrentItems, maxAvgWithCurrentItems,
         reachablePointsThisWeek, reachableAvgThisWeek: reachablePointsThisWeek / 16,
         mythCapInfo, heroCapInfo, champCapInfo,
         availableMythMarks, farmableMythMarks, maxWeekMythMarks,
         availableHeroMarks, farmableHeroMarks, maxWeekHeroMarks,
-        usedHeroMarks, usedMythMarks, missingHeroMarks, missingMythMarks, totalMissingMarks,
+        usedHeroMarks, usedMythMarks, missingHeroMarks, missingMythMarks,
+        totalMissingMarks: missingMythMarks + missingHeroMarks,
         totalNeededMarks: usedHeroMarks + usedMythMarks,
         planSteps
       };
@@ -1116,22 +1120,20 @@
       const results = characters.map((c, idx) => simulateCharacterToTarget(c, idx));
       results.sort((a, b) => {
         if (a.missingMythMarks !== b.missingMythMarks) return a.missingMythMarks - b.missingMythMarks;
-        if (a.totalMissingMarks !== b.totalMissingMarks) return a.totalMissingMarks - b.totalMissingMarks;
-        if (Math.abs(b.reachableAvgNow - a.reachableAvgNow) > 0.01) return b.reachableAvgNow - a.reachableAvgNow;
+        if (Math.abs(b.reachableAvgWithWallet - a.reachableAvgWithWallet) > 0.01) return b.reachableAvgWithWallet - a.reachableAvgWithWallet;
         return a.totalNeededMarks - b.totalNeededMarks;
       });
       return results;
     }
 
     // =========================================================================
-    // 5. CHARAKTER-KARTEN OBEN & AUFGERÄUMTES COCKPIT UNTEN DRUNTER RENDERN
+    // 5. CHARAKTER-KARTEN OBEN & KORRIGIERTES COCKPIT UNTEN DRUNTER RENDERN
     // =========================================================================
     function buildCharSelectorCardsHtml(rankings) {
       return rankings.map((r, rankIdx) => {
         const isSelected = r.charIdx === activeCharIndex;
         const isTop1 = rankIdx === 0;
         const cColor = getCharClassColor(r.char);
-        const cLabel = getCharClassLabel(r.char);
         const myth = r.mythCapInfo;
 
         return `
@@ -1149,22 +1151,26 @@
                 </span>
                 <span class="text-sm font-black truncate" style="color:${cColor}">${escapeHtml(r.char.name)}</span>
               </div>
-              ${isTop1 ? '<span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-600/60 font-bold shrink-0">🏆 Beste Wahl</span>' : ''}
+              ${isTop1 ? '<span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-600/60 font-bold shrink-0">🏆 Schnellster auf 331</span>' : ''}
             </div>
 
-            <div class="grid grid-cols-2 gap-2 text-center bg-wow-panel p-2 rounded-lg border border-wow-border/70">
+            <div class="grid grid-cols-3 gap-1.5 text-center bg-wow-panel p-2 rounded-lg border border-wow-border/70">
               <div>
-                <div class="text-[10px] text-slate-400">Angezogen</div>
-                <div class="text-xs font-black text-white">${r.startAvg.toFixed(2)} Ø</div>
+                <div class="text-[9px] text-slate-400">Angezogen</div>
+                <div class="text-xs font-black text-white">${r.startAvg.toFixed(2)}</div>
               </div>
-              <div class="border-l border-wow-border/70">
-                <div class="text-[10px] text-cyan-300 font-semibold">Sofort (mit Tasche)</div>
-                <div class="text-xs font-black text-cyan-300">${r.reachableAvgNow.toFixed(2)} Ø</div>
+              <div class="border-x border-wow-border/70">
+                <div class="text-[9px] text-cyan-300">Nur Tasche</div>
+                <div class="text-xs font-black text-cyan-300">${r.avgWithBagsOnly.toFixed(2)}</div>
+              </div>
+              <div>
+                <div class="text-[9px] text-amber-300">Mit Beutel (${myth.wallet})</div>
+                <div class="text-xs font-black text-amber-300">${r.reachableAvgWithWallet.toFixed(2)}</div>
               </div>
             </div>
 
             <div class="flex flex-wrap items-center justify-between gap-1 text-[11px] pt-0.5">
-              <span class="text-slate-300">🎒 <strong>${myth.wallet}</strong> | 🔨 <strong>${myth.spent}</strong></span>
+              <span class="text-slate-300">🎒 <strong>${myth.wallet}</strong> + 🔨 <strong>${myth.spent}</strong></span>
               <span class="px-2 py-0.5 rounded bg-emerald-950/90 text-emerald-300 border border-emerald-600/50 font-bold">
                 🌾 Noch farmbar: ${myth.farmable}
               </span>
@@ -1186,32 +1192,35 @@
       const mythSubsWallet = Math.floor(myth.wallet / stepCost);
       const mythSubsTotal  = Math.floor(myth.totalAvailable / stepCost);
 
-      // BLOCK 1: DIE 4 FORMEL-KACHELN AUF EINEN BLICK
+      // BLOCK 1: DIE 4 GLASKLAREN KACHELN (JETZT MIT SAUBERER TRENNUNG: ANGEZOGEN -> NUR TASCHE -> MIT BEUTEL-WAPPEN)
       const topSummaryHtml = `
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-          <!-- Kachel 1: Item-Level -->
+          <!-- Kachel 1: Saubere 3-Stufen-Item-Level-Anzeige -->
           <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 shadow-lg" style="border-left: 5px solid ${charColor};">
             <div class="text-[11px] font-bold uppercase text-slate-400">1. Item-Level (${escapeHtml(char.name)})</div>
-            <div class="flex items-baseline justify-between mt-1.5">
+            <div class="grid grid-cols-3 gap-1 text-center mt-2 bg-wow-card p-2 rounded-xl border border-wow-border">
               <div>
-                <div class="text-[10px] text-slate-400">Angezogen</div>
-                <div class="text-xl font-black text-white">${activeSim.startAvg.toFixed(2)} Ø</div>
+                <div class="text-[9px] text-slate-400 uppercase">Angezogen</div>
+                <div class="text-sm font-black text-white">${activeSim.startAvg.toFixed(2)}</div>
               </div>
-              <span class="text-slate-500 font-bold">&rarr;</span>
-              <div class="text-right">
-                <div class="text-[10px] text-cyan-300 font-bold">Sofort (Tasche)</div>
-                <div class="text-2xl font-black text-cyan-300">${activeSim.reachableAvgNow.toFixed(2)} Ø</div>
+              <div class="border-x border-wow-border">
+                <div class="text-[9px] text-cyan-300 uppercase font-bold">Nur Tasche</div>
+                <div class="text-sm font-black text-cyan-300">${activeSim.avgWithBagsOnly.toFixed(2)}</div>
+              </div>
+              <div>
+                <div class="text-[9px] text-amber-300 uppercase font-bold">+${myth.wallet} Beutel</div>
+                <div class="text-base font-black text-wow-gold">${activeSim.reachableAvgWithWallet.toFixed(2)}</div>
               </div>
             </div>
-            <div class="text-[11px] text-slate-400 mt-2 pt-2 border-t border-wow-border/60">
-              Fehlt bis ${activeSim.targetAvg}: <strong class="text-amber-300">+${missingPoints} iLvl-Punkte</strong>
+            <div class="text-[11px] text-slate-400 mt-2">
+              Max. mit aktuellen Mythos-Items: <strong class="text-white">${activeSim.maxAvgWithCurrentItems.toFixed(2)} Ø</strong> (Bis 331: +${missingPoints} Pkt)
             </div>
           </div>
 
           <!-- Kachel 2: In der Tasche + Verbraucht auf Charakter -->
           <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 shadow-lg">
             <div class="text-[11px] font-bold uppercase text-purple-300">2. Aus SimC: Tasche + Verbraucht</div>
-            <div class="flex items-baseline gap-2 mt-1">
+            <div class="flex items-baseline gap-2 mt-1.5">
               <span class="text-2xl font-black text-white">${myth.wallet}</span>
               <span class="text-xs text-slate-400">Tasche +</span>
               <span class="text-2xl font-black text-amber-300">${myth.spent}</span>
@@ -1225,7 +1234,7 @@
           <!-- Kachel 3: Noch farmbar diese Woche -->
           <div class="bg-wow-panel border-2 border-emerald-500/70 rounded-2xl p-4 shadow-lg bg-emerald-950/10">
             <div class="text-[11px] font-black uppercase text-emerald-400">3. 🌾 Noch farmbar bis Cap</div>
-            <div class="flex items-baseline gap-2 mt-1">
+            <div class="flex items-baseline gap-2 mt-1.5">
               <span class="text-3xl font-black text-emerald-300">${myth.farmable}</span>
               <span class="text-xs font-bold text-emerald-400">Mythisch-Wappen</span>
             </div>
@@ -1237,18 +1246,18 @@
           <!-- Kachel 4: Gesamt ausgibbar diese Woche -->
           <div class="bg-wow-panel border border-amber-500/60 rounded-2xl p-4 shadow-lg">
             <div class="text-[11px] font-bold uppercase text-wow-gold">4. ⚡ Gesamt nutzbar diese ID</div>
-            <div class="flex items-baseline gap-2 mt-1">
+            <div class="flex items-baseline gap-2 mt-1.5">
               <span class="text-3xl font-black text-amber-300">${myth.totalAvailable}</span>
-              <span class="text-xs font-bold text-slate-300">= ${mythSubsTotal} Upgrade-Stufen</span>
+              <span class="text-xs font-bold text-slate-300">Wappen verfügbar</span>
             </div>
             <div class="text-[11px] text-slate-300 mt-2 pt-2 border-t border-wow-border/60">
-              <strong>${myth.wallet} Tasche</strong> (${mythSubsWallet} St.) + <strong>${myth.farmable} noch farmbar</strong>
+              Benötigt bis Ø ${activeSim.targetAvg}: <strong class="text-amber-300">${activeSim.usedMythMarks} Mythisch-Wappen</strong> (inkl. 50% Twink-Rabatt!)
             </div>
           </div>
         </div>
       `;
 
-      // BLOCK 2: DIE KOMPLETTE WAPPEN-TABELLE (TASCHE + VERBRAUCHT + CAP = NOCH FARMBAR)
+      // BLOCK 2: WAPPEN-CAP-TABELLE
       const crestTableRows = CREST_TIERS_META.map(tier => {
         const cInfo = getCharCrestCapNumbers(char, tier.key);
         const subsNow = Math.floor(cInfo.wallet / stepCost);
@@ -1258,7 +1267,6 @@
 
         return `
           <tr class="border-b border-wow-border/60 last:border-0 hover:bg-white/[0.02] transition">
-            <!-- Wappen-Art & erkannte SimC-Items -->
             <td class="py-3 px-4">
               <div class="font-bold text-xs ${tier.colorText}">${tier.name}</div>
               <div class="text-[11px] text-slate-400">${escapeHtml(cInfo.note)}</div>
@@ -1266,8 +1274,6 @@
                 <div class="h-full ${tier.barClass}" style="width: ${pct}%"></div>
               </div>
             </td>
-
-            <!-- 1. In der Tasche (aus SimC c:3442-3446) -->
             <td class="py-3 px-3 text-center">
               <div class="inline-flex items-center gap-1.5">
                 <input type="number" value="${cInfo.wallet}" min="0" step="5"
@@ -1276,24 +1282,16 @@
                 <span class="text-[11px] text-slate-400">(${subsNow} St.)</span>
               </div>
             </td>
-
-            <!-- 2. Verbraucht auf dem Charakter (aus SimC-Ausrüstung) -->
             <td class="py-3 px-3 text-center">
-              <div class="inline-flex items-center gap-1">
-                <input type="number" value="${cInfo.spent}" min="0" step="10"
-                       onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'spent', this.value)"
-                       class="w-20 bg-wow-bg border border-amber-600/50 rounded-lg px-2 py-1 text-sm font-bold text-amber-200 text-center" />
-              </div>
+              <input type="number" value="${cInfo.spent}" min="0" step="20"
+                     onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'spent', this.value)"
+                     class="w-20 bg-wow-bg border border-amber-600/50 rounded-lg px-2 py-1 text-sm font-bold text-amber-200 text-center" />
             </td>
-
-            <!-- 3. Summe (Tasche + Verbraucht) vs. Wochen-Cap -->
             <td class="py-3 px-3 text-center">
               <span class="px-2.5 py-1 rounded-lg bg-wow-panel border border-wow-border text-xs font-bold text-slate-200">
                 ${cInfo.earned} <span class="text-slate-400 font-normal">/ ${cInfo.seasonCap}</span>
               </span>
             </td>
-
-            <!-- 4. Noch farmbar diese Woche (Cap - (Tasche + Verbraucht)) -->
             <td class="py-3 px-3 text-center">
               <div class="inline-flex items-center gap-1.5">
                 <input type="number" value="${cInfo.farmable}" min="0" max="${cInfo.seasonCap}" step="10"
@@ -1302,11 +1300,9 @@
                 <span class="text-[11px] text-emerald-400 font-semibold">${cInfo.farmable > 0 ? `(≈ ${mplusRuns} Runs)` : '✔️ Voll'}</span>
               </div>
             </td>
-
-            <!-- 5. Gesamt verfügbar (In Tasche + Noch farmbar) -->
             <td class="py-3 px-4 text-right">
               <div class="text-sm font-black text-amber-300">${cInfo.totalAvailable} Wappen</div>
-              <div class="text-[11px] text-slate-300 font-semibold">= <strong>${subsTotal} Upgrade-Stufen</strong> (à ${stepCost})</div>
+              <div class="text-[11px] text-slate-300 font-semibold">= <strong>${subsTotal} Basis-Stufen</strong> (od. ${Math.floor(cInfo.totalAvailable / 10)} mit 50% Rabatt)</div>
             </td>
           </tr>
         `;
@@ -1316,9 +1312,9 @@
         <div class="bg-wow-panel border border-wow-border rounded-2xl overflow-hidden shadow-lg">
           <div class="p-4 border-b border-wow-border flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h3 class="text-sm font-bold text-white">🌾 SimCraft Wappen-Tracker: In der Tasche + Verbraucht + Wochen-Cap (${seasonCap})</h3>
+              <h3 class="text-sm font-bold text-white">🌾 SimCraft Wappen-Tracker für <span style="color:${charColor}">${escapeHtml(char.name)}</span></h3>
               <p class="text-xs text-slate-400">
-                Berechnet automatisch: <strong>🎒 In der Tasche (aus SimC)</strong> + <strong>🔨 Verbraucht auf Charakter (aus SimC-Items)</strong> = <strong>📊 Bisher verbraucht/gefarmt</strong> ➔ Abgezogen vom <strong>${seasonCap}er Cap</strong> ergibt das deine <strong>🌾 noch farmbaren Wappen</strong>!
+                <strong>🎒 In der Tasche</strong> + <strong>🔨 Verbraucht (in glatten 20er/80er Schritten)</strong> = <strong>📊 Summe</strong> ➔ Abgezogen vom <strong>${seasonCap}er Cap</strong> ergibt das deine <strong>🌾 noch farmbaren Wappen</strong>!
               </p>
             </div>
             <button onclick="recalculateCharSpentFromSimcGear(${charIdx})" class="px-3 py-1.5 rounded-xl bg-wow-card hover:bg-slate-700 border border-wow-border text-xs font-semibold text-slate-200 transition">
@@ -1338,9 +1334,7 @@
                   <th class="py-2.5 px-4 text-right text-wow-gold">⚡ Gesamt nutzbar (Tasche + Farmbar)</th>
                 </tr>
               </thead>
-              <tbody>
-                ${crestTableRows}
-              </tbody>
+              <tbody>${crestTableRows}</tbody>
             </table>
           </div>
         </div>
@@ -1354,28 +1348,35 @@
       SLOTS.forEach(s => {
         const eq = getEquippedSlotIlvl(char, s.key);
         const bag = getBagSlotIlvl(char, s.key);
-        const wbMax = benchmarks[s.key] || 0;
+        const wbMax = Math.max(benchmarks[s.key] || 0, Number(char.accountWatermarks?.[s.key] || 0));
         const meta = char.slotMeta?.[s.key] || {};
         const hasMythInBag = Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
-        const isStuckHero6 = (meta.track === 'hero_max' && !hasMythInBag && bag <= eq);
-        const itemEntry = { slot: s, eq, bag, wbMax, meta, hasMythInBag, isStuckHero6 };
+        const maxUpgradable = hasMythInBag ? 334 : (meta.maxUpgradable || 321);
+        const isStuckHero6 = (maxUpgradable <= 321 && bag <= eq);
+        const itemEntry = { slot: s, eq, bag, wbMax, meta, hasMythInBag, maxUpgradable, isStuckHero6 };
 
         if (eq >= targetIlvlGoal && bag <= eq) zone3Completed.push(itemEntry);
-        else if (bag > eq || hasMythInBag || (!isStuckHero6 && eq < targetIlvlGoal)) zone1ActionNow.push(itemEntry);
+        else if (bag > eq || maxUpgradable > 321) zone1ActionNow.push(itemEntry);
         else zone2BlockedHero.push(itemEntry);
       });
 
       const renderZoneSlotCard = (item, zoneType) => {
-        const { slot, eq, bag, meta, hasMythInBag } = item;
+        const { slot, eq, bag, wbMax, meta, hasMythInBag } = item;
+        const has50PctDiscount = wbMax > eq;
         let statusTag = '', borderClass = 'border-wow-border';
+
         if (zoneType === 'action') {
           borderClass = 'border-emerald-500/60 bg-emerald-950/20';
-          if (bag > eq) statusTag = `<span class="text-[11px] text-cyan-300 font-bold">🎒 ${bag} in Tasche (+${bag - eq} Pkt für 0 Wappen)</span>`;
-          else if (hasMythInBag && meta.track === 'hero_max') statusTag = `<span class="text-[11px] text-amber-300 font-bold">🎒 ${meta.bagMythIlvl} Mythos in Tasche ➔ Bis 334 ziehbar!</span>`;
-          else statusTag = `<span class="text-[11px] text-emerald-300 font-bold">⚡ Direkt aufwertbar</span>`;
+          if (bag > eq) {
+            statusTag = `<span class="text-[11px] text-cyan-300 font-bold">🎒 ${bag} in Tasche (+${bag - eq} Pkt für 0 Wappen!)</span>`;
+          } else if (hasMythInBag && meta.track === 'hero_max') {
+            statusTag = `<span class="text-[11px] text-amber-300 font-bold">🎒 321 Mythos-2/6 in Tasche! ${has50PctDiscount ? `(50% Rabatt bis ${wbMax}!)` : 'Bis 334 ziehbar'}</span>`;
+          } else {
+            statusTag = `<span class="text-[11px] text-emerald-300 font-bold">⚡ Mythos-Spur (bis 334) ${has50PctDiscount ? `• 50% Twink-Rabatt bis ${wbMax}!` : ''}</span>`;
+          }
         } else if (zoneType === 'blocked') {
           borderClass = 'border-amber-700/50 bg-amber-950/10';
-          statusTag = `<span class="text-[11px] text-red-300 font-semibold">🔒 Held 6/6 (Braucht Mythos-Item / 331 Handwerk)</span>`;
+          statusTag = `<span class="text-[11px] text-red-300 font-semibold">🔒 Held 6/6 Limit (321 Max – braucht Mythos-Item oder 331 Handwerk)</span>`;
         } else {
           borderClass = 'border-emerald-800/40 bg-wow-card/50';
           statusTag = `<span class="text-[10px] text-emerald-300 font-semibold">✔️ ${meta.label || 'Fertig'}</span>`;
@@ -1395,7 +1396,7 @@
       const groupedSteps = [];
       activeSim.planSteps.forEach(st => {
         const last = groupedSteps[groupedSteps.length - 1];
-        if (last && last.slotKey === st.slotKey && last.markType === st.markType && last.availability === st.availability) {
+        if (last && last.slotKey === st.slotKey && last.markType === st.markType && last.availability === st.availability && !st.isBlockedHeroReplacement) {
           last.toIlvl = st.toIlvl;
           last.pointGain += st.pointGain;
           last.markCost += st.markCost;
@@ -1410,10 +1411,13 @@
         let badgeColor = 'bg-slate-800 text-slate-300 border-slate-600';
         let costLabel = '0 Wappen';
         if (g.markType === 'bag') { badgeColor = 'bg-cyan-950 text-cyan-300 border-cyan-600'; costLabel = '🎒 0 Wappen (Tasche)'; }
-        else if (g.markType === 'free') { badgeColor = 'bg-emerald-950 text-emerald-300 border-emerald-600'; costLabel = '👑 0 Wappen (Rabatt)'; }
-        else if (g.markType === 'myth') {
+        else if (g.markType === 'free') { badgeColor = 'bg-emerald-950 text-emerald-300 border-emerald-600'; costLabel = '👑 0 Wappen (Char-WM)'; }
+        else if (g.isBlockedHeroReplacement) {
+          badgeColor = 'bg-purple-950 text-purple-200 border-purple-500';
+          costLabel = `🔨 80 Mythisch (Handwerk 331)`;
+        } else if (g.markType === 'myth') {
           badgeColor = g.availability === 'now' ? 'bg-amber-950 text-amber-200 border-amber-500' : 'bg-emerald-950 text-emerald-200 border-emerald-500';
-          costLabel = `🟠 ${g.markCost} Mythisch (${g.stepCount} St.)`;
+          costLabel = `🟠 ${g.markCost} Mythisch (${g.stepCount} St.${g.hasWarband50PctDiscount ? ' à 10' : ' à 20'})`;
         } else {
           badgeColor = 'bg-purple-950 text-purple-200 border-purple-500';
           costLabel = `🟣 ${g.markCost} Held (${g.stepCount} St.)`;
@@ -1444,9 +1448,9 @@
         <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
           <div class="xl:col-span-7 bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-3 shadow-lg">
             <div>
-              <h3 class="text-sm font-bold text-white">🎯 Optimaler 331-Upgrade-Fahrplan für <span style="color:${charColor}">${escapeHtml(char.name)}</span></h3>
+              <h3 class="text-sm font-bold text-white">🎯 Korrigierter 331-Upgrade-Fahrplan für <span style="color:${charColor}">${escapeHtml(char.name)}</span></h3>
               <p class="text-xs text-slate-400">
-                Schritte mit <strong>🟢 Sofort</strong> nutzt du direkt aus deinen <strong>${myth.wallet} Taschen-Wappen</strong> (bringt dich auf <strong>${activeSim.reachableAvgNow.toFixed(2)} Ø</strong>). Die Schritte darunter bezahlst du aus deinen <strong>🌾 ${myth.farmable} noch farmbaren Wappen</strong>!
+                Nutzt zuerst <strong>0-Wappen-Taschen-Items</strong> (➔ <strong>${activeSim.avgWithBagsOnly.toFixed(2)} Ø</strong>), danach deine <strong>50%-Twink-Rabatt-Slots (10 statt 20 Wappen dank Lexinê!)</strong> bis deine <strong>${myth.wallet} Beutel-Wappen</strong> aufgebraucht sind (➔ <strong>${activeSim.reachableAvgWithWallet.toFixed(2)} Ø</strong>) und zeigt dir danach die Schritte aus deinem <strong>${myth.farmable}er Farm-Pool</strong>!
               </p>
             </div>
             <div class="space-y-2">${stepsHtml}</div>
@@ -1455,16 +1459,16 @@
           <div class="xl:col-span-5 bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-4 shadow-lg">
             <div>
               <h3 class="text-sm font-bold text-white">🚦 3-Zonen-Slot-Ampel (Klick = Slot bearbeiten)</h3>
-              <p class="text-xs text-slate-400">Übersicht deiner 16 Slots aufgeteilt nach Handlungsbedarf.</p>
+              <p class="text-xs text-slate-400">Erkennt automatisch versteckte Mythos-2/6-Items in deiner Tasche!</p>
             </div>
 
             <div class="space-y-2">
-              <div class="text-xs font-bold uppercase text-emerald-400">🟢 Zone 1: Sofort-Aktion (${zone1ActionNow.length} Slots)</div>
+              <div class="text-xs font-bold uppercase text-emerald-400">🟢 Zone 1: Aufwertbare Mythos-Slots & Taschen-Upgrades (${zone1ActionNow.length} Slots)</div>
               <div class="space-y-2">${zone1ActionNow.map(i => renderZoneSlotCard(i, 'action')).join('')}</div>
             </div>
 
             <div class="space-y-2 pt-3 border-t border-wow-border/60">
-              <div class="text-xs font-bold uppercase text-amber-300">🔒 Zone 2: Auf Held 6/6 blockiert (${zone2BlockedHero.length} Slots)</div>
+              <div class="text-xs font-bold uppercase text-amber-300">🔒 Zone 2: Auf Held 6/6 (321) blockiert (${zone2BlockedHero.length} Slots)</div>
               <div class="space-y-2">${zone2BlockedHero.map(i => renderZoneSlotCard(i, 'blocked')).join('')}</div>
             </div>
 
@@ -1504,7 +1508,7 @@
     }
 
     // =========================================================================
-    // 6. SIMCRAFT PARSER (INKL. AUTOMATISCHER VERBRAUCHS-BERECHNUNG!)
+    // 6. SIMCRAFT PARSER (INKL. KORREKTER TRINKET-2 & WATERMARK-ERKENNUNG)
     // =========================================================================
     function classifyItemTrackFromBonusIds(bonusStr, isCrafted) {
       if (isCrafted) return { track: 'crafted', label: 'Handwerk', maxUpgradable: 331 };
@@ -1515,7 +1519,7 @@
           return { track: id === 12846 ? 'hero_max' : 'hero', label: HERO_BONUS_IDS[id], maxUpgradable: 321 };
         }
       }
-      return { track: 'unknown', label: 'Standard', maxUpgradable: 334 };
+      return { track: 'hero_max', label: 'Max 321', maxUpgradable: 321 };
     }
 
     function parseSimcString(rawText) {
@@ -1523,14 +1527,15 @@
       let charName = '', realm = '', region = apiConfig.region || 'eu', className = '';
       let advMarks = null, vetMarks = null, champMarks = null, heroMarks = null, mythMarks = null;
 
-      const equippedSlots = {}, bagSlots = {}, slotMeta = {}, watermarks = {};
+      const equippedSlots = {}, bagSlots = {}, slotMeta = {}, charWatermarks = {}, accountWatermarks = {};
       SLOTS.forEach(s => {
         equippedSlots[s.key] = 0;
         bagSlots[s.key] = 0;
-        slotMeta[s.key] = { track: 'unknown', label: '', maxUpgradable: 334 };
+        slotMeta[s.key] = { track: 'hero_max', label: '', maxUpgradable: 321 };
       });
 
       const bagRingsList = [], bagTrinketsList = [];
+      const bagMythRings = [], bagMythTrinkets = [];
       let currentSection = 'equipped', lastCommentIlvl = 0;
 
       const simcToSlotKey = {
@@ -1580,17 +1585,20 @@
           continue;
         }
 
+        // KORRIGIERT: Trennt strikt zwischen parts[1] (Charakter-Watermark = 0 Wappen) und parts[2] (Kriegsmeuten-Watermark = 50% Rabatt)!
         if (/^#\s*slot_high_watermarks=/i.test(line)) {
           const rawWm = line.replace(/^#\s*slot_high_watermarks=/i, '').trim();
-          const redundancyMap = {};
+          const charMap = {}, accMap = {};
           rawWm.split('/').forEach(entry => {
             const parts = entry.split(':').map(n => parseInt(n, 10));
             if (parts.length >= 3 && !isNaN(parts[0])) {
-              redundancyMap[parts[0]] = Math.max(parts[1] || 0, parts[2] || 0);
+              charMap[parts[0]] = parts[1] || 0;
+              accMap[parts[0]]  = Math.max(parts[1] || 0, parts[2] || 0);
             }
           });
           SLOTS.forEach(s => {
-            if (redundancyMap[s.redundancyId] !== undefined) watermarks[s.key] = redundancyMap[s.redundancyId];
+            if (charMap[s.redundancyId] !== undefined) charWatermarks[s.key] = charMap[s.redundancyId];
+            if (accMap[s.redundancyId] !== undefined)  accountWatermarks[s.key] = accMap[s.redundancyId];
           });
           continue;
         }
@@ -1638,12 +1646,18 @@
             const bonusMatch = stripped.match(/bonus_id=([0-9/]+)/i);
             const trackInfo = classifyItemTrackFromBonusIds(bonusMatch ? bonusMatch[1] : '', /crafting_quality=/i.test(stripped));
             if (slotKey && finalIlvl > 0) {
-              if (rawSlot === 'finger1' || rawSlot === 'finger2') bagRingsList.push(finalIlvl);
-              else if (rawSlot === 'trinket1' || rawSlot === 'trinket2') bagTrinketsList.push(finalIlvl);
-              else bagSlots[slotKey] = Math.max(bagSlots[slotKey] || 0, finalIlvl);
-              if (trackInfo.track === 'myth') {
-                slotMeta[slotKey].bagMythIlvl = Math.max(slotMeta[slotKey].bagMythIlvl || 0, finalIlvl);
-                slotMeta[slotKey].maxUpgradable = 334;
+              if (rawSlot === 'finger1' || rawSlot === 'finger2') {
+                bagRingsList.push(finalIlvl);
+                if (trackInfo.track === 'myth') bagMythRings.push(finalIlvl);
+              } else if (rawSlot === 'trinket1' || rawSlot === 'trinket2') {
+                bagTrinketsList.push(finalIlvl);
+                if (trackInfo.track === 'myth') bagMythTrinkets.push(finalIlvl);
+              } else {
+                bagSlots[slotKey] = Math.max(bagSlots[slotKey] || 0, finalIlvl);
+                if (trackInfo.track === 'myth') {
+                  slotMeta[slotKey].bagMythIlvl = Math.max(slotMeta[slotKey].bagMythIlvl || 0, finalIlvl);
+                  slotMeta[slotKey].maxUpgradable = 334;
+                }
               }
             }
             lastCommentIlvl = 0;
@@ -1659,19 +1673,38 @@
         bagSlots.finger1 = bagRingsList[0];
         bagSlots.finger2 = bagRingsList.length > 1 ? bagRingsList[1] : bagRingsList[0];
       }
+      if (bagMythRings.length > 0) {
+        bagMythRings.sort((a, b) => b - a);
+        slotMeta.finger1.bagMythIlvl = bagMythRings[0];
+        slotMeta.finger1.maxUpgradable = 334;
+        if (bagMythRings.length > 1) {
+          slotMeta.finger2.bagMythIlvl = bagMythRings[1];
+          slotMeta.finger2.maxUpgradable = 334;
+        }
+      }
+
       if (bagTrinketsList.length > 0) {
         bagTrinketsList.sort((a, b) => b - a);
         bagSlots.trinket1 = bagTrinketsList[0];
         bagSlots.trinket2 = bagTrinketsList.length > 1 ? bagTrinketsList[1] : bagTrinketsList[0];
       }
+      // WICHTIG: Wenn 2 Mythos-Schmuckstücke in der Tasche liegen (wie bei Tatami!), werden BEIDE Trinket-Slots für 334 freigeschaltet!
+      if (bagMythTrinkets.length > 0) {
+        bagMythTrinkets.sort((a, b) => b - a);
+        slotMeta.trinket1.bagMythIlvl = bagMythTrinkets[0];
+        slotMeta.trinket1.maxUpgradable = 334;
+        if (bagMythTrinkets.length > 1) {
+          slotMeta.trinket2.bagMythIlvl = bagMythTrinkets[1];
+          slotMeta.trinket2.maxUpgradable = 334;
+        }
+      }
 
-      // Automatische Berechnung der verbrauchten Wappen auf dem Charakter aus den gelesenen Items
       const tempChar = { slots: equippedSlots, bagSlots, slotMeta };
       const spentInfo = calculateSpentFromCharGear(tempChar);
 
       return {
         charName, realm: realm || 'Unbekannt', region, className,
-        equippedSlots, bagSlots, slotMeta, watermarks,
+        equippedSlots, bagSlots, slotMeta, charWatermarks, accountWatermarks,
         equippedCount: Object.values(equippedSlots).filter(v => v > 0).length,
         bagCount: Object.values(bagSlots).filter(v => v > 0).length,
         advMarks, vetMarks, champMarks, heroMarks, mythMarks,
@@ -1703,7 +1736,7 @@
         <div class="font-bold text-purple-300">✔️ Charakter erkannt: <span class="text-white">${escapeHtml(parsed.charName || 'Unbekannt')} (${escapeHtml(parsed.realm)})</span></div>
         <div class="text-slate-300">🎒 <strong>In der Tasche (SimC):</strong> 🟠 ${mWallet} Mythisch • 🟣 ${parsed.heroMarks ?? 0} Held • 🔵 ${parsed.champMarks ?? 0} Champion</div>
         <div class="text-amber-300">🔨 <strong>Verbraucht auf Charakter:</strong> 🟠 ${mSpent} Mythisch (${escapeHtml(parsed.spentInfo.mythSpentNote)})</div>
-        <div class="text-emerald-300 font-bold">🌾 <strong>Automatische Cap-Rechnung:</strong> ${seasonCap} Cap − (${mWallet} Tasche + ${mSpent} Verbraucht = ${mTotal}) = <u>Noch ${mFarmable} Mythisch-Wappen farmbar!</u></div>
+        <div class="text-emerald-300 font-bold">🌾 <strong>Cap-Rechnung:</strong> ${seasonCap} Cap − (${mWallet} Tasche + ${mSpent} Verbraucht = ${mTotal}) = <u>Noch ${mFarmable} Mythisch-Wappen farmbar!</u></div>
       `;
     }
 
@@ -1725,7 +1758,8 @@
         slots: parsed.equippedSlots,
         bagSlots: parsed.bagSlots,
         slotMeta: parsed.slotMeta,
-        watermarks: parsed.watermarks,
+        charWatermarks: parsed.charWatermarks,
+        accountWatermarks: parsed.accountWatermarks,
         advMarks: parsed.advMarks ?? 0,
         vetMarks: parsed.vetMarks ?? 0,
         champMarks: parsed.champMarks ?? 0,
@@ -1744,7 +1778,7 @@
       renderAll();
       closeModal('simcModal');
       switchTab('charhub');
-      showToast(`${charObj.name} importiert: ${charObj.mythMarks} Tasche + ${charObj.mythSpent} verbraucht!`, 'success');
+      showToast(`${charObj.name} importiert!`, 'success');
     }
 
     function selectActiveCharacter(idxStr) {
@@ -1780,7 +1814,7 @@
 
     function renderAll() {
       if (!Array.isArray(characters) || characters.length === 0) {
-        characters = [JSON.parse(JSON.stringify(INITIAL_LEXINE_CHAR))];
+        characters = JSON.parse(JSON.stringify(INITIAL_CHARS));
       }
       renderCharacterHubAndPopup();
       renderMatrixView();
@@ -1794,7 +1828,7 @@
 
       let headerHtml = `
         <th class="py-3 px-4 font-bold text-white sticky left-0 bg-wow-card z-10 w-44">Ausrüstungs-Slot</th>
-        <th class="py-3 px-4 font-bold text-wow-gold bg-amber-950/20 border-x border-wow-border w-48">👑 Kriegsmeuten-Max</th>
+        <th class="py-3 px-4 font-bold text-wow-gold bg-amber-950/20 border-x border-wow-border w-48">👑 Kriegsmeuten-Max (50% Rabatt)</th>
       `;
       characters.forEach((char, idx) => {
         const avg = getCharAverageEquippedIlvl(char);
@@ -1826,7 +1860,7 @@
           const bagVal = getBagSlotIlvl(char, slot.key);
           const diff = maxIlvl - equippedVal;
           const bagBadge = bagVal > 0 ? `<span class="text-[11px] font-bold ${bagVal > equippedVal ? 'text-cyan-300' : 'text-slate-400'} ml-1.5">🎒 ${bagVal}</span>` : '';
-          const statusBadge = diff > 0 ? `<span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300">🟢 +${diff}</span>` : `<span class="text-[11px] text-amber-300">👑 Max</span>`;
+          const statusBadge = diff > 0 ? `<span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300">🟢 50% bis ${maxIlvl}</span>` : `<span class="text-[11px] text-amber-300">👑 Max</span>`;
           bodyHtml += `
             <td onclick="openEditSlotModal(${cIdx}, '${slot.key}', '${slot.label}')" class="py-2.5 px-4 cursor-pointer hover:bg-slate-800/60">
               <div class="flex items-center justify-between">
@@ -1996,7 +2030,8 @@
           className: newChar.className || ex.className || '',
           bagSlots: newChar.bagSlots || ex.bagSlots || {},
           slotMeta: newChar.slotMeta || ex.slotMeta || {},
-          watermarks: newChar.watermarks || ex.watermarks || {},
+          charWatermarks: newChar.charWatermarks || ex.charWatermarks || {},
+          accountWatermarks: newChar.accountWatermarks || ex.accountWatermarks || {},
           mythSpent: newChar.mythSpent ?? ex.mythSpent,
           heroSpent: newChar.heroSpent ?? ex.heroSpent,
           champSpent: newChar.champSpent ?? ex.champSpent,
