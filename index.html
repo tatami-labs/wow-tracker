@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>WoW Kriegsmeuten-Tracker v16.0</title>
+  <title>WoW Kriegsmeuten-Tracker v17.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -34,7 +34,7 @@
         <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-yellow-700 flex items-center justify-center text-slate-950 font-black text-base">W</div>
         <h1 class="text-sm font-bold text-white flex items-center gap-2">
           Kriegsmeuten-Upgrade-Tracker
-          <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v16.0 BEREIT</span>
+          <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v17.0 BEREIT</span>
         </h1>
       </div>
 
@@ -131,15 +131,31 @@
             </select>
           </div>
 
+          <!-- LÜCKENLOSES WOCHEN-DROPDOWN (Woche 1 bis 20) -->
           <div class="flex items-center justify-between gap-2">
             <span class="text-xs text-slate-300 whitespace-nowrap font-medium">📅 Wochen-Cap:</span>
             <select id="seasonWeekSelect" onchange="onSettingsChange()" class="w-40 bg-wow-card border border-wow-border rounded-lg px-2.5 py-1.5 text-amber-300 font-bold text-xs">
               <option value="auto" selected id="autoWeekOption">Auto (Aktuelle ID)</option>
+              <option value="1">Woche 1 (100 Cap)</option>
+              <option value="2">Woche 2 (200 Cap)</option>
+              <option value="3">Woche 3 (300 Cap)</option>
+              <option value="4">Woche 4 (400 Cap)</option>
+              <option value="5">Woche 5 (500 Cap)</option>
+              <option value="6">Woche 6 (600 Cap)</option>
               <option value="7">Woche 7 (700 Cap)</option>
               <option value="8">Woche 8 (800 Cap)</option>
               <option value="9">Woche 9 (900 Cap)</option>
               <option value="10">Woche 10 (1000 Cap)</option>
+              <option value="11">Woche 11 (1100 Cap)</option>
               <option value="12">Woche 12 (1200 Cap)</option>
+              <option value="13">Woche 13 (1300 Cap)</option>
+              <option value="14">Woche 14 (1400 Cap)</option>
+              <option value="15">Woche 15 (1500 Cap)</option>
+              <option value="16">Woche 16 (1600 Cap)</option>
+              <option value="17">Woche 17 (1700 Cap)</option>
+              <option value="18">Woche 18 (1800 Cap)</option>
+              <option value="19">Woche 19 (1900 Cap)</option>
+              <option value="20">Woche 20 (2000 Cap)</option>
             </select>
           </div>
 
@@ -153,6 +169,14 @@
           </div>
 
           <div class="pt-2 border-t border-wow-border/60 space-y-2">
+            <label class="flex items-center justify-between text-xs text-amber-300 cursor-pointer" title="Manueller Schalter, falls dein Account den 331er Mythos-Meilenstein bereits hat">
+              <span>🏆 331er-Erfolg freigeschaltet</span>
+              <input type="checkbox" id="has331AchToggle" onchange="onSettingsChange()" class="w-4 h-4 accent-amber-500 rounded cursor-pointer" />
+            </label>
+            <label class="flex items-center justify-between text-xs text-purple-300 cursor-pointer" title="Steuert den Preis für Held- & Champion-Upgrades (10 mit Rabatt vs. 20 ohne Rabatt)">
+              <span>🟣 Held/Champ-Rabatt (10 W.)</span>
+              <input type="checkbox" id="heroChampDiscToggle" onchange="onSettingsChange()" class="w-4 h-4 accent-purple-500 rounded cursor-pointer" checked />
+            </label>
             <label class="flex items-center justify-between text-xs text-emerald-300 cursor-pointer">
               <span>⏱️ M+ Keys Intime (+4 W.)</span>
               <input type="checkbox" id="keyTimedToggle" onchange="onSettingsChange()" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer" checked />
@@ -228,7 +252,7 @@
     </div>
   </div>
 
-  <!-- MODAL: SLOT BEARBEITEN -->
+  <!-- MODAL: SLOT BEARBEITEN (INKL. MANUELLER SPUR-/HANDWERKS-AUSWAHL) -->
   <div id="editSlotModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-wow-panel border border-wow-border rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between">
@@ -239,6 +263,15 @@
         <div>
           <label class="block text-xs text-slate-300 mb-1">Angelegtes Item-Level</label>
           <input type="number" id="editSlotEquippedInput" class="w-full bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-sm text-white font-bold" />
+        </div>
+        <div>
+          <label class="block text-xs text-amber-300 mb-1">Spur des angelegten Items (Max-Limit)</label>
+          <select id="editSlotTrackSelect" class="w-full bg-wow-card border border-wow-border rounded-lg px-3 py-2 text-xs text-white font-bold">
+            <option value="myth">🟠 Mythos-Spur (Aufwertbar bis 334)</option>
+            <option value="crafted">🔨 80W Handwerks-Item (Fest auf 331 Max)</option>
+            <option value="hero_max">🟣 Held-Spur (Aufwertbar bis 321)</option>
+            <option value="champ_max">🔵 Champion-Spur (Aufwertbar bis 308)</option>
+          </select>
         </div>
         <div>
           <label class="block text-xs text-cyan-300 mb-1">🎒 Max. Item-Level in der Tasche</label>
@@ -297,7 +330,7 @@
   <script>
     const STORAGE_KEY_MAIN  = 'wow_warband_tracker_data';
     const STORAGE_KEY_RULES = 'wow_warband_tracker_rules';
-    const CURRENT_SCHEMA_VERSION = 16;
+    const CURRENT_SCHEMA_VERSION = 17;
     const WEEKLY_CAP_PER_WEEK = 100;
     const CRAFTED_MYTH_COST = 80;
     const EU_SEASON2_START_UTC = Date.UTC(2026, 7, 19, 7, 0, 0);
@@ -353,11 +386,14 @@
     const CHAMP_BONUS_IDS   = { 12833: 'Champion 1/6', 12834: 'Champion 2/6', 12835: 'Champion 3/6', 12836: 'Champion 4/6', 12837: 'Champion 5/6', 12838: 'Champion 6/6 (Max 308)' };
     const HERO_BONUS_IDS    = { 12841: 'Held 1/6', 12842: 'Held 2/6', 12843: 'Held 3/6', 12844: 'Held 4/6', 12845: 'Held 5/6', 12846: 'Held 6/6 (Max 321)' };
     const MYTH_BONUS_IDS    = { 12849: 'Mythos 1/6', 12850: 'Mythos 2/6', 12851: 'Mythos 3/6', 12852: 'Mythos 4/6', 12853: 'Mythos 5/6', 12854: 'Mythos 6/6 (Max 334)' };
+    // Verifiziert an Tatamis echtem SimC-Export (12214 = Funken-Item, 13836 = 331er Wappen-Craft)
     const CRAFTED_BONUS_IDS = [13836, 12214];
 
     const DEFAULT_RULES = {
       targetIlvl: 331, selectedKeyLevel: 10, keyTimedMode: true,
-      seasonWeek: 'auto', stepCost: 'auto', includeBags: true, showCompletedSteps: true
+      seasonWeek: 'auto', stepCost: 'auto',
+      manual331Achievement: false, heroChampDiscount: true,
+      includeBags: true, showCompletedSteps: true
     };
 
     const INITIAL_CHARS = [
@@ -424,11 +460,10 @@
     let milestoneTarget = 331;
     let currentEditingCell = null;
     let rules = { ...DEFAULT_RULES };
-    // discountOverride: null = folgt automatisch dem 331-Meilenstein/Dropdown, true = 10W erzwungen, false = 20W erzwungen
     let calcTabState = { targetIlvl: 334, discountOverride: null };
 
     // =========================================================================
-    // 1. ZENTRALE HELFER (ZWEIHÄNDER, HANDWERKS-REGELN & ZEIT-CAP)
+    // 1. ZENTRALE HELFER & EINHEITLICHE KOSTEN-LOGIK
     // =========================================================================
     function getAutoSeasonWeek() {
       const w = Math.floor((Date.now() - EU_SEASON2_START_UTC) / (7 * 86400000)) + 1;
@@ -439,7 +474,6 @@
       return (rules.seasonWeek === 'auto' || !rules.seasonWeek) ? getAutoSeasonWeek() : (parseInt(rules.seasonWeek, 10) || 9);
     }
 
-    // Einheitliche Zweihänder-Prüfung für den gesamten Code
     function isTwoHandEquipped(char) {
       return Boolean(char?.hasTwoHand) && Number(char.slots?.mainhand || 0) > 0 && Number(char.slots?.offhand || 0) === 0;
     }
@@ -468,13 +502,11 @@
       return Math.max(eqMax, bagMax);
     }
 
-    // Einheitliche Handwerks-Regel für Strategie-Leiste, Simulation UND M+-Rechner
     function isSlotPlannedForCraft(char, slotObj) {
-      if (slotObj.noCraft) return false; // Schmuckstücke können nie als 331er Handwerk gebaut werden
+      if (slotObj.noCraft) return false;
       if (char.plannedCrafts && char.plannedCrafts[slotObj.key] !== undefined) {
         return Boolean(char.plannedCrafts[slotObj.key]);
       }
-      // Standard: Nicht-Set-Slots sind ideale 80W-Handwerks-Kandidaten, Set-Slots bevorzugen Mythos-Drops/Katalysator
       return !slotObj.isTierSlot;
     }
 
@@ -500,13 +532,19 @@
     }
 
     function is331MilestoneUnlocked() {
+      if (rules.manual331Achievement) return true;
       const bm = calculateMilestoneBenchmarks();
       return SLOTS.every(s => (bm[s.key] || 0) >= 331) || characters.some(c => c.has331Achievement === true);
     }
 
+    // Einheitliche Kosten-Funktionen für Simulation, Cap-Tabelle UND SimC-Import!
     function getEffectiveMythStepCost() {
       if (rules.stepCost === 'auto' || !rules.stepCost) return is331MilestoneUnlocked() ? 10 : 20;
       return parseInt(rules.stepCost, 10) || 20;
+    }
+
+    function getEffectiveHeroChampStepCost() {
+      return rules.heroChampDiscount !== false ? 10 : 20;
     }
 
     function getCalcTabDiscountActive() {
@@ -514,11 +552,14 @@
       return getEffectiveMythStepCost() === 10;
     }
 
+    // =========================================================================
+    // 2. ECHTE SCHEMA-VERSIONS-PRÜFUNG & MIGRATION
+    // =========================================================================
     function isValidCharacterArray(arr) {
       return Array.isArray(arr) && arr.length > 0 && arr.every(c => c && typeof c === 'object' && typeof c.name === 'string' && c.name.trim() !== '' && c.slots && typeof c.slots === 'object');
     }
 
-    function migrateCharacterObject(c) {
+    function migrateCharacterObject(c, fromVersion = 0) {
       if (!c.slots || typeof c.slots !== 'object') c.slots = {};
       if (!c.bagSlots || typeof c.bagSlots !== 'object') c.bagSlots = {};
       if (!c.slotMeta || typeof c.slotMeta !== 'object') c.slotMeta = {};
@@ -528,7 +569,13 @@
       if (c.hasTwoHand === undefined) {
         c.hasTwoHand = Number(c.slots.mainhand || 0) > 0 && Number(c.slots.offhand || 0) === 0;
       }
+      if (c.has331Achievement === undefined) c.has331Achievement = false;
       if (c.catalystCharges === undefined) c.catalystCharges = c.name.toLowerCase() === 'tatami' ? 7 : 6;
+
+      // Migration für Daten vor v16: Bereinige doppelt zugewiesenen Einzel-Ring bei Tatami
+      if (fromVersion < 16 && c.name.toLowerCase() === 'tatami' && c.bagSlots.finger1 === 321 && c.bagSlots.finger2 === 321 && !c.slotMeta.finger2?.bagName) {
+        c.bagSlots.finger2 = 0;
+      }
 
       SLOTS.forEach(s => {
         if (c.slots[s.key] === undefined) c.slots[s.key] = 0;
@@ -537,10 +584,20 @@
         if (!m.eqMaxUpgradable) {
           m.eqMaxUpgradable = m.track === 'champ_max' ? 308 : (m.track === 'hero_max' ? 321 : (m.track === 'crafted' ? 331 : (m.maxUpgradable || 321)));
         }
+        // Migration vor v17: Falls ein 331er Handwerks-Item fälschlich auf 334 gesetzt wurde
+        if (m.track === 'crafted') m.eqMaxUpgradable = 331;
         if (m.bagMythIlvl && !m.bagMaxUpgradable) m.bagMaxUpgradable = 334;
         c.slotMeta[s.key] = m;
       });
       return c;
+    }
+
+    function migrateStoragePayload(parsed) {
+      if (!parsed) return null;
+      const version = Number(parsed.schemaVersion || 0);
+      const rawChars = Array.isArray(parsed) ? parsed : parsed.characters;
+      if (!isValidCharacterArray(rawChars)) return null;
+      return rawChars.map(c => migrateCharacterObject(c, version));
     }
 
     function syncSidebarInputsFromRules() {
@@ -552,19 +609,25 @@
       document.getElementById('selectedKeyLevelSelect').value = String(rules.selectedKeyLevel || 10);
       document.getElementById('seasonWeekSelect').value = String(rules.seasonWeek || 'auto');
       document.getElementById('crestStepCostSelect').value = String(rules.stepCost || 'auto');
+      document.getElementById('has331AchToggle').checked = Boolean(rules.manual331Achievement || characters.some(c => c.has331Achievement));
+      document.getElementById('heroChampDiscToggle').checked = rules.heroChampDiscount !== false;
       document.getElementById('keyTimedToggle').checked = rules.keyTimedMode !== false;
       document.getElementById('includeBagsToggle').checked = rules.includeBags !== false;
     }
 
     window.addEventListener('DOMContentLoaded', () => {
       try {
-        let loaded = null;
         const raw = localStorage.getItem(STORAGE_KEY_MAIN);
         if (raw) {
-          const p = JSON.parse(raw);
-          loaded = isValidCharacterArray(p?.characters) ? p.characters : (isValidCharacterArray(p) ? p : null);
+          const parsed = JSON.parse(raw);
+          const migrated = migrateStoragePayload(parsed);
+          if (migrated) {
+            characters = migrated;
+            if (Number(parsed?.schemaVersion || 0) < CURRENT_SCHEMA_VERSION) {
+              saveCharsToStorage();
+            }
+          }
         }
-        if (loaded) characters = loaded.map(migrateCharacterObject);
         const sr = localStorage.getItem(STORAGE_KEY_RULES);
         if (sr) rules = { ...DEFAULT_RULES, ...JSON.parse(sr) };
         syncSidebarInputsFromRules();
@@ -583,13 +646,19 @@
       rules.selectedKeyLevel = parseInt(document.getElementById('selectedKeyLevelSelect').value || '10', 10);
       rules.seasonWeek = document.getElementById('seasonWeekSelect').value;
       rules.stepCost = document.getElementById('crestStepCostSelect').value;
+      rules.manual331Achievement = document.getElementById('has331AchToggle').checked;
+      rules.heroChampDiscount = document.getElementById('heroChampDiscToggle').checked;
       rules.keyTimedMode = document.getElementById('keyTimedToggle').checked;
       rules.includeBags = document.getElementById('includeBagsToggle').checked;
+
+      characters.forEach(c => { c.has331Achievement = rules.manual331Achievement; });
+
       if (rules.stepCost !== 'auto') {
         calcTabState.discountOverride = parseInt(rules.stepCost, 10) === 10;
       } else {
         calcTabState.discountOverride = null;
       }
+      saveCharsToStorage();
       try { localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules)); } catch (e) {}
       renderAll();
     }
@@ -607,7 +676,7 @@
         localStorage.removeItem(STORAGE_KEY_MAIN);
         localStorage.removeItem(STORAGE_KEY_RULES);
       } catch (e) {}
-      characters = JSON.parse(JSON.stringify(INITIAL_CHARS)).map(migrateCharacterObject);
+      characters = JSON.parse(JSON.stringify(INITIAL_CHARS)).map(c => migrateCharacterObject(c, CURRENT_SCHEMA_VERSION));
       activeCharIndex = 0;
       rules = { ...DEFAULT_RULES };
       calcTabState = { targetIlvl: 334, discountOverride: null };
@@ -665,7 +734,7 @@
     }
 
     // =========================================================================
-    // 2. REITER 2: M+ & ITEM-RECHNER (80W HANDWERK, DROPS & RABATT)
+    // 3. REITER 2: M+ & ITEM-RECHNER (80W HANDWERK, DROPS & RABATT)
     // =========================================================================
     function setCalcTarget(val) {
       calcTabState.targetIlvl = val;
@@ -1006,12 +1075,13 @@
     }
 
     // =========================================================================
-    // 3. HAUPT-SIMULATION (INKL. CHAMP-CAP, 2H-LOGIK & PLANNED-CRAFTS!)
+    // 4. HAUPT-SIMULATION (MIT EINHEITLICHEN HELD/CHAMP-KOSTEN & ZONE-1-FIX!)
     // =========================================================================
     function simulateCharacter(char, charIdx) {
       const targetAvg = Number(rules.targetIlvl || 331);
       const targetTotalPoints = Math.ceil(targetAvg * 16);
       const mythStepCost = getEffectiveMythStepCost();
+      const heroChampStepCost = getEffectiveHeroChampStepCost();
       const using2H = isTwoHandEquipped(char);
 
       const autoCostOpt = document.getElementById('autoCostOption');
@@ -1090,10 +1160,10 @@
           let nextIlvl = 0, markType = 'myth', cost = mythStepCost;
           if (curVal < 308) {
             nextIlvl = CHAMP_UPGRADE_STEPS.find(st => st > curVal && st <= maxUpgradable) || Math.min(308, maxUpgradable);
-            markType = 'champ'; cost = 10;
+            markType = 'champ'; cost = heroChampStepCost;
           } else if (curVal < 321) {
             nextIlvl = HERO_UPGRADE_STEPS.find(st => st > curVal && st <= maxUpgradable) || Math.min(321, maxUpgradable);
-            markType = 'hero'; cost = 10;
+            markType = 'hero'; cost = heroChampStepCost;
           } else {
             const step = MYTH_UPGRADE_STEPS.find(st => st > curVal && st <= maxUpgradable);
             if (!step) return;
@@ -1123,12 +1193,13 @@
         planSteps.push(best);
       }
 
-      // Phase 4: Blockierte Slots ersetzen (beachtet strikt isSlotPlannedForCraft: zuerst geplante 80W-Handwerks-Slots, danach Drops!)
+      // Phase 4: Blockierte Slots ersetzen (inkl. 331er Handwerk, falls Ziel 334 gewählt ist!)
+      const replaceTarget = targetAvg >= 334 ? 334 : 331;
       const blockedCandidates = SLOTS.filter(s => {
         if (s.key === 'offhand' && using2H) return false;
-        return simSlots[s.key] <= 321 && getEffectiveSlotMaxUpgradable(char, s.key) <= 321;
+        const maxUp = getEffectiveSlotMaxUpgradable(char, s.key);
+        return simSlots[s.key] < replaceTarget && maxUp <= simSlots[s.key];
       });
-      // Sortiere: Zuerst Slots, die als 80W-Handwerk geplant sind (da ohne Drop-Glück sofort baubar!)
       blockedCandidates.sort((a, b) => Number(isSlotPlannedForCraft(char, b)) - Number(isSlotPlannedForCraft(char, a)));
 
       for (const blocked of blockedCandidates) {
@@ -1136,9 +1207,9 @@
         const is2HMain = (blocked.key === 'mainhand' && using2H);
         const curVal = simSlots[blocked.key];
         const meta = char.slotMeta?.[blocked.key] || {};
-        const useCraft = isSlotPlannedForCraft(char, blocked) && targetAvg <= 331;
+        const useCraft = isSlotPlannedForCraft(char, blocked) && replaceTarget <= 331 && curVal < 331;
 
-        const toIlvl = useCraft ? 331 : (targetAvg >= 334 ? 334 : 331);
+        const toIlvl = useCraft ? 331 : replaceTarget;
         const dropSteps = MYTH_UPGRADE_STEPS.filter(st => st > 321 && st <= toIlvl).length;
         const markCost = useCraft ? CRAFTED_MYTH_COST : (dropSteps * mythStepCost);
         const pointGain = is2HMain ? (toIlvl - curVal) * 2 : (toIlvl - curVal);
@@ -1159,7 +1230,6 @@
         });
       }
 
-      // Verfügbarkeit getrennt für Champion, Held und Mythisch prüfen!
       let usedMyth = 0, usedHero = 0, usedChamp = 0, reachableWalletPts = startPoints;
       planSteps.forEach((st, idx) => {
         if (st.markType === 'bag' || st.markType === 'free') {
@@ -1194,7 +1264,7 @@
     }
 
     function renderAll() {
-      if (!isValidCharacterArray(characters)) characters = JSON.parse(JSON.stringify(INITIAL_CHARS)).map(migrateCharacterObject);
+      if (!isValidCharacterArray(characters)) characters = JSON.parse(JSON.stringify(INITIAL_CHARS)).map(c => migrateCharacterObject(c, CURRENT_SCHEMA_VERSION));
       if (activeCharIndex >= characters.length) activeCharIndex = 0;
 
       const sims = characters.map((c, idx) => simulateCharacter(c, idx));
@@ -1447,6 +1517,8 @@
         <div class="space-y-2">${stepsHtml || '<div class="text-xs text-emerald-400 py-2">🎉 Ziel erreicht!</div>'}</div>
       `;
 
+      // KORRIGIERT: Zone 1 prüft jetzt strikt canUpgradeFurther = (maxUpgradable > eq).
+      // Dadurch landet ein 331er Handwerks-Item (maxUpgradable 331) bei Ziel 334 sauber in Zone 2 (Blockiert) statt in Zone 1!
       const zone1 = [], zone2 = [], zone3 = [];
       SLOTS.forEach(s => {
         if (s.key === 'offhand' && using2H) return;
@@ -1455,9 +1527,11 @@
         const meta = char.slotMeta?.[s.key] || {};
         const hasMythInBag = rules.includeBags && Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
         const maxUpgradable = getEffectiveSlotMaxUpgradable(char, s.key);
+        const canUpgradeFurther = maxUpgradable > eq;
         const entry = { slot: s, eq, bag, meta, hasMythInBag, maxUpgradable };
+
         if (eq >= sim.targetAvg && bag <= eq) zone3.push(entry);
-        else if (bag > eq || maxUpgradable > 321) zone1.push(entry);
+        else if (bag > eq || canUpgradeFurther) zone1.push(entry);
         else zone2.push(entry);
       });
 
@@ -1466,7 +1540,7 @@
         const startMyth = hasMythInBag ? Math.max(eq, meta.bagMythIlvl) : Math.max(eq, bag);
         const steps334 = MYTH_UPGRADE_STEPS.filter(st => st > Math.max(startMyth, 318) && st <= 334).length;
         const isCrafted80 = meta.track === 'crafted' && eq >= 331;
-        const plannedCraft = isSlotPlannedForCraft(char, slot);
+        const plannedCraft = isSlotPlannedForCraft(char, slot) && eq < 331;
         let sub = '', border = 'border-wow-border';
         if (type === 'action') {
           border = 'border-emerald-500/50 bg-emerald-950/15';
@@ -1476,8 +1550,10 @@
                 ? `<div class="text-[11px] text-amber-300 font-bold">🎒 Mythos in Tasche: „${escapeHtml(meta.bagMythName || '321er Mythos')}“ (Bis 334: ${steps334 * stepCost} W.)</div>`
                 : `<div class="text-[11px] text-emerald-300 font-semibold">⚡ „${escapeHtml(meta.eqName || slot.label)}“ (Bis 334: ${steps334 * stepCost} W.)</div>`);
         } else if (type === 'blocked') {
-          border = 'border-amber-700/50 bg-amber-950/10';
-          sub = `<div class="text-[11px] text-red-300">🔒 Limit (${maxUpgradable} Max): „${escapeHtml(meta.eqName || slot.label)}“ ${plannedCraft ? '<span class="text-blue-300 font-bold">(🔨 80W-Handwerk geplant)</span>' : '<span class="text-rose-300">(🎲 Mythos-Drop geplant)</span>'}</div>`;
+          border = isCrafted80 ? 'border-blue-500/50 bg-blue-950/15' : 'border-amber-700/50 bg-amber-950/10';
+          sub = isCrafted80
+            ? `<div class="text-[11px] text-blue-300">🔨 80W Handwerks-Limit (331 Max): „${escapeHtml(meta.eqName || slot.label)}“ <span class="text-rose-300">(Für 334 Mythos-Drop nötig)</span></div>`
+            : `<div class="text-[11px] text-red-300">🔒 Limit (${maxUpgradable} Max): „${escapeHtml(meta.eqName || slot.label)}“ ${plannedCraft ? '<span class="text-blue-300 font-bold">(🔨 80W-Handwerk geplant)</span>' : '<span class="text-rose-300">(🎲 Mythos-Drop geplant)</span>'}</div>`;
         } else {
           border = isCrafted80 ? 'border-blue-500/50 bg-blue-950/15' : 'border-wow-border';
           sub = `<div class="text-[11px] ${isCrafted80 ? 'text-blue-300 font-bold' : 'text-emerald-300'}">${isCrafted80 ? '🔨 80W Handwerks-Item (331): ' : '✔️ '}${escapeHtml(meta.eqName || meta.label || 'Fertig')}</div>`;
@@ -1492,21 +1568,23 @@
 
       document.getElementById('planRightColumn').innerHTML = `
         <div class="border-b border-wow-border pb-2.5">
-          <h3 class="text-sm font-bold text-white">🚦 3-Zonen-Slot-Ampel (Klick = Slot anpassen)</h3>
+          <h3 class="text-sm font-bold text-white">🚦 3-Zonen-Slot-Ampel (Klick = Slot & Spur anpassen)</h3>
         </div>
         <div class="space-y-1.5"><div class="text-xs font-bold uppercase text-emerald-400">🟢 Zone 1: Aufwertbar & Tasche (${zone1.length})</div>${zone1.map(x => renderSlotCard(x, 'action')).join('')}</div>
-        <div class="space-y-1.5 pt-2 border-t border-wow-border/60"><div class="text-xs font-bold uppercase text-amber-300">🔒 Zone 2: Blockiert (${zone2.length})</div>${zone2.map(x => renderSlotCard(x, 'blocked')).join('')}</div>
-        <div class="space-y-1.5 pt-2 border-t border-wow-border/60"><div class="text-xs font-bold uppercase text-slate-400">✔️ Zone 3: Fertig ≥ ${sim.targetAvg} & 80W-Handwerk (${zone3.length})</div>${zone3.map(x => renderSlotCard(x, 'done')).join('')}</div>
+        <div class="space-y-1.5 pt-2 border-t border-wow-border/60"><div class="text-xs font-bold uppercase text-amber-300">🔒 Zone 2: Am Spur-Limit blockiert (${zone2.length})</div>${zone2.map(x => renderSlotCard(x, 'blocked')).join('')}</div>
+        <div class="space-y-1.5 pt-2 border-t border-wow-border/60"><div class="text-xs font-bold uppercase text-slate-400">✔️ Zone 3: Fertig ≥ ${sim.targetAvg} (${zone3.length})</div>${zone3.map(x => renderSlotCard(x, 'done')).join('')}</div>
       `;
     }
 
     function renderCapsTableView(sim) {
       const char = sim.char;
       const charIdx = sim.charIdx;
-      const stepCost = sim.mythStepCost;
+      const mythStepCost = sim.mythStepCost;
+      const heroChampCost = getEffectiveHeroChampStepCost();
+
       const rows = CREST_TIERS_META.map(tier => {
         const c = getCharCrestCapNumbers(char, tier.key);
-        const cost = tier.key === 'myth' ? stepCost : 10;
+        const cost = tier.key === 'myth' ? mythStepCost : heroChampCost;
         return `
           <tr class="border-b border-wow-border/60 last:border-0">
             <td class="py-3 px-4"><div class="font-bold text-xs ${tier.colorText}">${tier.name}</div><div class="text-[11px] text-slate-400">${escapeHtml(c.note)}</div></td>
@@ -1514,7 +1592,7 @@
             <td class="py-3 px-3 text-center"><input type="number" value="${c.spent}" min="0" step="20" onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'spent', this.value)" class="w-20 bg-wow-bg border border-amber-600/50 rounded-lg px-2 py-1 text-sm font-bold text-amber-200 text-center" /></td>
             <td class="py-3 px-3 text-center text-xs font-bold text-slate-200">${c.earned} / ${c.seasonCap}</td>
             <td class="py-3 px-3 text-center"><input type="number" value="${c.farmable}" min="0" max="${c.seasonCap}" step="10" onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'farmable', this.value)" class="w-20 bg-emerald-950/60 border-2 border-emerald-500/70 rounded-lg px-2 py-1 text-base font-black text-emerald-300 text-center" /></td>
-            <td class="py-3 px-4 text-right"><div class="text-sm font-black text-amber-300">${c.totalAvailable} Wappen</div><div class="text-[11px] text-slate-400">= ${Math.floor(c.totalAvailable / cost)} Stufen</div></td>
+            <td class="py-3 px-4 text-right"><div class="text-sm font-black text-amber-300">${c.totalAvailable} Wappen</div><div class="text-[11px] text-slate-400">= ${Math.floor(c.totalAvailable / cost)} Stufen (à ${cost}W)</div></td>
           </tr>
         `;
       }).join('');
@@ -1550,7 +1628,7 @@
     }
 
     // =========================================================================
-    // 4. AKTIONEN: ABHAKEN (INKL. BEUTEL-/CAP-CHECK & HANDWERK-SCHUTZ!) & UNDO
+    // 5. AKTIONEN: ABHAKEN, UNDO, SIMC & RAIDER.IO
     // =========================================================================
     function completeUpgradeStep(charIdx, slotKey, toIlvl, markType, markCost, availability, isCraftReplacement = false) {
       const char = characters[charIdx];
@@ -1571,7 +1649,6 @@
       const prevWallet = tier ? Number(char[tier.walletField] || 0) : 0;
       const prevSpent  = tier ? Number(char[tier.spentField] || 0) : 0;
 
-      // Prüfe Wappen-Bestand & freies Wochen-Cap
       if (markCost > 0 && tier) {
         const capInfo = getCharCrestCapNumbers(char, markType);
         if (markCost > capInfo.wallet) {
@@ -1606,7 +1683,6 @@
       if (!char.charWatermarks) char.charWatermarks = {};
       char.charWatermarks[slotKey] = Math.max(Number(char.charWatermarks[slotKey] || 0), toIlvl);
 
-      // Saubere Spur-Aktualisierung: Handwerks-Ersatz (331) bleibt strikt bei eqMaxUpgradable = 331!
       if (isCraftReplacement) {
         meta.track = 'crafted';
         meta.label = '80W Handwerk (331)';
@@ -1639,7 +1715,6 @@
         meta.eqMaxUpgradable = 334;
       }
 
-      // Wappen exakt buchen (inkl. nachgefarmter Differenz)
       if (markCost > 0 && tier) {
         char[tier.walletField] = Math.max(0, prevWallet - markCost);
         char[tier.spentField]  = prevSpent + markCost;
@@ -1664,7 +1739,6 @@
       char.slotMeta[slotKey] = JSON.parse(JSON.stringify(entry.prevSlotMeta || {}));
       if (char.charWatermarks) char.charWatermarks[slotKey] = entry.prevWatermark;
 
-      // Stelle exakt den vorherigen Beutel- & Verbraucht-Stand wieder her
       if (entry.markCost > 0) {
         const tier = CREST_TIERS_META.find(t => t.key === entry.markType);
         if (tier && entry.prevWallet !== undefined && entry.prevSpent !== undefined) {
@@ -1693,9 +1767,6 @@
       renderAll();
     }
 
-    // =========================================================================
-    // 5. SIMCRAFT PARSER & RAIDER.IO (KEINE DOPPELTEN RINGE / HANDWERKS-SCHUTZ)
-    // =========================================================================
     function classifyItemTrackFromBonusIds(bonusStr, isCrafted, itemIlvl = 0) {
       const ids = String(bonusStr || '').split('/').map(n => parseInt(n, 10)).filter(n => !isNaN(n));
       if (isCrafted || ids.some(id => CRAFTED_BONUS_IDS.includes(id))) {
@@ -1708,7 +1779,6 @@
         if (VET_BONUS_IDS[id]) return { track: 'vet', label: 'Veteran', eqMaxUpgradable: 295, tierKey: 'vet', stepsSpent: Math.max(0, VET_BONUS_IDS[id] - 1) };
         if (ADV_BONUS_IDS[id]) return { track: 'adv', label: 'Abenteurer', eqMaxUpgradable: 282, tierKey: 'adv', stepsSpent: Math.max(0, ADV_BONUS_IDS[id] - 1) };
       }
-      // Fallback nach Item-Level (für Raider.IO ohne bekannte Spur-Bonus-ID)
       if (itemIlvl > 321) return { track: 'myth', label: 'Mythos', eqMaxUpgradable: 334, tierKey: 'myth', stepsSpent: MYTH_UPGRADE_STEPS.filter(st => st <= itemIlvl).length };
       if (itemIlvl > 308) return { track: itemIlvl >= 321 ? 'hero_max' : 'hero', label: 'Held', eqMaxUpgradable: 321, tierKey: 'hero', stepsSpent: 0 };
       if (itemIlvl > 295) return { track: itemIlvl >= 308 ? 'champ_max' : 'champ', label: 'Champion', eqMaxUpgradable: 308, tierKey: 'champ', stepsSpent: 0 };
@@ -1718,7 +1788,7 @@
     function parseSimcString(rawText) {
       const lines = (rawText || '').split(/\r?\n/);
       let charName = '', realm = 'Unbekannt', region = 'eu', className = '', catalystCharges = 6;
-      let has331Achievement = false, hasHeroDiscount = true, hasChampDiscount = true;
+      let has331Achievement = Boolean(rules.manual331Achievement);
       let advMarks = 0, vetMarks = 0, champMarks = 0, heroMarks = 0, mythMarks = 0;
 
       const equippedSlots = {}, bagSlots = {}, slotMeta = {}, charWatermarks = {};
@@ -1734,12 +1804,6 @@
         if (!line || /^#\s*(?:Saved Loadout|talents=)/i.test(line)) continue;
         if (line.startsWith('###')) { section = line.toLowerCase().includes('gear from bags') ? 'bags' : 'other'; lastIlvl = 0; lastName = ''; continue; }
         if (/^#\s*catalyst_currencies=/i.test(line)) { const m = line.match(/\b3465:(\d+)/); if (m) catalystCharges = parseInt(m[1], 10); continue; }
-        if (/^#\s*upgrade_achievements=/i.test(line)) {
-          hasChampDiscount  = /\b62412\b/.test(line);
-          hasHeroDiscount   = /\b62414\b/.test(line);
-          has331Achievement = /\b(62413|62415)\b/.test(line);
-          continue;
-        }
         if (/^#\s*upgrade_currencies=/i.test(line)) {
           advMarks   = parseInt((line.match(/\bc:3442:(\d+)/) || [])[1] || '0', 10);
           vetMarks   = parseInt((line.match(/\bc:3443:(\d+)/) || [])[1] || '0', 10);
@@ -1815,7 +1879,6 @@
         }
       }
 
-      // KORRIGIERT: Ein einzelner Ring/Schmuck in der Tasche wird NUR dem schwächeren Slot zugewiesen (keine Verdopplung!)
       const assignPairBagItems = (list, slotA, slotB) => {
         if (!list.length) return;
         list.sort((a, b) => b.ilvl - a.ilvl);
@@ -1850,19 +1913,19 @@
       assignPairMythBagItems(bagMythRings, 'finger1', 'finger2');
       assignPairMythBagItems(bagMythTrinkets, 'trinket1', 'trinket2');
 
-      const mythUnitCost  = (has331Achievement || is331MilestoneUnlocked()) ? 10 : 20;
-      const heroUnitCost  = hasHeroDiscount ? 10 : 20;
-      const champUnitCost = hasChampDiscount ? 10 : 20;
+      // KORRIGIERT: Nutzt exakt dieselben Kosten-Funktionen wie die Simulation und die Cap-Tabelle!
+      const mythUnitCost      = getEffectiveMythStepCost();
+      const heroChampUnitCost = getEffectiveHeroChampStepCost();
 
       return {
         name: charName, realm, region, className, has331Achievement, catalystCharges,
         hasTwoHand: equippedSlots.mainhand > 0 && equippedSlots.offhand === 0,
         slots: equippedSlots, bagSlots, slotMeta, charWatermarks,
         advMarks, vetMarks, champMarks, heroMarks, mythMarks,
-        advSpent: advSteps * 10,
-        vetSpent: vetSteps * 10,
-        champSpent: champSteps * champUnitCost,
-        heroSpent: heroSteps * heroUnitCost,
+        advSpent: advSteps * heroChampUnitCost,
+        vetSpent: vetSteps * heroChampUnitCost,
+        champSpent: champSteps * heroChampUnitCost,
+        heroSpent: heroSteps * heroChampUnitCost,
         mythSpent: mythCrafted * CRAFTED_MYTH_COST + mythSteps * mythUnitCost,
         mythSpentNote: `${mythCrafted}× Handwerk (331 à 80W) + ${mythSteps}× Mythos-Stufen (à ${mythUnitCost}W)`,
         completedHistory: [], plannedCrafts: {}
@@ -1947,7 +2010,7 @@
           completedHistory: [], plannedCrafts: {}, catalystCharges: 6,
           mythMarks: 0, heroMarks: 0, champMarks: 0, vetMarks: 0, advMarks: 0,
           mythSpent: 0, heroSpent: 0, champSpent: 0, vetSpent: 0, advSpent: 0
-        }));
+        }, CURRENT_SCHEMA_VERSION));
         activeCharIndex = characters.length - 1;
         saveCharsToStorage();
         renderAll();
@@ -1956,7 +2019,6 @@
       } catch (e) { showToast(e.message, 'error'); }
     }
 
-    // KORRIGIERT: Raider.IO-Refresh überschreibt niemals 80W-Handwerks-Items (331) mit 334!
     async function refreshActiveCharRaiderIO() {
       const char = characters[activeCharIndex];
       if (!char) return;
@@ -1999,9 +2061,12 @@
     function openEditSlotModal(charIdx, slotKey, slotLabel) {
       const char = characters[charIdx];
       currentEditingCell = { charIdx, slotKey };
+      const meta = char.slotMeta?.[slotKey] || {};
       document.getElementById('editSlotTitle').textContent = `${char.name} – ${slotLabel}`;
       document.getElementById('editSlotEquippedInput').value = char.slots?.[slotKey] || 0;
       document.getElementById('editSlotBagInput').value = char.bagSlots?.[slotKey] || 0;
+      const trackVal = meta.track === 'crafted' ? 'crafted' : (meta.eqMaxUpgradable >= 334 ? 'myth' : (meta.eqMaxUpgradable <= 308 ? 'champ_max' : 'hero_max'));
+      document.getElementById('editSlotTrackSelect').value = trackVal;
       openModal('editSlotModal');
     }
 
@@ -2011,10 +2076,30 @@
       const char = characters[charIdx];
       const newEq = Math.max(0, parseInt(document.getElementById('editSlotEquippedInput').value || '0', 10));
       const newBag = Math.max(0, parseInt(document.getElementById('editSlotBagInput').value || '0', 10));
+      const selTrack = document.getElementById('editSlotTrackSelect').value;
+
       char.slots[slotKey] = newEq;
       char.bagSlots[slotKey] = newBag;
       if (!char.slotMeta[slotKey]) char.slotMeta[slotKey] = {};
-      if (newEq > 321 && char.slotMeta[slotKey].track !== 'crafted') char.slotMeta[slotKey].eqMaxUpgradable = 334;
+
+      if (selTrack === 'crafted') {
+        char.slotMeta[slotKey].track = 'crafted';
+        char.slotMeta[slotKey].label = '80W Handwerk (331)';
+        char.slotMeta[slotKey].eqMaxUpgradable = 331;
+      } else if (selTrack === 'myth') {
+        char.slotMeta[slotKey].track = 'myth';
+        char.slotMeta[slotKey].label = 'Mythos';
+        char.slotMeta[slotKey].eqMaxUpgradable = 334;
+      } else if (selTrack === 'champ_max') {
+        char.slotMeta[slotKey].track = 'champ_max';
+        char.slotMeta[slotKey].label = 'Champion 6/6';
+        char.slotMeta[slotKey].eqMaxUpgradable = 308;
+      } else {
+        char.slotMeta[slotKey].track = 'hero_max';
+        char.slotMeta[slotKey].label = 'Held 6/6';
+        char.slotMeta[slotKey].eqMaxUpgradable = 321;
+      }
+
       if (newBag > 321) char.slotMeta[slotKey].bagMaxUpgradable = 334;
       saveCharsToStorage();
       renderAll();
@@ -2050,14 +2135,14 @@
       reader.onload = (e) => {
         try {
           const parsed = JSON.parse(e.target.result);
-          const arr = Array.isArray(parsed) ? parsed : parsed?.characters;
-          if (!isValidCharacterArray(arr)) throw new Error('Ungültige JSON-Struktur');
-          characters = arr.map(migrateCharacterObject);
+          const migrated = migrateStoragePayload(parsed);
+          if (!migrated) throw new Error('Ungültige JSON-Struktur');
+          characters = migrated;
           activeCharIndex = 0;
           saveCharsToStorage();
           renderAll();
           closeModal('backupModal');
-          showToast('Backup erfolgreich geladen!', 'success');
+          showToast('Backup erfolgreich geprüft, migriert & geladen!', 'success');
         } catch (err) { showToast('Ungültige Backup-Datei.', 'error'); }
       };
       reader.readAsText(file);
