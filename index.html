@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>WoW Kriegsmeuten-Tracker v13.0</title>
+  <title>WoW Kriegsmeuten-Tracker v14.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -34,11 +34,14 @@
         <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-yellow-700 flex items-center justify-center text-slate-950 font-black text-base">W</div>
         <h1 class="text-sm font-bold text-white flex items-center gap-2">
           Kriegsmeuten-Upgrade-Tracker
-          <span id="jsStatusBadge" class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v13.0 BEREIT</span>
+          <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v14.0 BEREIT</span>
         </h1>
       </div>
 
       <div class="flex flex-wrap items-center gap-2">
+        <button type="button" onclick="openCalcModal()" class="px-3.5 py-1.5 rounded-lg bg-wow-gold hover:bg-amber-400 text-slate-950 text-xs font-black shadow transition">
+          🧮 M+ & 334 Item-Planer (Popup)
+        </button>
         <button type="button" onclick="openSimcModal()" class="px-3.5 py-1.5 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-xs font-bold shadow border border-purple-500/40 transition">
           📋 WoW ➔ SimCraft Import
         </button>
@@ -73,6 +76,18 @@
       <aside class="w-full lg:w-72 shrink-0 space-y-4 lg:sticky lg:top-16">
         <div class="bg-wow-panel border border-wow-border rounded-2xl p-3 space-y-1.5 shadow-lg">
           <div class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">1-Klick Ansichten</div>
+
+          <!-- NEU: 1-KLICK POPUP FÜR 334/331 ITEMS, M+ RUNS & RABATT-VERGLEICH -->
+          <button type="button" onclick="openCalcModal()" class="w-full text-left px-3.5 py-3 rounded-xl transition flex items-center justify-between bg-gradient-to-r from-amber-500/20 to-emerald-500/20 hover:from-amber-500/30 hover:to-emerald-500/30 text-white border-2 border-wow-gold/80 shadow-lg">
+            <div class="flex items-center gap-3">
+              <span class="text-lg">🧮</span>
+              <div>
+                <div class="text-xs font-black text-wow-gold leading-tight">M+ & 334 Item-Rechner</div>
+                <div class="text-[11px] text-slate-200 font-semibold">Fehlende Items, M+ & Rabatt</div>
+              </div>
+            </div>
+            <span class="text-xs font-black text-wow-gold">&nearr;</span>
+          </button>
 
           <button type="button" onclick="switchTab('plan')" id="tabBtn-plan" class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-3 bg-wow-gold text-slate-950 font-bold shadow">
             <span class="text-base">🎯</span>
@@ -139,8 +154,8 @@
             <span class="text-xs text-slate-300 whitespace-nowrap font-medium">🟠 Myth-Preis:</span>
             <select id="crestStepCostSelect" onchange="onSettingsChange()" class="w-40 bg-wow-card border border-wow-border rounded-lg px-2.5 py-1.5 text-white font-bold text-xs">
               <option value="auto" selected id="autoCostOption">Auto (Prüft 331-Erfolg)</option>
-              <option value="20">20 Wappen (Standard)</option>
-              <option value="10">10 Wappen (331-Rabatt)</option>
+              <option value="20">20 Wappen (Ohne Rabatt)</option>
+              <option value="10">10 Wappen (Mit Rabatt)</option>
             </select>
           </div>
 
@@ -191,6 +206,80 @@
       </div>
     </div>
   </main>
+
+  <!-- ===================================================================== -->
+  <!-- NEU: DAS 1-KLICK POPUP-FENSTER FÜR ITEMS, M+ KEYS & RABATT-VERGLEICH  -->
+  <!-- ===================================================================== -->
+  <div id="calcPopupModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-3 sm:p-5">
+    <div class="bg-wow-bg border-2 border-wow-gold rounded-2xl max-w-6xl w-full max-h-[93vh] flex flex-col shadow-2xl overflow-hidden">
+
+      <!-- KOPFLEISTE DES POPUPS MIT CHARAKTER-WAHL, RABATT-SCHALTER & M+ KEY-STUFEN -->
+      <div class="bg-wow-panel border-b border-wow-border p-4 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-2.5">
+            <span class="text-xl">🧮</span>
+            <div>
+              <h3 class="text-base font-black text-white">334 / 331 Item- & M+ Key-Planer</h3>
+              <p class="text-xs text-slate-400">Welche Items musst du noch aufwerten, welche Items fehlen dir noch und wie viele M+ läufst du dafür?</p>
+            </div>
+          </div>
+          <button type="button" onclick="closeModal('calcPopupModal')" class="px-3 py-1.5 rounded-xl bg-wow-card hover:bg-red-900/70 text-slate-200 hover:text-white border border-wow-border text-xs font-bold transition">
+            ✕ Fenster schließen
+          </button>
+        </div>
+
+        <!-- STEUERLEISTE IM POPUP: CHARAKTER | ZIEL | RABATT AN/AUS | M+ KEY-HÖHE -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 pt-1">
+          <!-- 1. Charakter wählen -->
+          <div class="bg-wow-card border border-wow-border rounded-xl p-2.5">
+            <div class="text-[10px] font-bold uppercase text-slate-400 mb-1">1. Charakter auswählen:</div>
+            <div id="popupCharBtns" class="flex flex-wrap gap-1.5"></div>
+          </div>
+
+          <!-- 2. Ziel-Stufe wählen (334 Max vs 331) -->
+          <div class="bg-wow-card border border-wow-border rounded-xl p-2.5">
+            <div class="text-[10px] font-bold uppercase text-slate-400 mb-1">2. Upgrade-Ziel pro Item:</div>
+            <div class="grid grid-cols-2 gap-1.5">
+              <button type="button" id="popTarget334Btn" onclick="setPopupTarget(334)" class="py-1.5 px-2 rounded-lg text-xs font-black transition">
+                🔥 Auf 334 Max
+              </button>
+              <button type="button" id="popTarget331Btn" onclick="setPopupTarget(331)" class="py-1.5 px-2 rounded-lg text-xs font-bold transition">
+                🎯 Auf 331 (Erfolg)
+              </button>
+            </div>
+          </div>
+
+          <!-- 3. Rabatt An / Aus klicken -->
+          <div class="bg-wow-card border border-wow-border rounded-xl p-2.5">
+            <div class="text-[10px] font-bold uppercase text-amber-300 mb-1">3. 50% Wappen-Rabatt (An / Aus):</div>
+            <div class="grid grid-cols-2 gap-1.5">
+              <button type="button" id="popDiscOffBtn" onclick="setPopupDiscount(false)" class="py-1.5 px-2 rounded-lg text-xs font-bold transition">
+                ❌ Ohne (20 W.)
+              </button>
+              <button type="button" id="popDiscOnBtn" onclick="setPopupDiscount(true)" class="py-1.5 px-2 rounded-lg text-xs font-bold transition">
+                ✅ Mit Rabatt (10 W.)
+              </button>
+            </div>
+          </div>
+
+          <!-- 4. M+ Key-Stufe einstellen -->
+          <div class="bg-wow-card border border-cyan-700/50 rounded-xl p-2.5">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-[10px] font-bold uppercase text-cyan-300">4. Deine M+ Key-Höhe:</span>
+              <label class="flex items-center gap-1 text-[10px] text-emerald-300 cursor-pointer">
+                <input type="checkbox" id="popKeyTimedCheck" onchange="togglePopupKeyTimed(this.checked)" class="w-3.5 h-3.5 accent-emerald-500 rounded" checked />
+                <span>Intime</span>
+              </label>
+            </div>
+            <div id="popupKeyBtns" class="grid grid-cols-6 gap-1"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCROLLBARER HAUPTBEREICH DES POPUPS -->
+      <div id="calcPopupBody" class="flex-1 overflow-y-auto p-5 space-y-5"></div>
+    </div>
+  </div>
 
   <!-- MODAL: SIMCRAFT IMPORT -->
   <div id="simcModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
@@ -284,7 +373,7 @@
   <script>
     const STORAGE_KEY_MAIN  = 'wow_warband_tracker_data';
     const STORAGE_KEY_RULES = 'wow_warband_tracker_rules';
-    const CURRENT_SCHEMA_VERSION = 13;
+    const CURRENT_SCHEMA_VERSION = 14;
     const WEEKLY_CAP_PER_WEEK = 100;
     const EU_SEASON2_START_UTC = Date.UTC(2026, 7, 19, 7, 0, 0);
 
@@ -405,6 +494,7 @@
       targetIlvl: 331, selectedKeyLevel: 10, keyTimedMode: true,
       seasonWeek: 'auto', stepCost: 'auto', includeBags: true, showCompletedSteps: true
     };
+    let popupState = { targetIlvl: 334, useDiscount: false };
 
     function getAutoSeasonWeek() {
       const w = Math.floor((Date.now() - EU_SEASON2_START_UTC) / (7 * 86400000)) + 1;
@@ -491,9 +581,7 @@
           const p = JSON.parse(raw);
           loaded = isValidCharacterArray(p?.characters) ? p.characters : (isValidCharacterArray(p) ? p : null);
         }
-        if (loaded) {
-          characters = loaded.map(migrateCharacterObject);
-        }
+        if (loaded) characters = loaded.map(migrateCharacterObject);
         const sr = localStorage.getItem(STORAGE_KEY_RULES);
         if (sr) rules = { ...rules, ...JSON.parse(sr) };
 
@@ -507,6 +595,7 @@
         document.getElementById('crestStepCostSelect').value = String(rules.stepCost || 'auto');
         document.getElementById('keyTimedToggle').checked = rules.keyTimedMode !== false;
         document.getElementById('includeBagsToggle').checked = rules.includeBags !== false;
+        popupState.useDiscount = getEffectiveMythStepCost() === 10;
       } catch (e) {}
       renderAll();
     });
@@ -593,6 +682,289 @@
       };
     }
 
+    // =========================================================================
+    // NEU: FUNKTIONEN FÜR DAS 1-KLICK M+ & 334/331 ITEM-POPUP
+    // =========================================================================
+    function openCalcModal() {
+      renderCalcPopup();
+      openModal('calcPopupModal');
+    }
+
+    function setPopupTarget(val) {
+      popupState.targetIlvl = val;
+      renderCalcPopup();
+    }
+
+    function setPopupDiscount(state) {
+      popupState.useDiscount = Boolean(state);
+      renderCalcPopup();
+    }
+
+    function selectPopupKeyLevel(lvl) {
+      rules.selectedKeyLevel = lvl;
+      document.getElementById('selectedKeyLevelSelect').value = String(lvl);
+      try { localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules)); } catch (e) {}
+      renderAll();
+      renderCalcPopup();
+    }
+
+    function togglePopupKeyTimed(checked) {
+      rules.keyTimedMode = Boolean(checked);
+      document.getElementById('keyTimedToggle').checked = rules.keyTimedMode;
+      try { localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules)); } catch (e) {}
+      renderAll();
+      renderCalcPopup();
+    }
+
+    function renderCalcPopup() {
+      const char = characters[activeCharIndex];
+      if (!char) return;
+
+      const goalIlvl = popupState.targetIlvl; // 334 oder 331
+      const stepCost = popupState.useDiscount ? 10 : 20;
+      const otherCost = popupState.useDiscount ? 20 : 10;
+      const keyLvl = rules.selectedKeyLevel || 10;
+      const cPerKey = getKeyCrestsPerRun();
+      const walletMyth = Number(char.mythMarks || 0);
+
+      // 1. Header-Buttons im Popup aktualisieren
+      document.getElementById('popupCharBtns').innerHTML = characters.map((c, idx) => {
+        const isSel = idx === activeCharIndex;
+        const col = getCharColor(c);
+        return `
+          <button type="button" onclick="activeCharIndex=${idx}; renderAll(); renderCalcPopup();"
+                  class="px-2.5 py-1 rounded-lg text-xs font-black border transition ${isSel ? 'bg-wow-panel border-wow-gold shadow' : 'bg-wow-bg/60 border-wow-border opacity-75 hover:opacity-100'}"
+                  style="color:${col}">
+            ${escapeHtml(c.name)}
+          </button>
+        `;
+      }).join('');
+
+      document.getElementById('popTarget334Btn').className = goalIlvl === 334
+        ? 'py-1.5 px-2 rounded-lg text-xs font-black bg-wow-gold text-slate-950 shadow'
+        : 'py-1.5 px-2 rounded-lg text-xs font-bold bg-wow-panel text-slate-300 border border-wow-border';
+      document.getElementById('popTarget331Btn').className = goalIlvl === 331
+        ? 'py-1.5 px-2 rounded-lg text-xs font-black bg-wow-gold text-slate-950 shadow'
+        : 'py-1.5 px-2 rounded-lg text-xs font-bold bg-wow-panel text-slate-300 border border-wow-border';
+
+      document.getElementById('popDiscOffBtn').className = !popupState.useDiscount
+        ? 'py-1.5 px-2 rounded-lg text-xs font-black bg-amber-500 text-slate-950 shadow'
+        : 'py-1.5 px-2 rounded-lg text-xs font-bold bg-wow-panel text-slate-300 border border-wow-border';
+      document.getElementById('popDiscOnBtn').className = popupState.useDiscount
+        ? 'py-1.5 px-2 rounded-lg text-xs font-black bg-emerald-500 text-slate-950 shadow'
+        : 'py-1.5 px-2 rounded-lg text-xs font-bold bg-wow-panel text-slate-300 border border-wow-border';
+
+      document.getElementById('popKeyTimedCheck').checked = rules.keyTimedMode !== false;
+      document.getElementById('popupKeyBtns').innerHTML = [9, 10, 11, 12, 13, 14].map(lvl => {
+        const isK = lvl === keyLvl;
+        const w = rules.keyTimedMode ? MPLUS_KEY_REWARDS[lvl].timed : MPLUS_KEY_REWARDS[lvl].untimed;
+        return `
+          <button type="button" onclick="selectPopupKeyLevel(${lvl})"
+                  class="py-1 rounded text-[11px] font-black transition ${isK ? 'bg-cyan-400 text-slate-950 shadow' : 'bg-wow-panel text-slate-300 border border-wow-border hover:text-white'}"
+                  title="+${lvl} gibt ${w} Wappen pro Run">
+            +${lvl === 14 ? '14+' : lvl}<div class="text-[9px] font-normal opacity-85">${w}W</div>
+          </button>
+        `;
+      }).join('');
+
+      // 2. Alle 16 Slots analysieren: Was ist direkt aufwertbar vs. wo fehlt noch ein neues Item?
+      const directUpgradeItems = [];
+      const missingDropItems = [];
+      const alreadyDoneItems = [];
+
+      let ownedTotalSteps = 0, ownedTotalPointGain = 0;
+      let missingDropTotalSteps = 0, missingDropTotalPointGain = 0;
+
+      SLOTS.forEach(s => {
+        const eq = getEquippedSlotIlvl(char, s.key);
+        const bag = getBagSlotIlvl(char, s.key);
+        const meta = char.slotMeta?.[s.key] || {};
+        const hasMythInBag = rules.includeBags && Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
+        const maxTrack = getEffectiveSlotMaxUpgradable(char, s.key);
+        const startIlvl = hasMythInBag ? Math.max(eq, meta.bagMythIlvl) : Math.max(eq, bag);
+        const itemName = (hasMythInBag && meta.bagMythName) ? meta.bagMythName : (bag > eq && meta.bagName ? meta.bagName : (meta.eqName || s.label));
+
+        if (eq >= goalIlvl || (meta.track === 'crafted' && eq >= 331 && goalIlvl === 331)) {
+          alreadyDoneItems.push({ slot: s, eq, itemName, label: meta.label || 'Fertig' });
+          return;
+        }
+
+        if (maxTrack >= goalIlvl) {
+          // Vorhandenes Mythos-Item (angezogen oder in Tasche) -> direkt beim NPC aufwertbar!
+          const steps = MYTH_UPGRADE_STEPS.filter(st => st > Math.max(startIlvl, 318) && st <= goalIlvl).length;
+          const ptGain = goalIlvl - eq;
+          const cost = steps * stepCost;
+          ownedTotalSteps += steps;
+          ownedTotalPointGain += ptGain;
+          directUpgradeItems.push({
+            slot: s, eq, startIlvl, goalIlvl, itemName, hasMythInBag, bagHigher: bag > eq,
+            steps, ptGain, cost, runs: Math.ceil(cost / cPerKey)
+          });
+        } else {
+          // Slot klebt bei Held 6/6 (321), Champion (308) oder Handwerk (331, falls Ziel 334) fest -> braucht erst ein neues Item!
+          const stepsAfterDrop = meta.track === 'crafted' ? 4 : MYTH_UPGRADE_STEPS.filter(st => st > 321 && st <= goalIlvl).length;
+          const ptGain = goalIlvl - eq;
+          const cost = stepsAfterDrop * stepCost;
+          missingDropTotalSteps += stepsAfterDrop;
+          missingDropTotalPointGain += ptGain;
+
+          const neededSource = (goalIlvl === 331 && !s.isTierSlot)
+            ? '🔨 331er Handwerks-Item bauen (80 W.) ODER 🎲 Mythos-Item droppen'
+            : (s.isTierSlot
+                ? '🎲 Mythos-Set-Item aus Weekly Vault / Raid holen (+ ✨ Katalysator)'
+                : '🎲 Mythos-Item aus Weekly Vault (+10 Key) oder Mythic Raid holen');
+
+          missingDropItems.push({
+            slot: s, eq, maxTrack, goalIlvl, itemName: meta.eqName || s.label,
+            stepsAfterDrop, ptGain, cost, runs: Math.ceil(cost / cPerKey), neededSource
+          });
+        }
+      });
+
+      const ownedCrestCost = ownedTotalSteps * stepCost;
+      const ownedNetMissing = Math.max(0, ownedCrestCost - walletMyth);
+      const ownedMplusRuns = Math.ceil(ownedNetMissing / cPerKey);
+
+      const allTotalSteps = ownedTotalSteps + missingDropTotalSteps;
+      const allTotalPointGain = ownedTotalPointGain + missingDropTotalPointGain;
+      const allCrestCost = allTotalSteps * stepCost;
+      const allNetMissing = Math.max(0, allCrestCost - walletMyth);
+      const allMplusRuns = Math.ceil(allNetMissing / cPerKey);
+
+      // Vergleich: Ohne Rabatt vs. Mit Rabatt
+      const costWithoutDisc = Math.max(0, allTotalSteps * 20 - walletMyth);
+      const costWithDisc    = Math.max(0, allTotalSteps * 10 - walletMyth);
+      const savedCrests     = costWithoutDisc - costWithDisc;
+      const savedMplusRuns  = Math.ceil(costWithoutDisc / cPerKey) - Math.ceil(costWithDisc / cPerKey);
+
+      const directCardsHtml = directUpgradeItems.map(it => `
+        <div class="p-3 rounded-xl bg-wow-card border border-emerald-500/50 flex items-center justify-between gap-3">
+          <div class="min-w-0">
+            <div class="text-xs font-bold text-white flex items-center gap-1.5 flex-wrap">
+              <span>${it.slot.label}:</span>
+              <span class="text-amber-200 font-semibold">„${escapeHtml(it.itemName)}“</span>
+              ${it.hasMythInBag && it.eq <= 321 ? '<span class="px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 text-[10px]">🎒 Aus Tasche</span>' : ''}
+            </div>
+            <div class="text-[11px] text-slate-300 mt-0.5">
+              Aktuell: <strong>${it.eq}</strong> &rarr; Ziel: <strong class="text-wow-gold">${it.goalIlvl} iLvl</strong>
+              <span class="text-emerald-400 font-bold ml-1">(+${it.ptGain} iLvl-Punkte)</span>
+            </div>
+          </div>
+          <div class="text-right shrink-0">
+            <div class="px-2.5 py-0.5 rounded-full bg-amber-950 text-amber-200 border border-amber-500/60 text-xs font-black">
+              ${it.cost === 0 ? '🎒 0 Wappen' : `${it.cost} Wappen (${it.steps} St.)`}
+            </div>
+            <div class="text-[11px] text-cyan-300 font-bold mt-0.5">
+              ${it.cost === 0 ? 'Sofort anlegen!' : `≈ ${it.runs}× M+${keyLvl}`}
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      const missingCardsHtml = missingDropItems.map(it => `
+        <div class="p-3 rounded-xl bg-wow-card border border-rose-500/50 flex items-center justify-between gap-3">
+          <div class="min-w-0">
+            <div class="text-xs font-bold text-white flex items-center gap-1.5 flex-wrap">
+              <span>${it.slot.label}:</span>
+              <span class="text-slate-300 font-normal">Trägt „${escapeHtml(it.itemName)}“ (Limit: ${it.maxTrack})</span>
+            </div>
+            <div class="text-[11px] text-rose-300 font-semibold mt-0.5">
+              ${it.neededSource}
+            </div>
+            <div class="text-[11px] text-slate-400">
+              Bringt bei Ersatz auf ${it.goalIlvl}: <strong class="text-emerald-400">+${it.ptGain} iLvl-Punkte</strong>
+            </div>
+          </div>
+          <div class="text-right shrink-0">
+            <div class="px-2.5 py-0.5 rounded-full bg-rose-950 text-rose-200 border border-rose-500/60 text-xs font-black">
+              +${it.cost} Wappen (${it.stepsAfterDrop} St.)
+            </div>
+            <div class="text-[11px] text-cyan-300 font-bold mt-0.5">
+              ≈ ${it.runs}× M+${keyLvl}
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('calcPopupBody').innerHTML = `
+        <!-- 1. GROSSES KLARTEXT-FAZIT OBEN IM POPUP -->
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-wow-panel via-emerald-950/30 to-wow-panel border-2 border-emerald-500/70 shadow-xl space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-500 text-slate-950 text-xs font-black uppercase">
+              📢 Klartext-Rechnung für ${escapeHtml(char.name)} (${popupState.useDiscount ? 'MIT 50% Rabatt = 10 W./Stufe' : 'OHNE Rabatt = 20 W./Stufe'})
+            </span>
+            <span class="text-xs text-cyan-300 font-bold">
+              Eingestellter Key: M+${keyLvl} (${rules.keyTimedMode ? 'Intime' : 'Overtime'} = ${cPerKey} Wappen pro Run)
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <!-- Box A: Nur vorhandene Mythos-Items -->
+            <div class="p-3.5 rounded-xl bg-wow-card border border-emerald-500/50">
+              <div class="text-[11px] font-bold uppercase text-emerald-400">A) Vorhandene Items (${directUpgradeItems.length}×) auf ${goalIlvl}:</div>
+              <div class="text-2xl font-black text-white mt-1">
+                Noch <span class="text-emerald-300">${ownedMplusRuns}× M+${keyLvl}</span> laufen
+              </div>
+              <div class="text-xs text-slate-300 mt-1">
+                Für <strong class="text-emerald-400">+${ownedTotalPointGain} iLvl-Punkte</strong> • Fehlen: <strong>${ownedNetMissing} Wappen</strong> (Kosten: ${ownedCrestCost} − ${walletMyth} im Beutel)
+              </div>
+            </div>
+
+            <!-- Box B: Komplett alle Slots (inkl. noch fehlender Drops) -->
+            <div class="p-3.5 rounded-xl bg-wow-card border border-wow-gold/60">
+              <div class="text-[11px] font-bold uppercase text-wow-gold">B) Komplett ALLE Slots auf ${goalIlvl} (+${missingDropItems.length} Drops):</div>
+              <div class="text-2xl font-black text-white mt-1">
+                Insgesamt <span class="text-wow-gold">${allMplusRuns}× M+${keyLvl}</span> laufen
+              </div>
+              <div class="text-xs text-slate-300 mt-1">
+                Für <strong class="text-emerald-400">+${allTotalPointGain} iLvl-Punkte</strong> • Fehlen gesamt: <strong>${allNetMissing} Wappen</strong> (${allCrestCost} − ${walletMyth} Beutel)
+              </div>
+            </div>
+
+            <!-- Box C: Direkter Rabatt-Vergleich (Mit vs. Ohne) -->
+            <div class="p-3.5 rounded-xl bg-wow-card border border-purple-500/50 flex flex-col justify-between">
+              <div class="text-[11px] font-bold uppercase text-purple-300">💡 Rabatt-Vergleich (20 vs. 10 Wappen):</div>
+              <div class="text-xs text-slate-200 mt-1 space-y-0.5">
+                <div class="flex justify-between"><span>Ohne Rabatt (20 W.):</span><strong>${costWithoutDisc} W. (${Math.ceil(costWithoutDisc / cPerKey)}× M+${keyLvl})</strong></div>
+                <div class="flex justify-between text-emerald-300"><span>Mit 50% Rabatt (10 W.):</span><strong>${costWithDisc} W. (${Math.ceil(costWithDisc / cPerKey)}× M+${keyLvl})</strong></div>
+              </div>
+              <div class="text-[11px] font-black text-wow-gold pt-1 border-t border-wow-border/60">
+                Ersparnis mit Rabatt: ${savedCrests} Wappen (= ${savedMplusRuns}× M+${keyLvl} weniger!)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. ZWEI SPALTEN: WELCHE ITEMS HABE ICH SCHON VS. WELCHE ITEMS BRAUCHE ICH ERST NOCH? -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
+          <!-- Spalte Links: Vorhandene Items, die direkt beim NPC aufgewertet werden können -->
+          <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 space-y-3">
+            <div class="border-b border-wow-border pb-2">
+              <h4 class="text-sm font-bold text-emerald-400">⚡ 1. Welche vorhandenen Items muss ich noch auf ${goalIlvl} aufwerten? (${directUpgradeItems.length} Items)</h4>
+              <p class="text-xs text-slate-400">Diese Items hast du bereits (angezogen oder in der Tasche) – dir fehlen nur die Wappen.</p>
+            </div>
+            <div class="space-y-2">
+              ${directCardsHtml || '<div class="text-xs text-emerald-400 py-2">✔️ Alle vorhandenen Mythos-Items sind bereits auf dem Ziel-Level!</div>'}
+            </div>
+          </div>
+
+          <!-- Spalte Rechts: Blockierte Slots, für die du erst noch ein neues Item brauchst -->
+          <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 space-y-3">
+            <div class="border-b border-wow-border pb-2">
+              <h4 class="text-sm font-bold text-rose-300">🎲 2. Welche Items brauche ich erst noch, um überhaupt auf ${goalIlvl} zu kommen? (${missingDropItems.length} Slots)</h4>
+              <p class="text-xs text-slate-400">Diese Slots stecken aktuell auf Held 6/6 (321) oder Champion (308) fest und lassen sich NICHT weiter aufwerten, bis du dort ein neues Item bekommst.</p>
+            </div>
+            <div class="space-y-2">
+              ${missingCardsHtml || '<div class="text-xs text-emerald-400 py-2">🎉 Du hast auf allen Slots bereits aufwertbare Mythos-Items!</div>'}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // HAUPT-SIMULATION & RESTLICHE ANSICHTEN
+    // =========================================================================
     function simulateCharacter(char, charIdx) {
       const targetAvg = Number(rules.targetIlvl || 331);
       const targetTotalPoints = Math.ceil(targetAvg * 16);
@@ -796,13 +1168,16 @@
           </div>
           <div class="text-xs text-slate-300 mt-2 pt-2 border-t border-wow-border/60">Gesamt nötig: <strong>${sim.usedMyth} W.</strong> (abzgl. ${myth.wallet} im Beutel)</div>
         </div>
-        <div class="bg-wow-panel border border-rose-500/60 rounded-2xl p-4 shadow">
-          <div class="text-[11px] font-bold uppercase text-rose-300">4. 🔥 Fehlt für Max-iLvl 334</div>
+        <div onclick="openCalcModal()" class="bg-wow-panel hover:bg-wow-card border-2 border-rose-500/70 rounded-2xl p-4 shadow cursor-pointer transition">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold uppercase text-rose-300">4. 🔥 Fehlt für Max-iLvl 334</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-wow-gold text-slate-950 font-black">🧮 Details &nearr;</span>
+          </div>
           <div class="mt-2 space-y-1 text-xs">
             <div class="flex justify-between"><span class="text-slate-300">Vorhandene (${m334.ownedMythItemsCount}×):</span><span class="font-black text-rose-300">${m334.ownedMissing} W. (${Math.ceil(m334.ownedMissing / cPerKey)}× M+${keyLvl})</span></div>
             <div class="flex justify-between"><span class="text-slate-300">Alle 16 Slots:</span><span class="font-black text-amber-300">${m334.allMissing} W. (${Math.ceil(m334.allMissing / cPerKey)}× M+${keyLvl})</span></div>
           </div>
-          <div class="text-[11px] text-slate-400 mt-2 pt-1.5 border-t border-wow-border/60">Berechnet mit M+${keyLvl} (${cPerKey} Wappen / Run)</div>
+          <div class="text-[11px] text-amber-300 font-semibold mt-2 pt-1.5 border-t border-wow-border/60">Klicken für Item-Liste & Rabatt-Schalter</div>
         </div>
       `;
     }
@@ -865,7 +1240,6 @@
       const completedList = Array.isArray(char.completedHistory) ? char.completedHistory : [];
       const completedCount = completedList.length;
 
-      // ABGEHAKTE ITEMS DIREKT OBEN IN DER LISTE (EIN- & AUSBLENDBAR!)
       let completedHtml = '';
       if (completedCount > 0 && rules.showCompletedSteps) {
         completedHtml = completedList.map((h, hIdx) => `
@@ -957,7 +1331,6 @@
         <div class="space-y-2">${stepsHtml || '<div class="text-xs text-emerald-400 py-2">🎉 Ziel erreicht!</div>'}</div>
       `;
 
-      // 3-Zonen-Ampel
       const zone1 = [], zone2 = [], zone3 = [];
       SLOTS.forEach(s => {
         const eq = getEquippedSlotIlvl(char, s.key);
