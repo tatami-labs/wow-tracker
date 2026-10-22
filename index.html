@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>WoW Kriegsmeuten-Tracker v19.0</title>
+  <title>WoW Kriegsmeuten-Tracker v20.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -34,7 +34,7 @@
         <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-yellow-700 flex items-center justify-center text-slate-950 font-black text-base">W</div>
         <h1 class="text-sm font-bold text-white flex items-center gap-2">
           Kriegsmeuten-Upgrade-Tracker
-          <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v19.0 UNCAPPED</span>
+          <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v20.0 SLOT-RECHNER</span>
         </h1>
       </div>
 
@@ -102,20 +102,20 @@
               </div>
             </button>
 
-            <!-- NEU: SEPARATER REITER FÜR HANDWERK 331 VS. MYTHOS UPGRADE -->
-            <button type="button" onclick="switchTab('craftvsmyth')" id="tabBtn-craftvsmyth" class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-3 bg-wow-card/60 hover:bg-wow-card text-slate-200">
-              <span class="text-base">⚖️</span>
+            <!-- NEU: DER GEWÜNSCHTE EINZEL-SLOT-RECHNER (HERSTELLEN ODER NORMAL UPGRADEN) -->
+            <button type="button" onclick="switchTab('slotplanner')" id="tabBtn-slotplanner" class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-3 bg-wow-card/60 hover:bg-wow-card text-slate-200">
+              <span class="text-base">🛠️</span>
               <div>
-                <div class="text-xs font-bold leading-tight">Handwerk 331 vs. Mythos</div>
-                <div class="text-[11px] text-slate-400">Slot-Vergleich: 80W Craft od. Upgrade</div>
+                <div class="text-xs font-bold leading-tight">Slot-Rechner (Alle 16 Slots)</div>
+                <div class="text-[11px] text-slate-400">Herstellen vs. Upgraden + M+</div>
               </div>
             </button>
 
             <button type="button" onclick="switchTab('calc')" id="tabBtn-calc" class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-3 bg-wow-card/60 hover:bg-wow-card text-slate-200">
               <span class="text-base">🧮</span>
               <div>
-                <div class="text-xs font-bold leading-tight">M+ & Item-Rechner</div>
-                <div class="text-[11px] text-slate-400">M+ Runs & Rabatt-Vergleich</div>
+                <div class="text-xs font-bold leading-tight">M+ & Item-Übersicht</div>
+                <div class="text-[11px] text-slate-400">Komplett-Bedarf & Rabatt</div>
               </div>
             </button>
 
@@ -136,7 +136,7 @@
             </button>
           </div>
 
-          <!-- EINSTELLUNGEN (OHNE WOCHEN-CAP, DA JETZT UNBEGRENZT!) -->
+          <!-- EINSTELLUNGEN -->
           <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 space-y-3 shadow-lg">
             <div class="text-[11px] font-bold text-slate-300 uppercase tracking-wider border-b border-wow-border pb-2">Rechner-Einstellungen</div>
 
@@ -151,10 +151,10 @@
             <div class="flex items-center justify-between gap-2">
               <span class="text-xs text-cyan-300 whitespace-nowrap font-medium">🗝️ Dein M+ Key:</span>
               <select id="selectedKeyLevelSelect" onchange="onSettingsChange()" class="w-40 bg-wow-card border border-cyan-700/60 rounded-lg px-2.5 py-1.5 text-cyan-300 font-bold text-xs">
-                <option value="9">M+ 9 (10 Wappen)</option>
-                <option value="10">M+ 10 (12 Wappen)</option>
-                <option value="11">M+ 11 (14 Wappen)</option>
-                <option value="12" selected>M+ 12+ (16 W. Max)</option>
+                <option value="9">M+ 9 (10 Münzen)</option>
+                <option value="10">M+ 10 (12 Münzen)</option>
+                <option value="11">M+ 11 (14 Münzen)</option>
+                <option value="12" selected>M+ 12+ (16 M. Max)</option>
               </select>
             </div>
 
@@ -162,8 +162,8 @@
               <span class="text-xs text-slate-300 whitespace-nowrap font-medium">🟠 Myth-Preis:</span>
               <select id="crestStepCostSelect" onchange="onSettingsChange()" class="w-40 bg-wow-card border border-wow-border rounded-lg px-2.5 py-1.5 text-white font-bold text-xs">
                 <option value="auto" selected id="autoCostOption">Auto (Prüft 331-Erfolg)</option>
-                <option value="20">20 Wappen (Ohne Rabatt)</option>
-                <option value="10">10 Wappen (Mit Rabatt)</option>
+                <option value="20">20 Münzen (Ohne Rabatt)</option>
+                <option value="10">10 Münzen (Mit Rabatt)</option>
               </select>
             </div>
 
@@ -173,11 +173,11 @@
                 <input type="checkbox" id="has331AchToggle" onchange="onSettingsChange()" class="w-4 h-4 accent-amber-500 rounded cursor-pointer" />
               </label>
               <label class="flex items-center justify-between text-xs text-purple-300 cursor-pointer">
-                <span>🟣 Held/Champ-Rabatt (10 W.)</span>
+                <span>🟣 Held/Champ-Rabatt (10 M.)</span>
                 <input type="checkbox" id="heroChampDiscToggle" onchange="onSettingsChange()" class="w-4 h-4 accent-purple-500 rounded cursor-pointer" checked />
               </label>
               <label class="flex items-center justify-between text-xs text-emerald-300 cursor-pointer">
-                <span>⏱️ M+ Keys Intime (+4 W.)</span>
+                <span>⏱️ M+ Keys Intime (+4 M.)</span>
                 <input type="checkbox" id="keyTimedToggle" onchange="onSettingsChange()" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer" checked />
               </label>
               <label class="flex items-center justify-between text-xs text-cyan-300 cursor-pointer">
@@ -199,9 +199,9 @@
             <div id="planRightColumn" class="xl:col-span-5 bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-4 shadow-lg"></div>
           </section>
 
-          <!-- REITER 2 (NEU): HANDWERK 331 VS. MYTHOS SLOT-VERGLEICH -->
-          <section id="tab-craftvsmyth" class="hidden space-y-5">
-            <div id="craftVsMythContainer" class="space-y-5"></div>
+          <!-- REITER 2 (NEU): ALLE 16 ITEM-SLOTS EINZELN (HERSTELLEN VS. MYTHISCH FARMEN / NORMAL UPGRADEN) -->
+          <section id="tab-slotplanner" class="hidden space-y-5">
+            <div id="slotPlannerContainer" class="space-y-5"></div>
           </section>
 
           <!-- REITER 3: M+ & ITEM-RECHNER -->
@@ -218,7 +218,7 @@
           <section id="tab-milestone" class="hidden bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-4 shadow-lg">
             <div class="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <h3 class="text-sm font-bold text-white">🏆 Kriegsmeuten-Meilenstein (50 % Wappen-Rabatt: 10 statt 20 Wappen)</h3>
+                <h3 class="text-sm font-bold text-white">🏆 Kriegsmeuten-Meilenstein (50 % Wappen-Rabatt: 10 statt 20 Münzen)</h3>
                 <p class="text-xs text-slate-400">Prüft dynamisch alle 16 Slots deiner eingefügten Charaktere (inkl. 2-Ring-, 2-Schmuck- & Waffen-Regel).</p>
               </div>
               <div class="flex items-center gap-1.5">
@@ -335,7 +335,7 @@
   <script>
     const STORAGE_KEY_MAIN  = 'wow_warband_tracker_data';
     const STORAGE_KEY_RULES = 'wow_warband_tracker_rules';
-    const CURRENT_SCHEMA_VERSION = 19;
+    const CURRENT_SCHEMA_VERSION = 20;
     const CRAFTED_MYTH_COST = 80;
 
     const MPLUS_KEY_REWARDS = {
@@ -430,15 +430,29 @@
       return Math.max(eqMax, bagMax);
     }
 
-    // Prüft für jeden Slot, ob "🔨 331 Handwerk (80W)" gewählt ist (Standard: Nicht-Set-Slots ohne Mythos-Item)
-    function isSlotPlannedForCraft(char, slotObj) {
-      if (slotObj.noCraft) return false;
-      if (char.plannedCrafts && char.plannedCrafts[slotObj.key] !== undefined) {
-        return Boolean(char.plannedCrafts[slotObj.key]);
+    // Bestimmt den geplanten Modus eines Slots im Slot-Rechner: 'craft' (Herstellen 331), 'upgrade' (Normal upgraden / Mythos farmen) oder 'skip' (Weglassen)
+    function getSlotPlannerMode(char, slotObj, goalIlvl) {
+      if (!char.slotModes) char.slotModes = {};
+      const saved = char.slotModes[slotObj.key];
+      if (saved === 'craft' && !slotObj.noCraft) return 'craft';
+      if (saved === 'upgrade') return 'upgrade';
+      if (saved === 'skip') return 'skip';
+
+      const eq = getEquippedSlotIlvl(char, slotObj.key);
+      const meta = char.slotMeta?.[slotObj.key] || {};
+      const hasMythInBag = rules.includeBags && Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
+      if (eq >= goalIlvl || (meta.track === 'crafted' && eq >= 331 && !hasMythInBag && goalIlvl <= 331)) {
+        return 'skip';
       }
       const maxTrack = getEffectiveSlotMaxUpgradable(char, slotObj.key);
-      if (maxTrack >= 334) return false; // Wer schon ein Mythos-Item hat, wertet es standardmäßig auf
-      return !slotObj.isTierSlot;
+      if (maxTrack >= 334) return 'upgrade';
+      if (!slotObj.noCraft && !slotObj.isTierSlot) return 'craft';
+      return 'upgrade';
+    }
+
+    function isSlotPlannedForCraft(char, slotObj) {
+      if (slotObj.noCraft) return false;
+      return getSlotPlannerMode(char, slotObj, Number(rules.targetIlvl || 331)) === 'craft';
     }
 
     function calculateMilestoneBenchmarks() {
@@ -493,7 +507,14 @@
       if (!c.slotMeta || typeof c.slotMeta !== 'object') c.slotMeta = {};
       if (!c.charWatermarks || typeof c.charWatermarks !== 'object') c.charWatermarks = {};
       if (!Array.isArray(c.completedHistory)) c.completedHistory = [];
-      if (!c.plannedCrafts || typeof c.plannedCrafts !== 'object') c.plannedCrafts = {};
+      if (!c.slotModes || typeof c.slotModes !== 'object') c.slotModes = {};
+      if (c.plannedCrafts && typeof c.plannedCrafts === 'object') {
+        Object.keys(c.plannedCrafts).forEach(k => {
+          if (c.slotModes[k] === undefined) {
+            c.slotModes[k] = c.plannedCrafts[k] ? 'craft' : 'upgrade';
+          }
+        });
+      }
       if (c.hasTwoHand === undefined) {
         c.hasTwoHand = Number(c.slots.mainhand || 0) > 0 && Number(c.slots.offhand || 0) === 0;
       }
@@ -654,59 +675,76 @@
     }
 
     // =========================================================================
-    // NEU: REITER "⚖️ HANDWERK 331 VS. MYTHOS" (SEPARATER SLOT-VERGLEICH)
+    // NEU: REITER "🛠️ SLOT-RECHNER (ALLE 16 SLOTS: HERSTELLEN ODER UPGRADEN)"
     // =========================================================================
-    function toggleSlotCraftPlan(charIdx, slotKey, makeCraft) {
+    function setSlotPlannerMode(charIdx, slotKey, mode) {
       const char = characters[charIdx];
       if (!char) return;
-      if (!char.plannedCrafts) char.plannedCrafts = {};
-      char.plannedCrafts[slotKey] = Boolean(makeCraft);
+      if (!char.slotModes) char.slotModes = {};
+      char.slotModes[slotKey] = mode; // 'craft' | 'upgrade' | 'skip'
       saveCharsToStorage();
       renderAll();
     }
 
-    function setAllOpenSlotsStrategy(charIdx, mode) {
+    function setBatchSlotPlannerMode(charIdx, preset) {
       const char = characters[charIdx];
       if (!char) return;
-      if (!char.plannedCrafts) char.plannedCrafts = {};
+      if (!char.slotModes) char.slotModes = {};
+      const goalIlvl = calcTabState.targetIlvl;
+
       SLOTS.forEach(s => {
-        if (s.noCraft) return;
         const eq = getEquippedSlotIlvl(char, s.key);
-        if (eq >= 331) return;
-        if (mode === 'craft_non_tier') {
-          char.plannedCrafts[s.key] = !s.isTierSlot && getEffectiveSlotMaxUpgradable(char, s.key) <= 321;
-        } else if (mode === 'all_myth') {
-          char.plannedCrafts[s.key] = false;
-        } else if (mode === 'all_craft') {
-          char.plannedCrafts[s.key] = true;
+        const maxTrack = getEffectiveSlotMaxUpgradable(char, s.key);
+        if (eq >= goalIlvl) {
+          char.slotModes[s.key] = 'skip';
+          return;
+        }
+        if (preset === 'smart') {
+          if (maxTrack >= 334) char.slotModes[s.key] = 'upgrade';
+          else if (!s.noCraft && !s.isTierSlot) char.slotModes[s.key] = 'craft';
+          else char.slotModes[s.key] = 'upgrade';
+        } else if (preset === 'all_upgrade') {
+          char.slotModes[s.key] = 'upgrade';
+        } else if (preset === 'all_craft') {
+          char.slotModes[s.key] = s.noCraft ? 'upgrade' : 'craft';
+        } else if (preset === 'clear') {
+          char.slotModes[s.key] = 'skip';
         }
       });
       saveCharsToStorage();
       renderAll();
-      showToast('Slot-Strategie für alle offenen Slots aktualisiert!', 'success');
     }
 
-    function renderCraftVsMythTabView(sim) {
-      const container = document.getElementById('craftVsMythContainer');
+    function renderSlotPlannerTabView(sim) {
+      const container = document.getElementById('slotPlannerContainer');
       if (!container) return;
       const char = sim.char;
       const charIdx = sim.charIdx;
       const using2H = isTwoHandEquipped(char);
-      const stepCost = sim.mythStepCost; // 20 oder 10
-      const keyLbl = getKeyLabel(rules.selectedKeyLevel);
+
+      const goalIlvl = calcTabState.targetIlvl; // 334 oder 331
+      const useDisc = getCalcTabDiscountActive();
+      const stepCost = useDisc ? 10 : 20;
+      const keyLvl = rules.selectedKeyLevel || 12;
+      const keyLbl = getKeyLabel(keyLvl);
       const cPerKey = getKeyCrestsPerRun();
       const walletMyth = Number(char.mythMarks || 0);
 
-      let chosenCraftCount = 0;
-      let chosenMythCount = 0;
-      let totalChosenCost = 0;
-      let projectedTotalIlvlSum = 0;
+      let selectedCraftCount = 0;
+      let selectedUpgradeCount = 0;
+      let totalSelectedCoins = 0;
+      let newTotalIlvlSum = 0;
 
-      const slotComparisonRows = [];
-      const alreadyDoneRows = [];
+      const slotRowsHtml = SLOTS.map(s => {
+        if (s.key === 'offhand' && using2H) {
+          return `
+            <div class="p-3.5 rounded-2xl bg-wow-panel/50 border border-wow-border flex items-center justify-between text-xs text-slate-400">
+              <span><strong>${s.label}:</strong> Wird automatisch durch deine Zweihandwaffe (${getEquippedSlotIlvl(char, 'mainhand')} iLvl) abgedeckt.</span>
+              <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 font-bold">2H aktiv</span>
+            </div>
+          `;
+        }
 
-      SLOTS.forEach(s => {
-        if (s.key === 'offhand' && using2H) return;
         const is2HMain = (s.key === 'mainhand' && using2H);
         const slotMult = is2HMain ? 2 : 1;
 
@@ -715,160 +753,145 @@
         const meta = char.slotMeta?.[s.key] || {};
         const hasMythInBag = rules.includeBags && Boolean(meta.bagMythIlvl && meta.bagMythIlvl >= 318);
         const maxTrack = getEffectiveSlotMaxUpgradable(char, s.key);
-        const itemName = (hasMythInBag && meta.bagMythName) ? meta.bagMythName : (bag > eq && meta.bagName ? meta.bagName : (meta.eqName || s.label));
-        const isAlreadyCrafted331 = (meta.track === 'crafted' && eq >= 331 && !hasMythInBag);
-
-        if (eq >= 334 || isAlreadyCrafted331) {
-          projectedTotalIlvlSum += eq * slotMult;
-          alreadyDoneRows.push({
-            slot: s, eq, itemName, isAlreadyCrafted331, is2HMain
-          });
-          return;
-        }
-
-        const canCraft = !s.noCraft;
-        const isCraftSelected = canCraft && isSlotPlannedForCraft(char, s);
-
-        // Option A: 🔨 331 Handwerk (immer 80 Wappen, Ziel 331)
-        const craftTargetIlvl = 331;
-        const craftCost = CRAFTED_MYTH_COST; // 80 Wappen
-        const craftAvgGain = ((craftTargetIlvl - eq) * slotMult) / 16;
-
-        // Option B: 🟠 Mythos-Item aufwerten (auf 331 bzw. 334)
         const hasOwnedMyth = maxTrack >= 334;
-        const startMythIlvl = hasOwnedMyth ? (hasMythInBag ? Math.max(eq, meta.bagMythIlvl) : Math.max(eq, bag)) : 321;
-        const stepsTo331 = MYTH_UPGRADE_STEPS.filter(st => st > Math.max(startMythIlvl, 318) && st <= 331).length;
-        const stepsTo334 = MYTH_UPGRADE_STEPS.filter(st => st > Math.max(startMythIlvl, 318) && st <= 334).length;
-        const mythCost331 = stepsTo331 * stepCost;
-        const mythCost334 = stepsTo334 * stepCost;
-        const mythAvgGain331 = ((331 - eq) * slotMult) / 16;
-        const mythAvgGain334 = ((334 - eq) * slotMult) / 16;
+        const isCrafted331 = meta.track === 'crafted' && eq >= 331 && !hasMythInBag;
+        const itemName = (hasMythInBag && meta.bagMythName) ? meta.bagMythName : (bag > eq && meta.bagName ? meta.bagName : (meta.eqName || s.label));
 
-        if (isCraftSelected) {
-          chosenCraftCount++;
-          totalChosenCost += craftCost;
-          projectedTotalIlvlSum += craftTargetIlvl * slotMult;
-        } else {
-          chosenMythCount++;
-          totalChosenCost += (rules.targetIlvl >= 334 ? mythCost334 : mythCost331);
-          projectedTotalIlvlSum += (rules.targetIlvl >= 334 ? 334 : 331) * slotMult;
+        const mode = getSlotPlannerMode(char, s, goalIlvl);
+
+        // 1. Berechnung für "🔨 Item herstellen (331)" -> kostet immer 80 Münzen/Wappen
+        const canCraft = !s.noCraft;
+        const craftCoins = CRAFTED_MYTH_COST; // 80
+        const craftRunsSingle = Math.ceil(craftCoins / cPerKey);
+        const craftRunsAfterWallet = Math.ceil(Math.max(0, craftCoins - walletMyth) / cPerKey);
+        const craftTargetIlvl = 331;
+        const craftAvgGain = ((Math.max(eq, craftTargetIlvl) - eq) * slotMult) / 16;
+
+        // 2. Berechnung für "⬆️ Normal upgraden" (wenn Mythos-Item da) bzw. "🎲 Mythisch-Item farmen & upgraden" (wenn noch Held/Champ)
+        const startForMyth = hasOwnedMyth ? (hasMythInBag ? Math.max(eq, meta.bagMythIlvl) : Math.max(eq, bag)) : 321;
+        const upgradeSteps = MYTH_UPGRADE_STEPS.filter(st => st > Math.max(startForMyth, 318) && st <= goalIlvl).length;
+        const upgradeCoins = upgradeSteps * stepCost;
+        const upgradeRunsSingle = Math.ceil(upgradeCoins / cPerKey);
+        const upgradeRunsAfterWallet = Math.ceil(Math.max(0, upgradeCoins - walletMyth) / cPerKey);
+        const upgradeAvgGain = ((Math.max(eq, goalIlvl) - eq) * slotMult) / 16;
+
+        // Aktive Auswahl für diesen Slot verbuchen
+        let activeCoins = 0;
+        let activeRunsSingle = 0;
+        let activeRunsWithWallet = 0;
+        let activeNewSlotIlvl = eq;
+        let activeActionText = 'Pausiert / Nicht eingeplant';
+
+        if (mode === 'craft' && canCraft) {
+          selectedCraftCount++;
+          activeCoins = craftCoins;
+          activeRunsSingle = craftRunsSingle;
+          activeRunsWithWallet = craftRunsAfterWallet;
+          activeNewSlotIlvl = Math.max(eq, 331);
+          activeActionText = `🔨 Herstellen auf 331 (+${craftAvgGain.toFixed(2)} Ø)`;
+        } else if (mode === 'upgrade') {
+          selectedUpgradeCount++;
+          activeCoins = upgradeCoins;
+          activeRunsSingle = upgradeRunsSingle;
+          activeRunsWithWallet = upgradeRunsAfterWallet;
+          activeNewSlotIlvl = Math.max(eq, goalIlvl);
+          activeActionText = hasOwnedMyth
+            ? `⬆️ Vorhandenes Item auf ${goalIlvl} upgraden (${upgradeSteps} St. = +${upgradeAvgGain.toFixed(2)} Ø)`
+            : `🎲 Mythisch-Item farmen + auf ${goalIlvl} upgraden (${upgradeSteps} St. = +${upgradeAvgGain.toFixed(2)} Ø)`;
         }
 
-        slotComparisonRows.push({
-          slot: s, eq, itemName, is2HMain, canCraft, isCraftSelected,
-          hasOwnedMyth, hasMythInBag, maxTrack,
-          craftCost, craftAvgGain,
-          stepsTo331, stepsTo334, mythCost331, mythCost334, mythAvgGain331, mythAvgGain334
-        });
-      });
+        totalSelectedCoins += activeCoins;
+        newTotalIlvlSum += activeNewSlotIlvl * slotMult;
 
-      const projectedAvgIlvl = (projectedTotalIlvlSum / 16).toFixed(2);
-      const netMissingCrests = Math.max(0, totalChosenCost - walletMyth);
-      const neededMplusRuns = Math.ceil(netMissingCrests / cPerKey);
+        const statusBadge = isCrafted331
+          ? `<span class="px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-600/50 text-[10px] font-bold">🔨 Trägt 331 Handwerk</span>`
+          : (hasOwnedMyth
+              ? `<span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600/50 text-[10px] font-bold">${hasMythInBag && eq <= 321 ? '🎒 321 Mythos in Tasche' : '🟠 Mythos-Item vorhanden'}</span>`
+              : `<span class="px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/50 text-[10px] font-bold">🔒 Aktuell ${meta.label || 'Held'} (${maxTrack} Max)</span>`);
 
-      const cardsHtml = slotComparisonRows.map(r => {
-        const sKey = r.slot.key;
+        const upgradeBtnLabel = hasOwnedMyth
+          ? `⬆️ Normal upgraden (${goalIlvl})`
+          : `🎲 Mythisch farmen + upgraden (${goalIlvl})`;
+
         return `
-          <div class="p-4 rounded-2xl bg-wow-panel border border-wow-border space-y-3 shadow-lg">
-            <!-- Slot-Kopfzeile -->
-            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-wow-border/70 pb-2.5">
-              <div class="flex items-center gap-2">
-                <span class="px-2.5 py-0.5 rounded-lg bg-wow-card border border-wow-border text-xs font-black text-white">
-                  ${r.slot.label}${r.is2HMain ? ' (2H zählt doppelt)' : ''}
-                </span>
-                <span class="text-xs text-amber-200 font-semibold">„${escapeHtml(r.itemName)}“</span>
-                ${r.slot.isTierSlot ? '<span class="px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-700/50 text-[10px] font-bold">Tier-Set-Slot</span>' : ''}
+          <div class="p-4 rounded-2xl border transition ${
+            mode === 'craft'
+              ? 'bg-blue-950/20 border-blue-500/70 shadow-lg'
+              : (mode === 'upgrade' ? 'bg-amber-950/20 border-wow-gold/70 shadow-lg' : 'bg-wow-panel border-wow-border opacity-80')
+          }">
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 items-center">
+
+              <!-- 1. LINKS (4 SPALTEN): SLOT & AKTUELLES ITEM -->
+              <div class="xl:col-span-4 space-y-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-sm font-black text-white">${s.label}${is2HMain ? ' (2H ×2)' : ''}</span>
+                  <span class="px-2 py-0.5 rounded bg-wow-card border border-wow-border text-xs font-black text-wow-gold">${eq} iLvl</span>
+                  ${statusBadge}
+                  ${s.isTierSlot ? '<span class="px-1.5 py-0.5 rounded bg-purple-950 text-purple-300 text-[10px] font-bold">Set-Slot</span>' : ''}
+                </div>
+                <div class="text-xs text-slate-300 truncate">Item: „${escapeHtml(itemName)}“</div>
               </div>
-              <div class="flex items-center gap-2 text-xs">
-                <span class="text-slate-400">Aktuell: <strong class="text-white">${r.eq} iLvl</strong></span>
-                <span class="px-2 py-0.5 rounded text-[11px] font-bold ${r.hasOwnedMyth ? 'bg-emerald-950 text-emerald-300 border border-emerald-600/50' : 'bg-amber-950 text-amber-300 border border-amber-600/50'}">
-                  ${r.hasOwnedMyth ? (r.hasMythInBag && r.eq <= 321 ? '🎒 Mythos-Item in Tasche!' : '✅ Mythos-Item vorhanden') : `🔒 Spur-Limit ${r.maxTrack} (Kein Mythos-Item)`}
-                </span>
+
+              <!-- 2. MITTE (5 SPALTEN): AUSWAHL-BUTTONS (HERSTELLEN VS. UPGRADEN VS. WEGLASSEN) -->
+              <div class="xl:col-span-5 grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <!-- Button A: Item herstellen (80 Münzen) -->
+                ${canCraft ? `
+                  <button type="button" onclick="setSlotPlannerMode(${charIdx}, '${s.key}', 'craft')"
+                          class="p-2.5 rounded-xl border text-left transition flex flex-col justify-between ${
+                            mode === 'craft'
+                              ? 'bg-blue-500 text-slate-950 border-blue-300 font-black shadow-md'
+                              : 'bg-wow-card hover:bg-slate-800 text-slate-200 border-wow-border'
+                          }">
+                    <div class="text-[11px] font-black leading-tight">🔨 Herstellen (331)</div>
+                    <div class="text-xs font-extrabold mt-1">${craftCoins} Münzen</div>
+                    <div class="text-[10px] ${mode === 'craft' ? 'text-slate-900 font-bold' : 'text-cyan-300'}">= ${craftRunsSingle}× M+${keyLbl}</div>
+                  </button>
+                ` : `
+                  <div class="p-2.5 rounded-xl border border-wow-border bg-wow-card/30 text-slate-500 text-[11px] flex items-center justify-center text-center">
+                    Kein Handwerk (Schmuck)
+                  </div>
+                `}
+
+                <!-- Button B: Normal upgraden / Mythisch farmen & upgraden -->
+                <button type="button" onclick="setSlotPlannerMode(${charIdx}, '${s.key}', 'upgrade')"
+                        class="p-2.5 rounded-xl border text-left transition flex flex-col justify-between ${
+                          mode === 'upgrade'
+                            ? 'bg-wow-gold text-slate-950 border-amber-300 font-black shadow-md'
+                            : 'bg-wow-card hover:bg-slate-800 text-slate-200 border-wow-border'
+                        }">
+                  <div class="text-[11px] font-black leading-tight">${upgradeBtnLabel}</div>
+                  <div class="text-xs font-extrabold mt-1">${upgradeCoins} Münzen <span class="text-[10px] font-normal">(${upgradeSteps} St.)</span></div>
+                  <div class="text-[10px] ${mode === 'upgrade' ? 'text-slate-900 font-bold' : 'text-cyan-300'}">= ${upgradeRunsSingle}× M+${keyLbl}</div>
+                </button>
+
+                <!-- Button C: Slot weglassen / erledigt -->
+                <button type="button" onclick="setSlotPlannerMode(${charIdx}, '${s.key}', 'skip')"
+                        class="p-2.5 rounded-xl border text-left transition flex flex-col justify-between ${
+                          mode === 'skip'
+                            ? 'bg-slate-700 text-white border-slate-400 font-black'
+                            : 'bg-wow-card/60 hover:bg-slate-800 text-slate-400 border-wow-border'
+                        }">
+                  <div class="text-[11px] font-bold leading-tight">➖ Weglassen</div>
+                  <div class="text-xs font-bold mt-1">0 Münzen</div>
+                  <div class="text-[10px] opacity-75">Nicht einrechnen</div>
+                </button>
               </div>
-            </div>
 
-            <!-- Direkter 2-Spalten-Vergleich zum Anklicken -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-
-              <!-- OPTION A: 🔨 AUF 331 HERSTELLEN (80 WAPPEN) -->
-              ${r.canCraft ? `
-                <div onclick="toggleSlotCraftPlan(${charIdx}, '${sKey}', true)"
-                     class="p-3.5 rounded-xl border-2 cursor-pointer transition flex flex-col justify-between gap-2 ${
-                       r.isCraftSelected
-                         ? 'bg-blue-950/35 border-blue-400 shadow-lg ring-1 ring-blue-400/50'
-                         : 'bg-wow-card/50 hover:bg-wow-card border-wow-border opacity-75 hover:opacity-100'
-                     }">
-                  <div class="flex items-center justify-between gap-2">
-                    <span class="text-xs font-black text-blue-300 flex items-center gap-1.5">
-                      <span>🔨</span> Option A: Auf 331 herstellen
-                    </span>
-                    <span class="px-2 py-0.5 rounded text-[10px] font-black ${r.isCraftSelected ? 'bg-blue-400 text-slate-950' : 'bg-slate-800 text-slate-400'}">
-                      ${r.isCraftSelected ? '✓ AUSGEWÄHLT' : 'Anklicken'}
-                    </span>
+              <!-- 3. RECHTS (3 SPALTEN): EXAKTES ERGEBNIS FÜR DIESEN SLOT ALLEIN -->
+              <div class="xl:col-span-3 bg-wow-card border border-wow-border rounded-xl p-3 flex flex-col justify-between">
+                <div class="text-[10px] uppercase font-bold text-slate-400">Aufwand nur für diesen Slot:</div>
+                ${mode === 'skip' ? `
+                  <div class="text-xs font-bold text-slate-400 mt-1">✔️ Pausiert (0 Münzen / 0 M+)</div>
+                ` : `
+                  <div class="flex items-baseline justify-between mt-1">
+                    <span class="text-base font-black text-amber-300">${activeCoins} Münzen</span>
+                    <span class="text-sm font-black text-cyan-300">🏃 ${activeRunsSingle}× M+${keyLbl}</span>
                   </div>
-
-                  <div class="flex items-baseline justify-between pt-1">
-                    <div>
-                      <div class="text-sm font-black text-white">${r.eq} &rarr; <span class="text-blue-300">331 iLvl</span></div>
-                      <div class="text-[11px] text-emerald-400 font-bold">Bringt +${r.craftAvgGain.toFixed(2)} Ø Gesamt-iLvl</div>
-                    </div>
-                    <div class="text-right">
-                      <div class="text-sm font-black text-amber-300">${r.craftCost} Wappen</div>
-                      <div class="text-[11px] text-cyan-300">≈ ${Math.ceil(r.craftCost / cPerKey)}× M+${keyLbl}</div>
-                    </div>
+                  <div class="text-[11px] text-slate-300 mt-1 pt-1 border-t border-wow-border/60 flex justify-between">
+                    <span>Mit Beutel (${walletMyth}):</span>
+                    <strong class="text-emerald-300">Noch ${activeRunsWithWallet}× M+${keyLbl}</strong>
                   </div>
-
-                  <div class="text-[11px] pt-1.5 border-t border-wow-border/60 ${r.slot.isTierSlot ? 'text-amber-300' : 'text-slate-300'}">
-                    ${r.slot.isTierSlot
-                      ? '⚠️ Achtung: Set-Slot! Handwerk trägt keinen Tier-Set-Bonus (nur wählen, wenn du 4er-Bonus woanders hast).'
-                      : (r.hasOwnedMyth
-                          ? 'ℹ️ Du hast hier bereits ein Mythos-Item – Aufwerten (Option B) geht bis 334!'
-                          : '✅ Sofort beim Handwerker baubar (kein Drop-Glück nötig, endet fest bei 331).')
-                    }
-                  </div>
-                </div>
-              ` : `
-                <div class="p-3.5 rounded-xl border border-wow-border bg-wow-card/30 opacity-50 flex flex-col justify-center items-center text-center">
-                  <div class="text-xs font-bold text-slate-400">❌ Option A: Handwerk nicht möglich</div>
-                  <div class="text-[11px] text-slate-500 mt-1">Schmuckstücke können nicht als 331er Handwerks-Item hergestellt werden.</div>
-                </div>
-              `}
-
-              <!-- OPTION B: 🟠 MYTHOS-ITEM AUFWERTEN (331 / 334) -->
-              <div onclick="toggleSlotCraftPlan(${charIdx}, '${sKey}', false)"
-                   class="p-3.5 rounded-xl border-2 cursor-pointer transition flex flex-col justify-between gap-2 ${
-                     !r.isCraftSelected
-                       ? 'bg-amber-950/30 border-wow-gold shadow-lg ring-1 ring-wow-gold/50'
-                       : 'bg-wow-card/50 hover:bg-wow-card border-wow-border opacity-75 hover:opacity-100'
-                   }">
-                <div class="flex items-center justify-between gap-2">
-                  <span class="text-xs font-black text-wow-gold flex items-center gap-1.5">
-                    <span>🟠</span> Option B: Mythos-Item aufwerten
-                  </span>
-                  <span class="px-2 py-0.5 rounded text-[10px] font-black ${!r.isCraftSelected ? 'bg-wow-gold text-slate-950' : 'bg-slate-800 text-slate-400'}">
-                    ${!r.isCraftSelected ? '✓ AUSGEWÄHLT' : 'Anklicken'}
-                  </span>
-                </div>
-
-                <div class="grid grid-cols-2 gap-2 pt-1">
-                  <div class="bg-wow-panel p-2 rounded-lg border border-wow-border/70">
-                    <div class="text-[10px] text-slate-400">Bis 331 (${r.stepsTo331} Stufen):</div>
-                    <div class="text-xs font-black text-white">${r.mythCost331} W. <span class="text-cyan-300">(${Math.ceil(r.mythCost331 / cPerKey)}× M+${keyLbl})</span></div>
-                    <div class="text-[10px] text-emerald-400 font-bold">+${r.mythAvgGain331.toFixed(2)} Ø iLvl</div>
-                  </div>
-                  <div class="bg-wow-panel p-2 rounded-lg border border-amber-500/40">
-                    <div class="text-[10px] text-wow-gold font-bold">Bis 334 Max (${r.stepsTo334} St.):</div>
-                    <div class="text-xs font-black text-amber-300">${r.mythCost334} W. <span class="text-cyan-300">(${Math.ceil(r.mythCost334 / cPerKey)}× M+${keyLbl})</span></div>
-                    <div class="text-[10px] text-emerald-400 font-bold">+${r.mythAvgGain334.toFixed(2)} Ø iLvl</div>
-                  </div>
-                </div>
-
-                <div class="text-[11px] pt-1.5 border-t border-wow-border/60 ${r.hasOwnedMyth ? 'text-emerald-300 font-semibold' : 'text-rose-300'}">
-                  ${r.hasOwnedMyth
-                    ? `✅ Du besitzt das Mythos-Item bereits – direkt beim NPC bis 334 aufwertbar (${stepCost} W./Stufe)!`
-                    : '🎲 Braucht erst einen Mythos-Drop aus der Weekly Vault (+10 Key) oder dem Mythic Raid.'
-                  }
-                </div>
+                `}
               </div>
 
             </div>
@@ -876,79 +899,130 @@
         `;
       }).join('');
 
-      const doneHtml = alreadyDoneRows.map(d => `
-        <div class="p-3 rounded-xl bg-wow-card/60 border border-wow-border flex items-center justify-between text-xs">
-          <div>
-            <span class="font-bold text-white">${d.slot.label}:</span>
-            <span class="text-slate-300 ml-1">„${escapeHtml(d.itemName)}“</span>
-          </div>
-          <span class="px-2.5 py-0.5 rounded font-bold ${d.isAlreadyCrafted331 ? 'bg-blue-950 text-blue-300 border border-blue-600/50' : 'bg-emerald-950 text-emerald-300 border border-emerald-600/50'}">
-            ${d.isAlreadyCrafted331 ? '🔨 Bereits 331 Handwerk (80W)' : `🟠 Bereits ${d.eq} Max`}
-          </span>
-        </div>
-      `).join('');
+      const netCoinsToFarm = Math.max(0, totalSelectedCoins - walletMyth);
+      const totalMplusToRun = Math.ceil(netCoinsToFarm / cPerKey);
+      const totalMplusWithoutWallet = Math.ceil(totalSelectedCoins / cPerKey);
+      const newAvgIlvl = (newTotalIlvlSum / 16).toFixed(2);
+      const avgGainTotal = Math.max(0, (newTotalIlvlSum / 16) - sim.startAvg).toFixed(2);
+
+      const keyBtnsHtml = [9, 10, 11, 12].map(lvl => {
+        const isK = lvl === keyLvl;
+        const w = rules.keyTimedMode ? MPLUS_KEY_REWARDS[lvl].timed : MPLUS_KEY_REWARDS[lvl].untimed;
+        return `
+          <button type="button" onclick="selectCalcKeyLevel(${lvl})"
+                  class="py-1.5 px-2 rounded-lg text-xs font-black transition ${isK ? 'bg-cyan-400 text-slate-950 shadow' : 'bg-wow-panel text-slate-300 border border-wow-border hover:text-white'}">
+            M+${lvl === 12 ? '12+' : lvl} <span class="text-[10px] font-normal">(${w}M)</span>
+          </button>
+        `;
+      }).join('');
 
       container.innerHTML = `
-        <!-- KOPF-ZUSAMMENFASSUNG DES VERGLEICHS -->
-        <div class="bg-wow-panel border-2 border-wow-gold/60 rounded-2xl p-4 shadow-xl space-y-3">
-          <div class="flex flex-wrap items-center justify-between gap-3">
+        <!-- KOPF-STEUERUNG & GESAMT-ZUSAMMENFASSUNG -->
+        <div class="bg-wow-panel border-2 border-wow-gold rounded-2xl p-5 shadow-2xl space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-wow-border pb-3">
             <div>
-              <h3 class="text-base font-black text-white">⚖️ Slot-Vergleich: 🔨 331 Handwerk (80 W.) vs. 🟠 Mythos-Item aufwerten</h3>
+              <h3 class="text-base font-black text-white">🛠️ Einzel-Slot-Rechner: Item herstellen (80 Münzen) vs. Normal upgraden / Mythisch farmen</h3>
               <p class="text-xs text-slate-400">
-                Klicke bei jedem Slot deine bevorzugte Option an. Aktueller Upgrade-Preis: <strong>${stepCost} Wappen pro Mythos-Stufe</strong> (Handwerk kostet immer <strong>80 Wappen</strong>).
+                Klicke bei jedem Slot an, ob du das Item <strong>🔨 herstellen (331)</strong> oder <strong>⬆️ normal upgraden / 🎲 mythisch farmen</strong> willst. Rechts siehst du sofort die M+ Runs für den einzelnen Slot und hier oben die Gesamtsumme!
               </p>
             </div>
             <div class="flex flex-wrap items-center gap-1.5">
-              <button type="button" onclick="setAllOpenSlotsStrategy(${charIdx}, 'craft_non_tier')" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow transition">
-                🔨 Empfehlung: Blockierte Nicht-Set-Slots craften
+              <button type="button" onclick="setBatchSlotPlannerMode(${charIdx}, 'smart')" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-slate-950 text-xs font-black shadow transition">
+                ⚡ Optimale Voreinstellung
               </button>
-              <button type="button" onclick="setAllOpenSlotsStrategy(${charIdx}, 'all_myth')" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-amber-300 text-xs font-bold transition">
-                🟠 Alle auf Mythos-Upgrade
+              <button type="button" onclick="setBatchSlotPlannerMode(${charIdx}, 'all_upgrade')" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-amber-300 text-xs font-bold transition">
+                ⬆️ Alle auf Upgraden
+              </button>
+              <button type="button" onclick="setBatchSlotPlannerMode(${charIdx}, 'clear')" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-slate-300 text-xs font-bold transition">
+                ➖ Alle abwählen (Einzeln klicken)
               </button>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-wow-border">
-            <div class="p-3 rounded-xl bg-wow-card border border-blue-500/50">
-              <div class="text-[11px] font-bold uppercase text-blue-300">Gewählte 331-Handwerks-Slots:</div>
-              <div class="text-xl font-black text-white mt-0.5">${chosenCraftCount} Slots <span class="text-xs font-normal text-slate-300">(${chosenCraftCount * 80} Wappen)</span></div>
+          <!-- SCHALTER FÜR UPGRADE-ZIEL, RABATT & M+ HÖHE -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="bg-wow-card border border-wow-border rounded-xl p-3">
+              <div class="text-[10px] font-bold uppercase text-slate-400 mb-1.5">1. Ziel beim normalen Upgraden:</div>
+              <div class="grid grid-cols-2 gap-1.5">
+                <button type="button" onclick="setCalcTarget(334)" class="py-1.5 px-2 rounded-lg text-xs font-black transition ${goalIlvl === 334 ? 'bg-wow-gold text-slate-950 shadow' : 'bg-wow-panel text-slate-300 border border-wow-border'}">
+                  🔥 Auf 334 Max
+                </button>
+                <button type="button" onclick="setCalcTarget(331)" class="py-1.5 px-2 rounded-lg text-xs font-black transition ${goalIlvl === 331 ? 'bg-wow-gold text-slate-950 shadow' : 'bg-wow-panel text-slate-300 border border-wow-border'}">
+                  🎯 Auf 331
+                </button>
+              </div>
             </div>
-            <div class="p-3 rounded-xl bg-wow-card border border-amber-500/50">
-              <div class="text-[11px] font-bold uppercase text-wow-gold">Gewählte Mythos-Upgrade-Slots:</div>
-              <div class="text-xl font-black text-white mt-0.5">${chosenMythCount} Slots</div>
+
+            <div class="bg-wow-card border border-wow-border rounded-xl p-3">
+              <div class="text-[10px] font-bold uppercase text-amber-300 mb-1.5">2. Upgrade-Preis (Ohne / Mit Rabatt):</div>
+              <div class="grid grid-cols-2 gap-1.5">
+                <button type="button" onclick="setCalcDiscount(false)" class="py-1.5 px-2 rounded-lg text-xs font-black transition ${!useDisc ? 'bg-amber-500 text-slate-950 shadow' : 'bg-wow-panel text-slate-300 border border-wow-border'}">
+                  ❌ Ohne Rabatt (20 M.)
+                </button>
+                <button type="button" onclick="setCalcDiscount(true)" class="py-1.5 px-2 rounded-lg text-xs font-black transition ${useDisc ? 'bg-emerald-500 text-slate-950 shadow' : 'bg-wow-panel text-slate-300 border border-wow-border'}">
+                  ✅ Mit Rabatt (10 M.)
+                </button>
+              </div>
             </div>
-            <div class="p-3 rounded-xl bg-wow-card border border-emerald-500/50">
-              <div class="text-[11px] font-bold uppercase text-emerald-400">Ergebnis deiner Auswahl:</div>
-              <div class="text-xl font-black text-emerald-300 mt-0.5">${projectedAvgIlvl} Ø iLvl <span class="text-xs text-cyan-300 font-bold">(Noch ${ netMissingCrests } W. ≈ ${neededMplusRuns}× M+${keyLbl})</span></div>
+
+            <div class="bg-wow-card border border-cyan-700/50 rounded-xl p-3">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-[10px] font-bold uppercase text-cyan-300">3. M+ Key-Stufe (+12+ = 16 Münzen):</span>
+                <label class="flex items-center gap-1 text-[10px] text-emerald-300 cursor-pointer">
+                  <input type="checkbox" onchange="toggleCalcKeyTimed(this.checked)" ${rules.keyTimedMode ? 'checked' : ''} class="w-3.5 h-3.5 accent-emerald-500 rounded" />
+                  <span>Intime</span>
+                </label>
+              </div>
+              <div class="grid grid-cols-4 gap-1.5">${keyBtnsHtml}</div>
+            </div>
+          </div>
+
+          <!-- 4 ERGEBNIS-KACHELN FÜR DEINE AKTUELLE SLOT-AUSWAHL -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2 border-t border-wow-border">
+            <div class="p-3.5 rounded-xl bg-wow-card border border-blue-500/50">
+              <div class="text-[11px] font-bold uppercase text-blue-300">🔨 Gewählt: Herstellen (331)</div>
+              <div class="text-xl font-black text-white mt-1">${selectedCraftCount} Slots <span class="text-xs text-amber-300">(${selectedCraftCount * 80} Münzen)</span></div>
+              <div class="text-[11px] text-cyan-300 mt-0.5">= ${Math.ceil((selectedCraftCount * 80) / cPerKey)}× M+${keyLbl} Runs</div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-wow-card border border-amber-500/50">
+              <div class="text-[11px] font-bold uppercase text-wow-gold">⬆️ Gewählt: Upgraden (${goalIlvl})</div>
+              <div class="text-xl font-black text-white mt-1">${selectedUpgradeCount} Slots <span class="text-xs text-amber-300">(${totalSelectedCoins - selectedCraftCount * 80} Münzen)</span></div>
+              <div class="text-[11px] text-cyan-300 mt-0.5">= ${Math.ceil((totalSelectedCoins - selectedCraftCount * 80) / cPerKey)}× M+${keyLbl} Runs</div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-wow-card border-2 border-emerald-500/70">
+              <div class="text-[11px] font-black uppercase text-emerald-400">🏃 Gesamt M+ Runs (abzgl. Beutel):</div>
+              <div class="text-2xl font-black text-emerald-300 mt-0.5">Noch ${totalMplusToRun}× M+${keyLbl}</div>
+              <div class="text-[11px] text-slate-300 mt-0.5">Fehlen: <strong>${netCoinsToFarm} Münzen</strong> (${totalSelectedCoins} Gesamt − ${walletMyth} Beutel)</div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-wow-card border border-purple-500/50">
+              <div class="text-[11px] font-bold uppercase text-purple-300">📈 Neues Durchschnitts-iLvl:</div>
+              <div class="text-2xl font-black text-white mt-0.5">${newAvgIlvl} Ø <span class="text-xs font-bold text-emerald-400">(+${avgGainTotal} Ø)</span></div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Ohne Beutel wären es ${totalMplusWithoutWallet}× M+${keyLbl}</div>
             </div>
           </div>
         </div>
 
-        <!-- EINZELNE SLOTS ZUM ANKLICKEN -->
-        <div class="space-y-3">
-          ${cardsHtml || '<div class="p-4 rounded-xl bg-wow-panel border border-wow-border text-xs text-emerald-400">🎉 Alle Slots sind bereits auf 334 bzw. 331 Handwerk!</div>'}
+        <!-- LISTE ALLER 16 SLOTS -->
+        <div class="space-y-2.5">
+          ${slotRowsHtml}
         </div>
-
-        ${doneHtml ? `
-          <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 space-y-2">
-            <div class="text-xs font-bold uppercase text-slate-400">✔️ Bereits abgeschlossene Slots (${alreadyDoneRows.length})</div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">${doneHtml}</div>
-          </div>
-        ` : ''}
       `;
     }
 
     // =========================================================================
-    // REITER 3: M+ & ITEM-RECHNER (OHNE VERWIRRENDE PUNKTE!)
+    // REITER 3: M+ & ITEM-ÜBERSICHT
     // =========================================================================
     function setCalcTarget(val) {
       calcTabState.targetIlvl = val;
-      renderCalcTabView();
+      renderAll();
     }
 
     function setCalcDiscount(state) {
       calcTabState.discountOverride = Boolean(state);
-      renderCalcTabView();
+      renderAll();
     }
 
     function selectCalcKeyLevel(lvl) {
@@ -970,7 +1044,6 @@
       if (!container) return;
       const char = characters[activeCharIndex];
       if (!char) return;
-      if (!char.plannedCrafts) char.plannedCrafts = {};
 
       const using2H = isTwoHandEquipped(char);
       const goalIlvl = calcTabState.targetIlvl;
@@ -1007,8 +1080,8 @@
           existingCraftedCount++;
           craftedAndDoneItems.push({
             slot: s, eq, itemName, isCrafted80: true,
-            badge: '🔨 80W Handwerks-Item (331)',
-            sub: 'Bereits für 80 Mythisch-Wappen hergestellt (Max 331 für Handwerk erreicht)'
+            badge: '🔨 80M Handwerks-Item (331)',
+            sub: 'Bereits für 80 Mythisch-Münzen hergestellt (Max 331 für Handwerk erreicht)'
           });
           return;
         }
@@ -1070,24 +1143,12 @@
       const savedCrests    = netWithoutDisc - netWithDisc;
       const savedRuns      = Math.ceil(netWithoutDisc / cPerKey) - Math.ceil(netWithDisc / cPerKey);
 
-      const keyBtnsHtml = [9, 10, 11, 12].map(lvl => {
-        const isK = lvl === keyLvl;
-        const w = rules.keyTimedMode ? MPLUS_KEY_REWARDS[lvl].timed : MPLUS_KEY_REWARDS[lvl].untimed;
-        return `
-          <button type="button" onclick="selectCalcKeyLevel(${lvl})"
-                  class="py-1.5 px-2 rounded-lg text-xs font-black transition ${isK ? 'bg-cyan-400 text-slate-950 shadow' : 'bg-wow-panel text-slate-300 border border-wow-border hover:text-white'}">
-            M+${lvl === 12 ? '12+' : lvl} <span class="text-[10px] font-normal">(${w}W)</span>
-          </button>
-        `;
-      }).join('');
-
       const directCardsHtml = directUpgradeItems.map(it => `
         <div class="p-3 rounded-xl bg-wow-card border border-emerald-500/50 flex items-center justify-between gap-3">
           <div class="min-w-0">
             <div class="text-xs font-bold text-white flex items-center gap-1.5 flex-wrap">
               <span>${it.slot.label}${it.is2HMain ? ' (2H)' : ''}:</span>
               <span class="text-amber-200 font-semibold">„${escapeHtml(it.itemName)}“</span>
-              ${it.hasMythInBag && it.eq <= 321 ? '<span class="px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 text-[10px]">🎒 Mythos in Tasche</span>' : '<span class="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 text-[10px]">🟠 Mythos-Spur</span>'}
             </div>
             <div class="text-[11px] text-slate-300 mt-0.5">
               Slot: <strong>${it.eq} &rarr; ${it.goalIlvl} iLvl</strong>
@@ -1096,7 +1157,7 @@
           </div>
           <div class="text-right shrink-0">
             <div class="px-2.5 py-0.5 rounded-full bg-amber-950 text-amber-200 border border-amber-500/60 text-xs font-black">
-              ${it.cost === 0 ? '🎒 0 Wappen' : `${it.cost} Wappen (${it.steps} St. à ${stepCost})`}
+              ${it.cost === 0 ? '🎒 0 Münzen' : `${it.cost} Münzen (${it.steps} St.)`}
             </div>
             <div class="text-[11px] text-cyan-300 font-bold mt-0.5">
               ${it.cost === 0 ? 'Sofort anlegen!' : `≈ ${it.runs}× M+${keyLbl}`}
@@ -1106,157 +1167,65 @@
       `).join('');
 
       const blockedCardsHtml = blockedItems.map(it => `
-        <div class="p-3 rounded-xl bg-wow-card border ${it.useCraft80 ? 'border-blue-500/60 bg-blue-950/15' : 'border-rose-500/50'} space-y-2">
-          <div class="flex items-center justify-between gap-2">
-            <div class="min-w-0">
-              <div class="text-xs font-bold text-white flex items-center gap-1.5 flex-wrap">
-                <span>${it.slot.label}:</span>
-                <span class="text-slate-300 font-normal">„${escapeHtml(it.itemName)}“ (Aktuell: ${it.eq} iLvl)</span>
-              </div>
-              <div class="text-[11px] text-slate-300 mt-0.5">
-                ${it.useCraft80
-                  ? `🔨 Geplant als <strong>331er Handwerk (80 Wappen)</strong> ➔ <strong class="text-emerald-400">+${it.avgGain.toFixed(2)} Ø Gesamt-iLvl</strong>`
-                  : `🎲 Geplant als <strong>Mythos-Drop + ${it.stepsIfDrop} Upgrades auf ${goalIlvl}</strong> ➔ <strong class="text-emerald-400">+${it.avgGain.toFixed(2)} Ø Gesamt-iLvl</strong>`
-                }
-              </div>
-            </div>
-            <div class="text-right shrink-0">
-              <div class="px-2.5 py-0.5 rounded-full ${it.useCraft80 ? 'bg-blue-950 text-blue-200 border-blue-500/60' : 'bg-rose-950 text-rose-200 border-rose-500/60'} border text-xs font-black">
-                ${it.useCraft80 ? '🔨 80 Wappen (Handwerk)' : `🎲 ${it.cost} Wappen (${it.stepsIfDrop} St.)`}
-              </div>
-              <div class="text-[11px] text-cyan-300 font-bold mt-0.5">≈ ${it.runs}× M+${keyLbl}</div>
-            </div>
-          </div>
-
-          ${it.canCraftSlot ? `
-            <div class="flex items-center gap-1.5 pt-1 border-t border-wow-border/60">
-              <button type="button" onclick="toggleSlotCraftPlan(${activeCharIndex}, '${it.slot.key}', true)"
-                      class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${it.useCraft80 ? 'bg-blue-500 text-slate-950 font-black shadow' : 'bg-wow-panel text-slate-300 border border-wow-border hover:text-white'}">
-                🔨 80W Handwerks-Item (331)
-              </button>
-              <button type="button" onclick="toggleSlotCraftPlan(${activeCharIndex}, '${it.slot.key}', false)"
-                      class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${!it.useCraft80 ? 'bg-rose-500 text-slate-950 font-black shadow' : 'bg-wow-panel text-slate-300 border border-wow-border hover:text-white'}">
-                🟠 Mythos-Upgrade (${it.stepsIfDrop * stepCost}W)
-              </button>
-            </div>
-          ` : ''}
-        </div>
-      `).join('');
-
-      const craftedDoneHtml = craftedAndDoneItems.map(it => `
-        <div class="p-3 rounded-xl border ${it.isCrafted80 ? 'bg-blue-950/20 border-blue-500/50' : 'bg-wow-card/60 border-emerald-700/40'} flex items-center justify-between gap-2">
+        <div class="p-3 rounded-xl bg-wow-card border ${it.useCraft80 ? 'border-blue-500/60 bg-blue-950/15' : 'border-rose-500/50'} flex items-center justify-between gap-3">
           <div class="min-w-0">
-            <div class="text-xs font-bold text-white">${it.slot.label}: <span class="text-amber-200">„${escapeHtml(it.itemName)}“</span></div>
-            <div class="text-[11px] text-slate-400 mt-0.5">${it.sub}</div>
+            <div class="text-xs font-bold text-white">${it.slot.label}: <span class="text-slate-300 font-normal">„${escapeHtml(it.itemName)}“ (${it.eq} iLvl)</span></div>
+            <div class="text-[11px] text-slate-300 mt-0.5">
+              ${it.useCraft80 ? `🔨 331er Handwerk (+${it.avgGain.toFixed(2)} Ø)` : `🎲 Mythos farmen + ${it.stepsIfDrop} Stufen (+${it.avgGain.toFixed(2)} Ø)`}
+            </div>
           </div>
-          <span class="px-2 py-0.5 rounded text-[11px] font-bold ${it.isCrafted80 ? 'bg-blue-950 text-blue-300 border border-blue-600/50' : 'bg-emerald-950 text-emerald-300 border border-emerald-600/50'}">
-            ${it.badge}
-          </span>
+          <div class="text-right shrink-0">
+            <div class="px-2.5 py-0.5 rounded-full ${it.useCraft80 ? 'bg-blue-950 text-blue-200 border-blue-500/60' : 'bg-rose-950 text-rose-200 border-rose-500/60'} border text-xs font-black">
+              ${it.cost} Münzen
+            </div>
+            <div class="text-[11px] text-cyan-300 font-bold mt-0.5">≈ ${it.runs}× M+${keyLbl}</div>
+          </div>
         </div>
       `).join('');
 
       container.innerHTML = `
         <div class="bg-wow-panel border-2 border-wow-gold/60 rounded-2xl p-4 shadow-xl space-y-4">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div class="bg-wow-card border border-wow-border rounded-xl p-3">
-              <div class="text-[10px] font-bold uppercase text-slate-400 mb-1.5">1. Upgrade-Ziel wählen:</div>
-              <div class="grid grid-cols-2 gap-1.5">
-                <button type="button" onclick="setCalcTarget(334)" class="py-1.5 px-2 rounded-lg text-xs font-black transition ${goalIlvl === 334 ? 'bg-wow-gold text-slate-950 shadow' : 'bg-wow-panel text-slate-300 border border-wow-border'}">
-                  🔥 Auf 334 Max
-                </button>
-                <button type="button" onclick="setCalcTarget(331)" class="py-1.5 px-2 rounded-lg text-xs font-black transition ${goalIlvl === 331 ? 'bg-wow-gold text-slate-950 shadow' : 'bg-wow-panel text-slate-300 border border-wow-border'}">
-                  🎯 Auf 331 (Erfolg)
-                </button>
-              </div>
-            </div>
-
-            <div class="bg-wow-card border border-wow-border rounded-xl p-3">
-              <div class="text-[10px] font-bold uppercase text-amber-300 mb-1.5">2. 50% Wappen-Rabatt (An / Aus klicken):</div>
-              <div class="grid grid-cols-2 gap-1.5">
-                <button type="button" onclick="setCalcDiscount(false)" class="py-1.5 px-2 rounded-lg text-xs font-black transition ${!useDisc ? 'bg-amber-500 text-slate-950 shadow' : 'bg-wow-panel text-slate-300 border border-wow-border'}">
-                  ❌ Ohne Rabatt (20 W.)
-                </button>
-                <button type="button" onclick="setCalcDiscount(true)" class="py-1.5 px-2 rounded-lg text-xs font-black transition ${useDisc ? 'bg-emerald-500 text-slate-950 shadow' : 'bg-wow-panel text-slate-300 border border-wow-border'}">
-                  ✅ Mit Rabatt (10 W.)
-                </button>
-              </div>
-            </div>
-
-            <div class="bg-wow-card border border-cyan-700/50 rounded-xl p-3">
-              <div class="flex items-center justify-between mb-1.5">
-                <span class="text-[10px] font-bold uppercase text-cyan-300">3. M+ Key-Höhe (+12+ = 16W Max):</span>
-                <label class="flex items-center gap-1 text-[10px] text-emerald-300 cursor-pointer">
-                  <input type="checkbox" onchange="toggleCalcKeyTimed(this.checked)" ${rules.keyTimedMode ? 'checked' : ''} class="w-3.5 h-3.5 accent-emerald-500 rounded" />
-                  <span>Intime</span>
-                </label>
-              </div>
-              <div class="grid grid-cols-4 gap-1.5">${keyBtnsHtml}</div>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 border-t border-wow-border">
             <div class="p-3.5 rounded-xl bg-wow-card border border-emerald-500/60">
               <div class="text-[11px] font-bold uppercase text-emerald-400">⚡ A) Vorhandene Mythos-Items (${directUpgradeItems.length}×):</div>
-              <div class="text-2xl font-black text-white mt-1">
-                Noch <span class="text-emerald-300">${ownedMplusRuns}× M+${keyLbl}</span> laufen
-              </div>
-              <div class="text-xs text-slate-300 mt-1">
-                Bringt <strong class="text-emerald-400">+${ownedAvgGain.toFixed(2)} Ø iLvl</strong> • Fehlen: <strong>${ownedNetMissing} Wappen</strong> (${ownedCost} − ${walletMyth} Beutel)
-              </div>
+              <div class="text-2xl font-black text-white mt-1">Noch <span class="text-emerald-300">${ownedMplusRuns}× M+${keyLbl}</span></div>
+              <div class="text-xs text-slate-300 mt-1">Bringt <strong class="text-emerald-400">+${ownedAvgGain.toFixed(2)} Ø iLvl</strong> • Fehlen: <strong>${ownedNetMissing} Münzen</strong></div>
             </div>
 
             <div class="p-3.5 rounded-xl bg-wow-card border-2 border-wow-gold/70">
               <div class="text-[11px] font-bold uppercase text-wow-gold">🔥 B) Komplett inkl. ${plannedCraftsCount}× Handwerk & Drops:</div>
-              <div class="text-2xl font-black text-white mt-1">
-                Gesamt <span class="text-wow-gold">${totalMplusRuns}× M+${keyLbl}</span> laufen
-              </div>
-              <div class="text-xs text-slate-300 mt-1">
-                Bringt <strong class="text-emerald-400">+${totalAvgGainAll.toFixed(2)} Ø iLvl</strong> • Fehlen: <strong>${totalNetMissing} Wappen</strong> (${totalCostAll} − ${walletMyth} Beutel)
-              </div>
+              <div class="text-2xl font-black text-white mt-1">Gesamt <span class="text-wow-gold">${totalMplusRuns}× M+${keyLbl}</span></div>
+              <div class="text-xs text-slate-300 mt-1">Bringt <strong class="text-emerald-400">+${totalAvgGainAll.toFixed(2)} Ø iLvl</strong> • Fehlen: <strong>${totalNetMissing} Münzen</strong></div>
             </div>
 
             <div class="p-3.5 rounded-xl bg-wow-card border border-purple-500/50 flex flex-col justify-between">
               <div class="text-[11px] font-bold uppercase text-purple-300">💡 Direktvergleich: Ohne vs. Mit Rabatt</div>
               <div class="text-xs text-slate-200 mt-1 space-y-0.5">
-                <div class="flex justify-between"><span>Ohne Rabatt (20 W.):</span><strong>${netWithoutDisc} W. (${Math.ceil(netWithoutDisc / cPerKey)}× M+${keyLbl})</strong></div>
-                <div class="flex justify-between text-emerald-300"><span>Mit Rabatt (10 W.):</span><strong>${netWithDisc} W. (${Math.ceil(netWithDisc / cPerKey)}× M+${keyLbl})</strong></div>
+                <div class="flex justify-between"><span>Ohne Rabatt (20 M.):</span><strong>${netWithoutDisc} M. (${Math.ceil(netWithoutDisc / cPerKey)}× M+${keyLbl})</strong></div>
+                <div class="flex justify-between text-emerald-300"><span>Mit Rabatt (10 M.):</span><strong>${netWithDisc} M. (${Math.ceil(netWithDisc / cPerKey)}× M+${keyLbl})</strong></div>
               </div>
               <div class="text-[11px] font-black text-wow-gold pt-1 border-t border-wow-border/60">
-                Rabatt spart dir ${savedCrests} Wappen (= ${savedRuns}× M+${keyLbl} weniger!)
+                Rabatt spart dir ${savedCrests} Münzen (= ${savedRuns}× M+${keyLbl} weniger!)
               </div>
             </div>
           </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
-          <div class="space-y-4">
-            <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 space-y-3 shadow-lg">
-              <div class="border-b border-wow-border pb-2">
-                <h4 class="text-sm font-bold text-emerald-400">⚡ 1. Vorhandene Mythos-Items direkt auf ${goalIlvl} aufwerten (${directUpgradeItems.length} Items)</h4>
-              </div>
-              <div class="space-y-2">${directCardsHtml || '<div class="text-xs text-emerald-400 py-2">✔️ Alle vorhandenen Mythos-Items sind bereits auf dem Ziel-Level!</div>'}</div>
-            </div>
-
-            <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 space-y-3 shadow-lg">
-              <div class="border-b border-wow-border pb-2">
-                <h4 class="text-sm font-bold text-blue-300">🔨 3. Getragene 80W-Handwerks-Items (${existingCraftedCount}×) & fertige Slots</h4>
-              </div>
-              <div class="space-y-2">${craftedDoneHtml}</div>
-            </div>
-          </div>
-
           <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 space-y-3 shadow-lg">
-            <div class="border-b border-wow-border pb-2">
-              <h4 class="text-sm font-bold text-rose-300">🎲 / 🔨 2. Noch fehlende Items / Handwerks-Slots (${blockedItems.length} Slots)</h4>
-            </div>
-            <div class="space-y-2.5">${blockedCardsHtml || '<div class="text-xs text-emerald-400 py-2">🎉 Keine blockierten Slots mehr vorhanden!</div>'}</div>
+            <h4 class="text-sm font-bold text-emerald-400 border-b border-wow-border pb-2">⚡ Vorhandene Mythos-Items (${directUpgradeItems.length})</h4>
+            <div class="space-y-2">${directCardsHtml || '<div class="text-xs text-emerald-400">✔️ Alle vorhandenen Mythos-Items sind fertig!</div>'}</div>
+          </div>
+          <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 space-y-3 shadow-lg">
+            <h4 class="text-sm font-bold text-rose-300 border-b border-wow-border pb-2">🎲 / 🔨 Geplante Handwerks- & Drop-Slots (${blockedItems.length})</h4>
+            <div class="space-y-2">${blockedCardsHtml || '<div class="text-xs text-emerald-400">🎉 Keine offenen Slots mehr!</div>'}</div>
           </div>
         </div>
       `;
     }
 
     // =========================================================================
-    // HAUPT-SIMULATION (OHNE WOCHEN-CAP & OHNE VERWIRRENDE PUNKTE!)
+    // HAUPT-SIMULATION
     // =========================================================================
     function simulateCharacter(char, charIdx) {
       const targetAvg = Number(rules.targetIlvl || 331);
@@ -1266,7 +1235,7 @@
       const using2H = isTwoHandEquipped(char);
 
       const autoCostOpt = document.getElementById('autoCostOption');
-      if (autoCostOpt) autoCostOpt.textContent = `Auto (${mythStepCost} Wappen)`;
+      if (autoCostOpt) autoCostOpt.textContent = `Auto (${mythStepCost} Münzen)`;
 
       const mythCap  = getCharCrestNumbers(char, 'myth');
       const heroCap  = getCharCrestNumbers(char, 'hero');
@@ -1280,7 +1249,6 @@
       const startAvg = startPoints / 16;
       const planSteps = [];
 
-      // Phase 1: Taschen-Items anlegen (0 Wappen)
       SLOTS.forEach(s => {
         if (s.key === 'offhand' && using2H) return;
         const is2HMain = (s.key === 'mainhand' && using2H);
@@ -1296,14 +1264,13 @@
             itemName: meta.bagMythName || meta.bagName || `${bagVal}er Item`,
             fromIlvl: curVal, toIlvl: bagVal, pointGain,
             markType: 'bag', markCost: 0, isCraftReplacement: false,
-            reason: '🎒 Aus Tasche anlegen (0 Wappen)'
+            reason: '🎒 Aus Tasche anlegen (0 Münzen)'
           });
         }
       });
 
       const avgWithBagsOnly = getSum() / 16;
 
-      // Phase 2: Eigener Charakter-Watermark (0 Wappen)
       SLOTS.forEach(s => {
         if (s.key === 'offhand' && using2H) return;
         const is2HMain = (s.key === 'mainhand' && using2H);
@@ -1319,12 +1286,11 @@
             itemName: char.slotMeta?.[s.key]?.eqName || '',
             fromIlvl: curVal, toIlvl: ownWm, pointGain,
             markType: 'free', markCost: 0, isCraftReplacement: false,
-            reason: `👑 Eigener Charakter-Watermark ist bereits ${ownWm} (0 Wappen)`
+            reason: `👑 Eigener Charakter-Watermark ist bereits ${ownWm} (0 Münzen)`
           });
         }
       });
 
-      // Phase 3: Vorhandene Items mit Wappen hochziehen (sofern der Slot nicht explizit als 331 Handwerk markiert wurde)
       let safety = 0;
       let lastUpgradedSlotKey = '';
       while (getSum() < targetTotalPoints && safety < 200) {
@@ -1332,7 +1298,7 @@
         let best = null;
         SLOTS.forEach(s => {
           if (s.key === 'offhand' && using2H) return;
-          if (char.plannedCrafts?.[s.key] === true && simSlots[s.key] < 331) return;
+          if (isSlotPlannedForCraft(char, s) && simSlots[s.key] < 331) return;
           const is2HMain = (s.key === 'mainhand' && using2H);
           const curVal = simSlots[s.key];
           const meta = char.slotMeta?.[s.key] || {};
@@ -1359,7 +1325,7 @@
           const itemName = (hasMythInBag && meta.bagMythName) ? meta.bagMythName : (meta.eqName || '');
           const reason = (hasMythInBag && meta.track === 'hero_max' && curVal === 321)
             ? '🎒 Taschen-Mythos anlegen & aufwerten'
-            : (rawGain >= 4 ? '⚡ Power-Sprung (+4 Slot-iLvl!)' : 'Aufwerten beim NPC');
+            : (rawGain >= 4 ? '⚡ Power-Sprung (+4 Slot-iLvl!)' : 'Normal beim NPC aufwerten');
 
           const sameSlotBonus = (s.key === lastUpgradedSlotKey && rawGain === 3) ? 0.5 : 0;
           const score = (markType === 'champ' ? 200 : (markType === 'hero' ? 100 : 0)) + (pointGain / cost) * 100 + sameSlotBonus;
@@ -1378,12 +1344,11 @@
         planSteps.push(best);
       }
 
-      // Phase 4: Geplante 331-Handwerks-Slots & blockierte Slots
       const replaceTarget = targetAvg >= 334 ? 334 : 331;
       const blockedCandidates = SLOTS.filter(s => {
         if (s.key === 'offhand' && using2H) return false;
         const maxUp = getEffectiveSlotMaxUpgradable(char, s.key);
-        const explicitlyCrafted = char.plannedCrafts?.[s.key] === true && simSlots[s.key] < 331;
+        const explicitlyCrafted = isSlotPlannedForCraft(char, s) && simSlots[s.key] < 331;
         return explicitlyCrafted || (simSlots[s.key] < replaceTarget && maxUp <= simSlots[s.key]);
       });
       blockedCandidates.sort((a, b) => Number(isSlotPlannedForCraft(char, b)) - Number(isSlotPlannedForCraft(char, a)));
@@ -1411,12 +1376,11 @@
           isBlockedReplacement: true,
           isCraftReplacement: useCraft,
           reason: useCraft
-            ? `🔨 Auf 331 herstellen (80 Wappen Handwerk)`
-            : `🎲 Mythos-Drop holen & in ${dropSteps} Stufen auf ${toIlvl} ziehen`
+            ? `🔨 Item herstellen auf 331 (80 Münzen)`
+            : `🎲 Mythisch-Item farmen & in ${dropSteps} Stufen auf ${toIlvl} upgraden`
         });
       }
 
-      // Da es kein Wochen-Cap mehr gibt, ist alles jenseits des Beutels ('now') direkt 'farmable' (♾️ Unbegrenzt farmbar)!
       let usedMyth = 0, usedHero = 0, usedChamp = 0, reachableWalletPts = startPoints;
       planSteps.forEach((st, idx) => {
         if (st.markType === 'bag' || st.markType === 'free') {
@@ -1470,7 +1434,7 @@
       renderTopKpiCards(activeSim);
       renderStrategyOverviewBar(activeSim, ranked);
       renderPlanAndAmpelView(activeSim);
-      renderCraftVsMythTabView(activeSim);
+      renderSlotPlannerTabView(activeSim);
       renderCalcTabView();
       renderCapsTableView(activeSim);
       renderMilestoneView();
@@ -1504,7 +1468,7 @@
             </div>
             <div class="flex items-center justify-between text-xs">
               <span class="text-slate-400">🎯 Fehlt bis ${r.targetAvg}:</span>
-              <span class="font-bold text-emerald-300">${r.missingMyth} W. (≈ ${runs}× M+${keyLbl})</span>
+              <span class="font-bold text-emerald-300">${r.missingMyth} M. (≈ ${runs}× M+${keyLbl})</span>
             </div>
           </div>
         `;
@@ -1548,28 +1512,28 @@
           </div>
         </div>
 
-        <div onclick="switchTab('craftvsmyth')" class="bg-wow-panel hover:bg-wow-card border border-amber-500/50 rounded-2xl p-4 shadow cursor-pointer transition">
+        <div onclick="switchTab('slotplanner')" class="bg-wow-panel hover:bg-wow-card border-2 border-amber-500/70 rounded-2xl p-4 shadow cursor-pointer transition">
           <div class="flex items-center justify-between">
             <span class="text-[11px] font-bold uppercase text-wow-gold">3. 🎯 Fehlt bis Ziel Ø ${sim.targetAvg}</span>
-            <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-600/50 font-bold">⚖️ 331 vs 334 &rarr;</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-600/50 font-bold">🛠️ Slot-Rechner &rarr;</span>
           </div>
           <div class="flex items-baseline justify-between mt-2">
-            <div><span class="text-2xl font-black text-amber-300">${sim.missingMyth}</span> <span class="text-xs font-bold text-slate-300">Wappen farmen</span></div>
+            <div><span class="text-2xl font-black text-amber-300">${sim.missingMyth}</span> <span class="text-xs font-bold text-slate-300">Münzen farmen</span></div>
             <span class="text-xs font-bold px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-700/50">≈ ${Math.ceil(sim.missingMyth / cPerKey)}× M+${keyLbl}</span>
           </div>
-          <div class="text-xs text-slate-300 mt-2 pt-2 border-t border-wow-border/60">Gesamt nötig: <strong>${sim.usedMyth} W.</strong> (abzgl. ${myth.wallet} im Beutel)</div>
+          <div class="text-xs text-slate-300 mt-2 pt-2 border-t border-wow-border/60">Gesamt nötig: <strong>${sim.usedMyth} M.</strong> (abzgl. ${myth.wallet} im Beutel)</div>
         </div>
 
-        <div onclick="switchTab('calc')" class="bg-wow-panel hover:bg-wow-card border-2 border-rose-500/70 rounded-2xl p-4 shadow cursor-pointer transition">
+        <div onclick="switchTab('calc')" class="bg-wow-panel hover:bg-wow-card border border-rose-500/70 rounded-2xl p-4 shadow cursor-pointer transition">
           <div class="flex items-center justify-between">
             <span class="text-[11px] font-bold uppercase text-rose-300">4. 🔥 Fehlt für Max-iLvl 334</span>
-            <span class="text-[10px] px-1.5 py-0.5 rounded bg-wow-gold text-slate-950 font-black">🧮 Zum Rechner &rarr;</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-wow-gold text-slate-950 font-black">🧮 Übersicht &rarr;</span>
           </div>
           <div class="mt-2 space-y-1 text-xs">
-            <div class="flex justify-between"><span class="text-slate-300">Vorhandene (${m334.ownedMythItemsCount}×):</span><span class="font-black text-rose-300">${m334.ownedMissing} W. (${Math.ceil(m334.ownedMissing / cPerKey)}× M+${keyLbl})</span></div>
-            <div class="flex justify-between"><span class="text-slate-300">Alle 16 Slots:</span><span class="font-black text-amber-300">${m334.allMissing} W. (${Math.ceil(m334.allMissing / cPerKey)}× M+${keyLbl})</span></div>
+            <div class="flex justify-between"><span class="text-slate-300">Vorhandene (${m334.ownedMythItemsCount}×):</span><span class="font-black text-rose-300">${m334.ownedMissing} M. (${Math.ceil(m334.ownedMissing / cPerKey)}× M+${keyLbl})</span></div>
+            <div class="flex justify-between"><span class="text-slate-300">Alle 16 Slots:</span><span class="font-black text-amber-300">${m334.allMissing} M. (${Math.ceil(m334.allMissing / cPerKey)}× M+${keyLbl})</span></div>
           </div>
-          <div class="text-[11px] text-amber-300 font-semibold mt-2 pt-1.5 border-t border-wow-border/60">Klicken für M+ & Rabatt-Rechner</div>
+          <div class="text-[11px] text-amber-300 font-semibold mt-2 pt-1.5 border-t border-wow-border/60">Klicken für M+ & Rabatt-Übersicht</div>
         </div>
       `;
     }
@@ -1588,8 +1552,8 @@
       const savings = (sim.max334.ownedMythSteps + sim.max334.blockedHeroCount * 4) * 10;
 
       const tip = (topSim && topSim.charIdx !== sim.charIdx && !is331MilestoneUnlocked())
-        ? `💡 <strong>Main-Zuerst-Hebel:</strong> Ziehe zuerst <strong class="text-emerald-300">${escapeHtml(topSim.char.name)}</strong> auf Ø 331 (fehlen nur ${topSim.missingMyth} W.). Danach zahlt <strong>${escapeHtml(char.name)}</strong> nur noch 10 statt 20 Wappen ➔ <strong class="text-wow-gold">spart hier ${savings} Wappen (≈ ${Math.ceil(savings / cPerKey)}× M+${keyLbl})!</strong>`
-        : `👑 <strong>Schnellster 331-Weg:</strong> Sobald <strong>${escapeHtml(char.name)}</strong> Ø 331 erreicht, halbieren sich die Mythisch-Wappen-Kosten für alle deine Twinks auf 10 Wappen!`;
+        ? `💡 <strong>Main-Zuerst-Hebel:</strong> Ziehe zuerst <strong class="text-emerald-300">${escapeHtml(topSim.char.name)}</strong> auf Ø 331 (fehlen nur ${topSim.missingMyth} M.). Danach zahlt <strong>${escapeHtml(char.name)}</strong> nur noch 10 statt 20 Münzen ➔ <strong class="text-wow-gold">spart hier ${savings} Münzen (≈ ${Math.ceil(savings / cPerKey)}× M+${keyLbl})!</strong>`
+        : `👑 <strong>Schnellster 331-Weg:</strong> Sobald <strong>${escapeHtml(char.name)}</strong> Ø 331 erreicht, halbieren sich die Mythisch-Upgrade-Kosten für alle deine Twinks auf 10 Münzen!`;
 
       let craftedCount = 0;
       const craftCandidates = [];
@@ -1614,16 +1578,16 @@
           </div>
           <div class="text-xs text-slate-200 pt-1 border-t border-wow-border/60">${tip}</div>
         </div>
-        <div onclick="switchTab('craftvsmyth')" class="xl:col-span-5 bg-wow-panel hover:bg-wow-card border border-wow-border rounded-2xl p-4 space-y-2 shadow flex flex-col justify-between cursor-pointer transition">
+        <div onclick="switchTab('slotplanner')" class="xl:col-span-5 bg-wow-panel hover:bg-wow-card border border-wow-border rounded-2xl p-4 space-y-2 shadow flex flex-col justify-between cursor-pointer transition">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-white">⚖️ Handwerk (331) vs. Mythos (334)</span>
+            <span class="text-xs font-bold text-white">🛠️ Slot-Rechner (Herstellen vs. Upgraden)</span>
             <div class="flex gap-1.5">
               <span class="px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-700/50 text-[11px] font-bold">🔨 ${craftedCount}× 331 an</span>
               <span class="px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-700/50 text-[11px] font-bold">✨ ${char.catalystCharges ?? 0} Kat.</span>
             </div>
           </div>
           <div class="text-xs text-slate-300">
-            ${craftCandidates.length > 0 ? `🎯 <strong>Geplante 80W-Handwerks-Slots:</strong> <span class="text-amber-300 font-semibold">${craftCandidates.join(', ')}</span> (Klicken zum Vergleichen & Ändern)` : '✔️ Alle offenen Slots stehen auf Mythos-Upgrade (Klicken zum Vergleichen)'}
+            ${craftCandidates.length > 0 ? `🎯 <strong>Geplante 80M-Handwerks-Slots:</strong> <span class="text-amber-300 font-semibold">${craftCandidates.join(', ')}</span> (Klicken, um Slots einzeln zu berechnen)` : '✔️ Klicken, um für jeden Slot Herstellen (80M) oder Upgraden zu berechnen'}
           </div>
         </div>
       `;
@@ -1649,7 +1613,7 @@
                   <div class="text-xs font-bold text-emerald-200 truncate">
                     ${escapeHtml(h.slotLabel)} ${h.itemName ? `„${escapeHtml(h.itemName)}“` : ''}: <span class="text-wow-gold">${h.fromIlvl} &rarr; ${h.toIlvl}</span> <span class="text-emerald-400">(+${avgGain} Ø)</span>
                   </div>
-                  <div class="text-[11px] text-slate-300">${h.markCost > 0 ? `${h.markCost} Wappen verbucht` : '0 Wappen (Tasche)'}</div>
+                  <div class="text-[11px] text-slate-300">${h.markCost > 0 ? `${h.markCost} Münzen verbucht` : '0 Münzen (Tasche)'}</div>
                 </div>
               </div>
               <button type="button" onclick="undoCompletedStep(${charIdx}, ${hIdx})"
@@ -1680,10 +1644,10 @@
         const isNow = g.availability === 'now';
         const avgGain = (g.pointGain / 16).toFixed(2);
         const costBadge = g.markCost === 0
-          ? `<span class="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-700/60 text-[11px] font-bold">🎒 0 Wappen</span>`
+          ? `<span class="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-700/60 text-[11px] font-bold">🎒 0 Münzen</span>`
           : (g.isCraftReplacement
-              ? `<span class="px-2 py-0.5 rounded bg-blue-950 text-blue-200 border border-blue-500/60 text-[11px] font-bold">🔨 ${g.markCost} W. (Handwerk 331)</span>`
-              : `<span class="px-2 py-0.5 rounded ${isNow ? 'bg-amber-950 text-amber-200 border-amber-500/60' : 'bg-slate-800 text-slate-300 border-slate-600'} border text-[11px] font-bold">🟠 ${g.markCost} W. (${g.stepCount} St.)</span>`);
+              ? `<span class="px-2 py-0.5 rounded bg-blue-950 text-blue-200 border border-blue-500/60 text-[11px] font-bold">🔨 ${g.markCost} M. (Herstellen 331)</span>`
+              : `<span class="px-2 py-0.5 rounded ${isNow ? 'bg-amber-950 text-amber-200 border-amber-500/60' : 'bg-slate-800 text-slate-300 border-slate-600'} border text-[11px] font-bold">🟠 ${g.markCost} M. (${g.stepCount} St.)</span>`);
         const statusText = isNow
           ? `<div class="text-[11px] mt-0.5 text-cyan-300 font-bold">🟢 Sofort (Beutel)</div>`
           : `<div class="text-[11px] mt-0.5 text-emerald-400 font-semibold">🌾 Noch farmen (♾️)</div>`;
@@ -1761,16 +1725,16 @@
           sub = bag > eq
             ? `<div class="text-[11px] text-cyan-300 font-bold">🎒 In Tasche: „${escapeHtml(meta.bagMythName || meta.bagName || bag + 'er Item')}“ (${bag})</div>`
             : (hasMythInBag && meta.track === 'hero_max'
-                ? `<div class="text-[11px] text-amber-300 font-bold">🎒 Mythos in Tasche: „${escapeHtml(meta.bagMythName || '321er Mythos')}“ (Bis 334: ${steps334 * stepCost} W.)</div>`
-                : `<div class="text-[11px] text-emerald-300 font-semibold">⚡ „${escapeHtml(meta.eqName || slot.label)}“ (Bis 334: ${steps334 * stepCost} W.)</div>`);
+                ? `<div class="text-[11px] text-amber-300 font-bold">🎒 Mythos in Tasche: „${escapeHtml(meta.bagMythName || '321er Mythos')}“ (Bis 334: ${steps334 * stepCost} M.)</div>`
+                : `<div class="text-[11px] text-emerald-300 font-semibold">⚡ „${escapeHtml(meta.eqName || slot.label)}“ (Bis 334: ${steps334 * stepCost} M.)</div>`);
         } else if (type === 'blocked') {
           border = isCrafted80 ? 'border-blue-500/50 bg-blue-950/15' : 'border-amber-700/50 bg-amber-950/10';
           sub = isCrafted80
-            ? `<div class="text-[11px] text-blue-300">🔨 80W Handwerks-Limit (331 Max): „${escapeHtml(meta.eqName || slot.label)}“ <span class="text-rose-300">(Für 334 Mythos-Drop nötig)</span></div>`
-            : `<div class="text-[11px] text-red-300">🔒 Limit (${maxUpgradable} Max): „${escapeHtml(meta.eqName || slot.label)}“ ${plannedCraft ? '<span class="text-blue-300 font-bold">(🔨 80W-Handwerk geplant)</span>' : '<span class="text-rose-300">(🎲 Mythos-Drop geplant)</span>'}</div>`;
+            ? `<div class="text-[11px] text-blue-300">🔨 80M Handwerks-Limit (331 Max): „${escapeHtml(meta.eqName || slot.label)}“</div>`
+            : `<div class="text-[11px] text-red-300">🔒 Limit (${maxUpgradable} Max): „${escapeHtml(meta.eqName || slot.label)}“ ${plannedCraft ? '<span class="text-blue-300 font-bold">(🔨 80M-Handwerk geplant)</span>' : '<span class="text-rose-300">(🎲 Mythos-Drop geplant)</span>'}</div>`;
         } else {
           border = isCrafted80 ? 'border-blue-500/50 bg-blue-950/15' : 'border-wow-border';
-          sub = `<div class="text-[11px] ${isCrafted80 ? 'text-blue-300 font-bold' : 'text-emerald-300'}">${isCrafted80 ? '🔨 80W Handwerks-Item (331): ' : '✔️ '}${escapeHtml(meta.eqName || meta.label || 'Fertig')}</div>`;
+          sub = `<div class="text-[11px] ${isCrafted80 ? 'text-blue-300 font-bold' : 'text-emerald-300'}">${isCrafted80 ? '🔨 80M Handwerks-Item (331): ' : '✔️ '}${escapeHtml(meta.eqName || meta.label || 'Fertig')}</div>`;
         }
         return `
           <div onclick="openEditSlotModal(${charIdx}, '${slot.key}', '${slot.label}')" class="p-2.5 rounded-xl border ${border} hover:bg-slate-800/70 cursor-pointer flex items-center justify-between gap-2">
@@ -1805,7 +1769,7 @@
             <td class="py-3 px-3 text-center"><input type="number" value="${c.wallet}" min="0" step="5" onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'wallet', this.value)" class="w-20 bg-wow-bg border border-wow-border rounded-lg px-2 py-1 text-sm font-black text-white text-center" /></td>
             <td class="py-3 px-3 text-center"><input type="number" value="${c.spent}" min="0" step="20" onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'spent', this.value)" class="w-20 bg-wow-bg border border-amber-600/50 rounded-lg px-2 py-1 text-sm font-bold text-amber-200 text-center" /></td>
             <td class="py-3 px-3 text-center"><span class="px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-600/50 text-xs font-bold">♾️ Unbegrenzt farmbar</span></td>
-            <td class="py-3 px-4 text-right"><div class="text-sm font-black text-amber-300">${Math.floor(c.wallet / cost)} Stufen im Beutel</div><div class="text-[11px] text-slate-400">(à ${cost} Wappen pro Stufe)</div></td>
+            <td class="py-3 px-4 text-right"><div class="text-sm font-black text-amber-300">${Math.floor(c.wallet / cost)} Stufen im Beutel</div><div class="text-[11px] text-slate-400">(à ${cost} Münzen pro Stufe)</div></td>
           </tr>
         `;
       }).join('');
@@ -1862,7 +1826,7 @@
 
       if (markCost > 0 && tier && markCost > prevWallet) {
         const diffToFarm = markCost - prevWallet;
-        if (!confirm(`Dir fehlen für diesen Schritt noch ${diffToFarm} Wappen im Beutel. Hast du diese ${diffToFarm} Wappen gerade im Spiel gefarmt und das Upgrade durchgeführt?`)) {
+        if (!confirm(`Dir fehlen für diesen Schritt noch ${diffToFarm} Münzen im Beutel. Hast du diese ${diffToFarm} Münzen gerade im Spiel gefarmt und das Upgrade durchgeführt?`)) {
           return;
         }
       }
@@ -1889,7 +1853,7 @@
 
       if (isCraftReplacement) {
         meta.track = 'crafted';
-        meta.label = '80W Handwerk (331)';
+        meta.label = '80M Handwerk (331)';
         meta.eqMaxUpgradable = 331;
         meta.eqName = `Handwerks-Item (${slotLabel})`;
       } else if (markType === 'bag') {
@@ -1971,7 +1935,7 @@
     function classifyItemTrackFromBonusIds(bonusStr, isCrafted, itemIlvl = 0) {
       const ids = String(bonusStr || '').split('/').map(n => parseInt(n, 10)).filter(n => !isNaN(n));
       if (isCrafted || ids.some(id => CRAFTED_BONUS_IDS.includes(id))) {
-        return { track: 'crafted', label: '80W Handwerk (331)', eqMaxUpgradable: 331, tierKey: 'myth', stepsSpent: 4 };
+        return { track: 'crafted', label: '80M Handwerk (331)', eqMaxUpgradable: 331, tierKey: 'myth', stepsSpent: 4 };
       }
       for (const id of ids) {
         if (MYTH_BONUS_IDS[id]) return { track: 'myth', label: MYTH_BONUS_IDS[id], eqMaxUpgradable: 334, tierKey: 'myth', stepsSpent: Math.max(0, id - 12849) };
@@ -2127,8 +2091,8 @@
         champSpent: champSteps * heroChampUnitCost,
         heroSpent: heroSteps * heroChampUnitCost,
         mythSpent: mythCrafted * CRAFTED_MYTH_COST + mythSteps * mythUnitCost,
-        mythSpentNote: `${mythCrafted}× Handwerk (331 à 80W) + ${mythSteps}× Mythos-Stufen (à ${mythUnitCost}W)`,
-        completedHistory: [], plannedCrafts: {}
+        mythSpentNote: `${mythCrafted}× Handwerk (331 à 80M) + ${mythSteps}× Mythos-Stufen (à ${mythUnitCost}M)`,
+        completedHistory: [], slotModes: {}
       };
     }
 
@@ -2163,7 +2127,7 @@
           ...ex, ...p,
           has331Achievement: Boolean(ex.has331Achievement || p.has331Achievement),
           completedHistory: ex.completedHistory || [],
-          plannedCrafts: ex.plannedCrafts || {},
+          slotModes: ex.slotModes || {},
           mythSpent: keepSpent ? ex.mythSpent : p.mythSpent,
           heroSpent: keepSpent ? ex.heroSpent : p.heroSpent,
           champSpent: keepSpent ? ex.champSpent : p.champSpent,
@@ -2207,7 +2171,7 @@
         characters.push(migrateCharacterObject({
           name: c.name, realm: c.realm, region: c.region, className: c.className, hasTwoHand: c.hasTwoHand,
           slots: c.slots, bagSlots: {}, slotMeta: c.eqMeta, charWatermarks: { ...c.slots },
-          completedHistory: [], plannedCrafts: {}, catalystCharges: 0,
+          completedHistory: [], slotModes: {}, catalystCharges: 0,
           mythMarks: 0, heroMarks: 0, champMarks: 0, vetMarks: 0, advMarks: 0,
           mythSpent: 0, heroSpent: 0, champSpent: 0, vetSpent: 0, advSpent: 0
         }));
@@ -2233,7 +2197,7 @@
           mergedMeta[s.key] = {
             ...oldMeta,
             track: keepCrafted ? 'crafted' : newMeta.track,
-            label: keepCrafted ? '80W Handwerk (331)' : newMeta.label,
+            label: keepCrafted ? '80M Handwerk (331)' : newMeta.label,
             eqMaxUpgradable: keepCrafted ? 331 : newMeta.eqMaxUpgradable,
             eqName: newMeta.eqName || oldMeta.eqName
           };
@@ -2284,7 +2248,7 @@
 
       if (selTrack === 'crafted') {
         char.slotMeta[slotKey].track = 'crafted';
-        char.slotMeta[slotKey].label = '80W Handwerk (331)';
+        char.slotMeta[slotKey].label = '80M Handwerk (331)';
         char.slotMeta[slotKey].eqMaxUpgradable = 331;
       } else if (selTrack === 'myth') {
         char.slotMeta[slotKey].track = 'myth';
@@ -2307,7 +2271,7 @@
     }
 
     function switchTab(tab) {
-      ['plan', 'craftvsmyth', 'calc', 'caps', 'milestone'].forEach(t => {
+      ['plan', 'slotplanner', 'calc', 'caps', 'milestone'].forEach(t => {
         const sec = document.getElementById(`tab-${t}`);
         const btn = document.getElementById(`tabBtn-${t}`);
         if (sec) sec.classList.toggle('hidden', t !== tab);
