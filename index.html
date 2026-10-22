@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>WoW Kriegsmeuten-Tracker v25.0</title>
+  <title>WoW Kriegsmeuten-Tracker v26.0</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -58,7 +58,7 @@
         <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-yellow-600 flex items-center justify-center text-slate-950 font-black text-base shadow">W</div>
         <h1 class="text-lg font-extrabold text-white tracking-tight flex items-center gap-2.5">
           Kriegsmeuten-Upgrade-Tracker
-          <span class="text-xs px-2.5 py-0.5 rounded-md bg-emerald-500 text-slate-950 font-black">v25.0 AUTO-SYNC</span>
+          <span class="text-xs px-2.5 py-0.5 rounded-md bg-emerald-500 text-slate-950 font-black">v26.0 LIVE-M+</span>
         </h1>
       </div>
 
@@ -154,8 +154,8 @@
             <div class="flex items-center justify-between gap-3">
               <span class="text-sm font-semibold text-slate-200">🎯 Ziel-Schnitt:</span>
               <select id="targetIlvlSelect" onchange="onSettingsChange()" class="w-44 bg-wow-card border border-wow-border rounded-xl px-3 py-2 text-wow-gold font-bold text-xs">
-                <option value="331" selected>Ø 331.00 (Rabatt)</option>
-                <option value="334">Ø 334.00 (Max)</option>
+                <option value="331">Ø 331.00 (Rabatt)</option>
+                <option value="334" selected>Ø 334.00 (Max)</option>
               </select>
             </div>
 
@@ -172,16 +172,16 @@
             <div class="flex items-center justify-between gap-3">
               <span class="text-sm font-semibold text-slate-200">🟠 Myth-Preis:</span>
               <select id="crestStepCostSelect" onchange="onSettingsChange()" class="w-44 bg-wow-card border border-wow-border rounded-xl px-3 py-2 text-white font-bold text-xs">
-                <option value="auto" selected id="autoCostOption">Auto (Prüft 331)</option>
-                <option value="20">20 Münzen (Ohne)</option>
-                <option value="10">10 Münzen (Rabatt)</option>
+                <option value="auto" id="autoCostOption">Auto (Prüft 331)</option>
+                <option value="20" selected>20 Münzen (Ohne Rabatt)</option>
+                <option value="10">10 Münzen (Mit Rabatt)</option>
               </select>
             </div>
 
             <div class="pt-3 border-t border-wow-border/60 space-y-2.5">
               <label class="flex items-center justify-between text-xs font-semibold text-amber-300 cursor-pointer">
-                <span>🏆 331er-Erfolg aktiv</span>
-                <input type="checkbox" id="has331AchToggle" onchange="onSettingsChange()" class="w-4 h-4 accent-amber-500 rounded cursor-pointer" />
+                <span>🏆 331er-Erfolg aktiv (10M)</span>
+                <input type="checkbox" id="has331AchToggle" onchange="onManual331Toggle(this.checked)" class="w-4 h-4 accent-amber-500 rounded cursor-pointer" />
               </label>
               <label class="flex items-center justify-between text-xs font-semibold text-purple-300 cursor-pointer">
                 <span>🟣 Held/Champ 10M</span>
@@ -336,7 +336,7 @@
     </div>
   </div>
 
-  <!-- MODAL: SIMCRAFT IMPORT (ÜBERSCHREIBT IMMER MIT NEUEN WAPPEN & SYNCED SLOT-AUSWAHL) -->
+  <!-- MODAL: SIMCRAFT IMPORT -->
   <div id="simcModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-wow-panel border border-wow-border rounded-2xl max-w-2xl w-full p-5 space-y-3.5 shadow-2xl">
       <div class="flex items-center justify-between">
@@ -436,7 +436,7 @@
     const STORAGE_KEY_MAIN  = 'wow_warband_tracker_data';
     const STORAGE_KEY_RULES = 'wow_warband_tracker_rules';
     const STORAGE_KEY_THEME = 'wow_warband_tracker_theme';
-    const CURRENT_SCHEMA_VERSION = 25;
+    const CURRENT_SCHEMA_VERSION = 26;
     const CRAFTED_MYTH_COST = 80;
 
     // =========================================================================
@@ -599,8 +599,8 @@
     const CRAFTED_BONUS_IDS = [13836, 12214];
 
     const DEFAULT_RULES = {
-      targetIlvl: 331, selectedKeyLevel: 12, keyTimedMode: true,
-      stepCost: 'auto', manual331Achievement: false, heroChampDiscount: true,
+      targetIlvl: 334, selectedKeyLevel: 12, keyTimedMode: true,
+      stepCost: '20', manual331Achievement: false, heroChampDiscount: true,
       includeBags: true, showCompletedSteps: true
     };
 
@@ -609,7 +609,6 @@
     let milestoneTarget = 331;
     let currentEditingCell = null;
     let rules = { ...DEFAULT_RULES };
-    let calcTabState = { targetIlvl: 334, discountOverride: null };
 
     function isTwoHandEquipped(char) {
       return Boolean(char?.hasTwoHand) && Number(char.slots?.mainhand || 0) > 0 && Number(char.slots?.offhand || 0) === 0;
@@ -639,6 +638,7 @@
       return Math.max(eqMax, bagMax);
     }
 
+    // WICHTIG IN v26.0: Alle offenen Slots starten standardmäßig auf 'upgrade', damit der Rabatt-Schalter (10M vs 20M) sofort bei jedem Slot die M+-Runs aktualisiert!
     function getSlotPlannerMode(char, slotObj, goalIlvl) {
       if (!char.slotModes) char.slotModes = {};
       const eq = getEquippedSlotIlvl(char, slotObj.key);
@@ -652,22 +652,14 @@
       const saved = char.slotModes[slotObj.key];
       if (saved === 'skip') return 'skip';
       if (saved === 'craft' && !slotObj.noCraft) return 'craft';
-      if (saved === 'upgrade') return 'upgrade';
-
-      const maxTrack = getEffectiveSlotMaxUpgradable(char, slotObj.key);
-      if (maxTrack >= 334) return 'upgrade';
-      if (!slotObj.noCraft && !slotObj.isTierSlot) return 'craft';
       return 'upgrade';
     }
 
     function isSlotPlannedForCraft(char, slotObj) {
       if (slotObj.noCraft) return false;
-      return getSlotPlannerMode(char, slotObj, Number(rules.targetIlvl || 331)) === 'craft';
+      return getSlotPlannerMode(char, slotObj, Number(rules.targetIlvl || 334)) === 'craft';
     }
 
-    // =========================================================================
-    // NEU IN v25.0: INTELLIGENTER SLOT-AUSWAHL-ABGLEICH BEIM SIMC-UPDATE
-    // =========================================================================
     function reconcileSlotModesOnSimcUpdate(oldChar, newChar) {
       const reconciledModes = {};
       const changesLog = [];
@@ -687,7 +679,6 @@
         const isNowCrafted331 = newMeta.track === 'crafted' && newEq >= 331 && !hasNewMythInBag;
         const isNowMax334 = newEq >= 334;
 
-        // 1. Slot ist im neuen SimC bereits fertig (334 Max oder 331 Handwerk) -> Aus offener Auswahl entfernen
         if (isNowMax334 || isNowCrafted331) {
           if (prevMode && prevMode !== 'done') {
             changesLog.push(`${s.label}: Jetzt auf ${newEq} (${isNowCrafted331 ? 'Handwerk' : 'Max'}) ➔ als erledigt markiert`);
@@ -695,27 +686,20 @@
           return;
         }
 
-        // 2. Neues Mythos-Item gefunden (vorher nur Held/Champ <=321, jetzt Mythos-Spur bis 334 verfügbar)
         if (oldMaxUp <= 321 && newMaxUp >= 334) {
           reconciledModes[key] = 'upgrade';
           changesLog.push(`${s.label}: Neues Mythos-Item erkannt ➔ automatisch auf „Upgraden“ umgestellt`);
           return;
         }
 
-        // 3. Item-Level im Slot ist gestiegen, aber noch unter 334 (z. B. im Spiel um 1-2 Stufen aufgewertet)
         if (newEq > oldEq && newMaxUp >= 334) {
           reconciledModes[key] = prevMode === 'skip' ? 'skip' : 'upgrade';
           changesLog.push(`${s.label}: Item-Level ${oldEq} ➔ ${newEq} aktualisiert`);
           return;
         }
 
-        // 4. Keine relevante Änderung am Slot -> Vorherige Auswahl des Nutzers ('craft', 'upgrade', 'skip') beibehalten!
         if (prevMode) {
-          if (prevMode === 'craft' && s.noCraft) {
-            reconciledModes[key] = 'upgrade';
-          } else {
-            reconciledModes[key] = prevMode;
-          }
+          reconciledModes[key] = (prevMode === 'craft' && s.noCraft) ? 'upgrade' : prevMode;
         }
       });
 
@@ -750,31 +734,34 @@
       return SLOTS.every(s => (bm[s.key] || 0) >= 331) || characters.some(c => c.has331Achievement === true);
     }
 
+    // EINZIGE ZENTRALE QUELLE FÜR DEN MYTHOS-PREIS (10M MIT RABATT VS. 20M OHNE RABATT)
     function getEffectiveMythStepCost() {
-      if (rules.stepCost === 'auto' || !rules.stepCost) return is331MilestoneUnlocked() ? 10 : 20;
-      return parseInt(rules.stepCost, 10) || 20;
+      if (rules.stepCost === '10') return 10;
+      if (rules.stepCost === '20') return 20;
+      return is331MilestoneUnlocked() ? 10 : 20;
     }
 
     function getEffectiveHeroChampStepCost() {
       return rules.heroChampDiscount !== false ? 10 : 20;
     }
 
-    function getCalcTabDiscountActive() {
-      if (calcTabState.discountOverride !== null) return calcTabState.discountOverride;
-      return getEffectiveMythStepCost() === 10;
-    }
-
     function isValidCharacterArray(arr) {
       return Array.isArray(arr) && arr.every(c => c && typeof c === 'object' && typeof c.name === 'string' && c.name.trim() !== '' && c.slots && typeof c.slots === 'object');
     }
 
-    function migrateCharacterObject(c) {
+    function migrateCharacterObject(c, fromVersion = 0) {
       if (!c.slots || typeof c.slots !== 'object') c.slots = {};
       if (!c.bagSlots || typeof c.bagSlots !== 'object') c.bagSlots = {};
       if (!c.slotMeta || typeof c.slotMeta !== 'object') c.slotMeta = {};
       if (!c.charWatermarks || typeof c.charWatermarks !== 'object') c.charWatermarks = {};
       if (!Array.isArray(c.completedHistory)) c.completedHistory = [];
       if (!c.slotModes || typeof c.slotModes !== 'object') c.slotModes = {};
+      if (fromVersion < 26) {
+        // Bereinige alte automatische 'craft'-Vorbelegungen, damit der Rabatt-Schalter sofort auf allen Slots greift
+        Object.keys(c.slotModes).forEach(k => {
+          if (c.slotModes[k] === 'craft') delete c.slotModes[k];
+        });
+      }
       if (c.hasTwoHand === undefined) {
         c.hasTwoHand = Number(c.slots.mainhand || 0) > 0 && Number(c.slots.offhand || 0) === 0;
       }
@@ -797,17 +784,18 @@
 
     function migrateStoragePayload(parsed) {
       if (!parsed) return null;
+      const version = Number(parsed.schemaVersion || 0);
       const rawChars = Array.isArray(parsed) ? parsed : parsed.characters;
       if (!isValidCharacterArray(rawChars)) return null;
-      return rawChars.map(c => migrateCharacterObject(c));
+      return rawChars.map(c => migrateCharacterObject(c, version));
     }
 
     function syncSidebarInputsFromRules() {
       if (!MPLUS_KEY_REWARDS[rules.selectedKeyLevel]) rules.selectedKeyLevel = 12;
-      document.getElementById('targetIlvlSelect').value = String(rules.targetIlvl || 331);
+      document.getElementById('targetIlvlSelect').value = String(rules.targetIlvl || 334);
       document.getElementById('selectedKeyLevelSelect').value = String(rules.selectedKeyLevel || 12);
-      document.getElementById('crestStepCostSelect').value = String(rules.stepCost || 'auto');
-      document.getElementById('has331AchToggle').checked = Boolean(rules.manual331Achievement || characters.some(c => c.has331Achievement));
+      document.getElementById('crestStepCostSelect').value = String(rules.stepCost || '20');
+      document.getElementById('has331AchToggle').checked = getEffectiveMythStepCost() === 10;
       document.getElementById('heroChampDiscToggle').checked = rules.heroChampDiscount !== false;
       document.getElementById('keyTimedToggle').checked = rules.keyTimedMode !== false;
       document.getElementById('includeBagsToggle').checked = rules.includeBags !== false;
@@ -847,21 +835,25 @@
     }
 
     function onSettingsChange() {
-      rules.targetIlvl = parseFloat(document.getElementById('targetIlvlSelect').value || '331');
+      rules.targetIlvl = parseFloat(document.getElementById('targetIlvlSelect').value || '334');
       rules.selectedKeyLevel = parseInt(document.getElementById('selectedKeyLevelSelect').value || '12', 10);
       rules.stepCost = document.getElementById('crestStepCostSelect').value;
-      rules.manual331Achievement = document.getElementById('has331AchToggle').checked;
       rules.heroChampDiscount = document.getElementById('heroChampDiscToggle').checked;
       rules.keyTimedMode = document.getElementById('keyTimedToggle').checked;
       rules.includeBags = document.getElementById('includeBagsToggle').checked;
+      rules.manual331Achievement = (rules.stepCost === '10');
 
+      syncSidebarInputsFromRules();
+      saveCharsToStorage();
+      try { localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules)); } catch (e) {}
+      renderAll();
+    }
+
+    function onManual331Toggle(checked) {
+      rules.manual331Achievement = Boolean(checked);
+      rules.stepCost = checked ? '10' : '20';
       characters.forEach(c => { c.has331Achievement = rules.manual331Achievement; });
-
-      if (rules.stepCost !== 'auto') {
-        calcTabState.discountOverride = parseInt(rules.stepCost, 10) === 10;
-      } else {
-        calcTabState.discountOverride = null;
-      }
+      syncSidebarInputsFromRules();
       saveCharsToStorage();
       try { localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules)); } catch (e) {}
       renderAll();
@@ -882,7 +874,6 @@
       characters = [];
       activeCharIndex = 0;
       rules = { ...DEFAULT_RULES };
-      calcTabState = { targetIlvl: 334, discountOverride: null };
       syncSidebarInputsFromRules();
       saveCharsToStorage();
       renderAll();
@@ -924,14 +915,16 @@
         const maxTrack = getEffectiveSlotMaxUpgradable(char, s.key);
         if (best >= 334 || (meta.track === 'crafted' && best >= 331 && !hasMythInBag)) return;
         if (maxTrack >= 334) {
-          const startIlvl = hasMythInBag ? Math.max(eq, meta.bagMythIlvl) : best;
+          const startIlvl = (meta.track === 'myth') ? (hasMythInBag ? Math.max(eq, meta.bagMythIlvl) : eq) : (hasMythInBag ? meta.bagMythIlvl : best);
           const steps = MYTH_UPGRADE_STEPS.filter(st => st > Math.max(startIlvl, 318) && st <= 334).length;
           if (steps > 0) { ownedMythItemsCount++; ownedMythSteps += steps; }
         } else blockedHeroCount++;
       });
       return {
         ownedMythItemsCount, ownedMythSteps, blockedHeroCount,
+        ownedTotalCost: ownedMythSteps * mythStepCost,
         ownedMissing: Math.max(0, ownedMythSteps * mythStepCost - walletMyth),
+        allTotalCost: (ownedMythSteps + blockedHeroCount * 4) * mythStepCost,
         allMissing: Math.max(0, (ownedMythSteps + blockedHeroCount * 4) * mythStepCost - walletMyth)
       };
     }
@@ -948,9 +941,7 @@
     function restoreSkippedSlot(charIdx, slotKey) {
       const char = characters[charIdx];
       if (!char || !char.slotModes) return;
-      const slotObj = SLOTS.find(s => s.key === slotKey);
-      const maxTrack = getEffectiveSlotMaxUpgradable(char, slotKey);
-      char.slotModes[slotKey] = (maxTrack >= 334 || slotObj?.noCraft || slotObj?.isTierSlot) ? 'upgrade' : 'craft';
+      char.slotModes[slotKey] = 'upgrade';
       saveCharsToStorage();
       renderAll();
     }
@@ -959,7 +950,7 @@
       const char = characters[charIdx];
       if (!char) return;
       if (!char.slotModes) char.slotModes = {};
-      const goalIlvl = calcTabState.targetIlvl;
+      const goalIlvl = Number(rules.targetIlvl || 334);
 
       SLOTS.forEach(s => {
         const eq = getEquippedSlotIlvl(char, s.key);
@@ -969,30 +960,38 @@
           return;
         }
         if (preset === 'smart') {
-          delete char.slotModes[s.key];
+          char.slotModes[s.key] = 'upgrade';
         } else if (preset === 'only_owned_myth') {
           char.slotModes[s.key] = maxTrack >= 334 ? 'upgrade' : 'skip';
-        } else if (preset === 'all_upgrade') {
-          char.slotModes[s.key] = 'upgrade';
+        } else if (preset === 'craft_non_tier') {
+          char.slotModes[s.key] = (maxTrack <= 321 && !s.noCraft && !s.isTierSlot) ? 'craft' : 'upgrade';
         }
       });
       saveCharsToStorage();
       renderAll();
     }
 
+    // SYNCHRONISIERT ZIEL & RABATT DIREKT MIT DEN GLOBALEN REGELN (DAMIT ALLE M+-ZAHLEN SOFORT UPDATEN!)
     function setCalcTarget(val) {
-      calcTabState.targetIlvl = val;
+      rules.targetIlvl = Number(val);
+      syncSidebarInputsFromRules();
+      try { localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules)); } catch (e) {}
       renderAll();
     }
 
-    function setCalcDiscount(state) {
-      calcTabState.discountOverride = Boolean(state);
+    function setCalcDiscount(useDiscount) {
+      rules.stepCost = useDiscount ? '10' : '20';
+      rules.manual331Achievement = Boolean(useDiscount);
+      characters.forEach(c => { c.has331Achievement = rules.manual331Achievement; });
+      syncSidebarInputsFromRules();
+      saveCharsToStorage();
+      try { localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules)); } catch (e) {}
       renderAll();
     }
 
     function selectCalcKeyLevel(lvl) {
       rules.selectedKeyLevel = lvl;
-      document.getElementById('selectedKeyLevelSelect').value = String(lvl);
+      syncSidebarInputsFromRules();
       try { localStorage.setItem(STORAGE_KEY_RULES, JSON.stringify(rules)); } catch (e) {}
       renderAll();
     }
@@ -1004,9 +1003,9 @@
       const charIdx = sim.charIdx;
       const using2H = isTwoHandEquipped(char);
 
-      const goalIlvl = calcTabState.targetIlvl;
-      const useDisc = getCalcTabDiscountActive();
-      const stepCost = useDisc ? 10 : 20;
+      const goalIlvl = Number(rules.targetIlvl || 334);
+      const stepCost = getEffectiveMythStepCost(); // 10 mit Rabatt, 20 ohne Rabatt
+      const useDisc = (stepCost === 10);
       const keyLvl = rules.selectedKeyLevel || 12;
       const keyLbl = getKeyLabel(keyLvl);
       const cPerKey = getKeyCrestsPerRun();
@@ -1062,11 +1061,14 @@
         }
 
         const canCraft = !s.noCraft;
-        const craftCoins = CRAFTED_MYTH_COST;
+        const craftCoins = CRAFTED_MYTH_COST; // 80
         const craftRuns = Math.ceil(craftCoins / cPerKey);
 
-        const startForMyth = hasOwnedMyth ? (hasMythInBag ? Math.max(eq, meta.bagMythIlvl) : Math.max(eq, bag)) : 321;
-        const upgradeSteps = MYTH_UPGRADE_STEPS.filter(st => st > Math.max(startForMyth, 318) && st <= goalIlvl).length;
+        // Exaktes Start-iLvl für das Mythos-Item bestimmen
+        const startForMyth = hasOwnedMyth
+          ? (meta.track === 'myth' ? (hasMythInBag ? Math.max(eq, meta.bagMythIlvl) : eq) : (hasMythInBag ? meta.bagMythIlvl : 321))
+          : 321;
+        const upgradeSteps = Math.max(1, MYTH_UPGRADE_STEPS.filter(st => st > Math.max(startForMyth, 318) && st <= goalIlvl).length);
         const upgradeCoins = upgradeSteps * stepCost;
         const upgradeRuns = Math.ceil(upgradeCoins / cPerKey);
 
@@ -1095,8 +1097,8 @@
           : `<span class="px-2.5 py-0.5 rounded-md bg-amber-950 text-amber-300 border border-amber-600/60 text-xs font-bold">🔒 ${meta.label || 'Held'} (${maxTrack})</span>`;
 
         const upgLabel = hasOwnedMyth
-          ? `⬆️ Upgraden (${upgradeCoins}M)`
-          : `🎲 Myth farmen (${upgradeCoins}M)`;
+          ? `⬆️ Upgraden (${upgradeCoins}M • ${upgradeRuns}× M+${keyLbl})`
+          : `🎲 Myth + Upgraden (${upgradeCoins}M • ${upgradeRuns}× M+${keyLbl})`;
 
         activeRowsHtml.push(`
           <tr class="border-b border-wow-border/70 last:border-0 hover:bg-white/[0.03] transition">
@@ -1114,18 +1116,18 @@
               <div class="inline-flex items-center gap-2 bg-wow-bg p-1.5 rounded-xl border border-wow-border">
                 ${canCraft ? `
                   <button type="button" onclick="setSlotPlannerMode(${charIdx}, '${s.key}', 'craft')"
-                          class="px-4 py-2 rounded-lg text-xs font-bold transition ${
+                          class="px-3.5 py-2 rounded-lg text-xs font-bold transition ${
                             mode === 'craft'
                               ? 'bg-blue-500 text-slate-950 font-black shadow'
                               : 'text-slate-200 hover:text-white'
                           }">
-                    🔨 Herstellen 331 (80M)
+                    🔨 Herstellen 331 (80M • ${craftRuns}× M+${keyLbl})
                   </button>
                 ` : `
                   <span class="px-3 py-2 text-xs font-medium text-slate-400">Kein Craft</span>
                 `}
                 <button type="button" onclick="setSlotPlannerMode(${charIdx}, '${s.key}', 'upgrade')"
-                        class="px-4 py-2 rounded-lg text-xs font-bold transition ${
+                        class="px-3.5 py-2 rounded-lg text-xs font-bold transition ${
                           mode === 'upgrade'
                             ? 'bg-wow-gold text-slate-950 font-black shadow'
                             : 'text-slate-200 hover:text-white'
@@ -1142,7 +1144,7 @@
 
             <td class="py-4 px-6 text-right whitespace-nowrap">
               <span class="text-base font-black text-amber-300">${activeCoins} Münzen</span>
-              <span class="text-xs font-extrabold text-cyan-300 block mt-0.5">🏃 ${activeRuns}× M+${keyLbl}</span>
+              <span class="text-sm font-extrabold text-cyan-300 block mt-0.5">🏃 ${activeRuns}× M+${keyLbl}</span>
             </td>
 
             <td class="py-4 px-6 text-right">
@@ -1156,8 +1158,9 @@
         `);
       });
 
+      const totalMplusPure = Math.ceil(totalSelectedCoins / cPerKey);
       const netCoinsToFarm = Math.max(0, totalSelectedCoins - walletMyth);
-      const totalMplusToRun = Math.ceil(netCoinsToFarm / cPerKey);
+      const totalMplusAfterWallet = Math.ceil(netCoinsToFarm / cPerKey);
       const newAvgIlvl = (newTotalIlvlSum / 16).toFixed(2);
       const avgGainTotal = Math.max(0, (newTotalIlvlSum / 16) - sim.startAvg).toFixed(2);
 
@@ -1165,47 +1168,53 @@
         <div class="bg-wow-panel border-2 border-wow-gold/70 rounded-2xl p-5 shadow-lg space-y-4 w-full">
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div class="flex flex-wrap items-center gap-2.5">
+              <!-- 1. Ziel-Stufe -->
               <div class="inline-flex rounded-xl bg-wow-bg p-1 border border-wow-border text-xs">
-                <button type="button" onclick="setCalcTarget(334)" class="px-3.5 py-1.5 rounded-lg font-bold transition ${goalIlvl === 334 ? 'bg-wow-gold text-slate-950 font-black' : 'text-slate-200'}">🔥 Ziel 334</button>
-                <button type="button" onclick="setCalcTarget(331)" class="px-3.5 py-1.5 rounded-lg font-bold transition ${goalIlvl === 331 ? 'bg-wow-gold text-slate-950 font-black' : 'text-slate-200'}">🎯 Ziel 331</button>
+                <button type="button" onclick="setCalcTarget(334)" class="px-3.5 py-1.5 rounded-lg font-bold transition ${goalIlvl === 334 ? 'bg-wow-gold text-slate-950 font-black shadow' : 'text-slate-200 hover:text-white'}">🔥 Ziel 334 Max</button>
+                <button type="button" onclick="setCalcTarget(331)" class="px-3.5 py-1.5 rounded-lg font-bold transition ${goalIlvl === 331 ? 'bg-wow-gold text-slate-950 font-black shadow' : 'text-slate-200 hover:text-white'}">🎯 Ziel 331</button>
               </div>
 
+              <!-- 2. Rabatt-Umschalter (aktualisiert sofort alle M+-Zahlen!) -->
               <div class="inline-flex rounded-xl bg-wow-bg p-1 border border-wow-border text-xs">
-                <button type="button" onclick="setCalcDiscount(false)" class="px-3.5 py-1.5 rounded-lg font-bold transition ${!useDisc ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-200'}">20M (Ohne Rabatt)</button>
-                <button type="button" onclick="setCalcDiscount(true)" class="px-3.5 py-1.5 rounded-lg font-bold transition ${useDisc ? 'bg-emerald-500 text-slate-950 font-black' : 'text-slate-200'}">10M (Mit Rabatt)</button>
+                <button type="button" onclick="setCalcDiscount(false)" class="px-3.5 py-1.5 rounded-lg font-bold transition ${!useDisc ? 'bg-amber-500 text-slate-950 font-black shadow' : 'text-slate-200 hover:text-white'}">❌ Ohne Rabatt (20M / Stufe)</button>
+                <button type="button" onclick="setCalcDiscount(true)" class="px-3.5 py-1.5 rounded-lg font-bold transition ${useDisc ? 'bg-emerald-500 text-slate-950 font-black shadow' : 'text-slate-200 hover:text-white'}">✅ Mit Rabatt (10M / Stufe)</button>
               </div>
 
+              <!-- 3. M+ Key-Höhe -->
               <div class="inline-flex rounded-xl bg-wow-bg p-1 border border-cyan-700/50 text-xs">
                 ${[9, 10, 11, 12].map(lvl => {
                   const isK = lvl === keyLvl;
                   const w = rules.keyTimedMode ? MPLUS_KEY_REWARDS[lvl].timed : MPLUS_KEY_REWARDS[lvl].untimed;
-                  return `<button type="button" onclick="selectCalcKeyLevel(${lvl})" class="px-3 py-1.5 rounded-lg font-bold transition ${isK ? 'bg-cyan-400 text-slate-950 font-black' : 'text-slate-200'}">M+${lvl === 12 ? '12+' : lvl} (${w}M)</button>`;
+                  return `<button type="button" onclick="selectCalcKeyLevel(${lvl})" class="px-3 py-1.5 rounded-lg font-bold transition ${isK ? 'bg-cyan-400 text-slate-950 font-black shadow' : 'text-slate-200 hover:text-white'}">M+${lvl === 12 ? '12+' : lvl} (${w}M)</button>`;
                 }).join('')}
               </div>
             </div>
 
-            <div class="flex items-center gap-2.5">
+            <div class="flex flex-wrap items-center gap-2">
               <button type="button" onclick="setBatchSlotPlannerMode(${charIdx}, 'only_owned_myth')" class="px-3.5 py-2 rounded-xl bg-wow-card hover:bg-slate-700 border border-wow-border text-xs font-bold text-cyan-300 transition">
                 ⚡ Nur vorhandene Mythos-Items
               </button>
+              <button type="button" onclick="setBatchSlotPlannerMode(${charIdx}, 'craft_non_tier')" class="px-3.5 py-2 rounded-xl bg-wow-card hover:bg-slate-700 border border-wow-border text-xs font-bold text-blue-300 transition">
+                🔨 Nicht-Set-Slots auf 80M Craft
+              </button>
               <button type="button" onclick="setBatchSlotPlannerMode(${charIdx}, 'smart')" class="px-3.5 py-2 rounded-xl bg-wow-card hover:bg-slate-700 border border-wow-border text-xs font-bold text-white transition">
-                🔄 Alle offenen zeigen
+                🔄 Alle offenen auf Upgraden
               </button>
             </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5 pt-3 border-t border-wow-border text-xs">
             <div class="bg-wow-card px-4 py-3 rounded-xl border border-wow-border flex items-center justify-between">
-              <span class="text-slate-300 font-medium">Aktive Auswahl:</span>
-              <strong class="text-white text-sm">${selectedCraftCount}× Craft | ${selectedUpgradeCount}× Upg.</strong>
+              <span class="text-slate-300 font-medium">Gesamtkosten Auswahl:</span>
+              <strong class="text-amber-300 text-base font-black">${totalSelectedCoins} Münzen <span class="text-cyan-300 text-xs">(${totalMplusPure}× M+${keyLbl})</span></strong>
             </div>
             <div class="bg-wow-card px-4 py-3 rounded-xl border border-wow-border flex items-center justify-between">
-              <span class="text-slate-300 font-medium">Münzen (−${walletMyth} Beutel):</span>
-              <strong class="text-amber-300 text-base font-black">${netCoinsToFarm} Münzen</strong>
+              <span class="text-slate-300 font-medium">Abzgl. Beutel (${walletMyth} M.):</span>
+              <strong class="text-white text-base font-black">Noch ${netCoinsToFarm} Münzen</strong>
             </div>
-            <div class="bg-emerald-950/35 px-4 py-3 rounded-xl border border-emerald-500/70 flex items-center justify-between">
-              <span class="text-emerald-200 font-bold">Gesamt M+ Runs:</span>
-              <strong class="text-emerald-300 text-lg font-black">🏃 ${totalMplusToRun}× M+${keyLbl}</strong>
+            <div class="bg-emerald-950/35 px-4 py-3 rounded-xl border-2 border-emerald-500/80 flex items-center justify-between">
+              <span class="text-emerald-200 font-bold">Noch zu laufen (M+):</span>
+              <strong class="text-emerald-300 text-lg font-black">🏃 ${totalMplusAfterWallet}× M+${keyLbl} <span class="text-xs font-normal text-slate-300">(Gesamt: ${totalMplusPure}×)</span></strong>
             </div>
             <div class="bg-wow-card px-4 py-3 rounded-xl border border-wow-border flex items-center justify-between">
               <span class="text-slate-300 font-medium">Neuer Schnitt:</span>
@@ -1221,7 +1230,7 @@
                 <thead>
                   <tr class="bg-wow-card border-b border-wow-border text-xs font-bold uppercase text-slate-300">
                     <th class="py-3.5 px-6">Offener Slot & Item (${activeRowsHtml.length})</th>
-                    <th class="py-3.5 px-4">Aktion (Herstellen vs. Upgraden)</th>
+                    <th class="py-3.5 px-4">Aktion wählen (${useDisc ? 'MIT Rabatt = 10M/Stufe' : 'OHNE Rabatt = 20M/Stufe'})</th>
                     <th class="py-3.5 px-4 text-center">Ziel & Gewinn</th>
                     <th class="py-3.5 px-6 text-right">Aufwand (Slot)</th>
                     <th class="py-3.5 px-6 text-right">Ausblenden</th>
@@ -1259,14 +1268,14 @@
     }
 
     function simulateCharacter(char, charIdx) {
-      const targetAvg = Number(rules.targetIlvl || 331);
+      const targetAvg = Number(rules.targetIlvl || 334);
       const targetTotalPoints = Math.ceil(targetAvg * 16);
       const mythStepCost = getEffectiveMythStepCost();
       const heroChampStepCost = getEffectiveHeroChampStepCost();
       const using2H = isTwoHandEquipped(char);
 
       const autoCostOpt = document.getElementById('autoCostOption');
-      if (autoCostOpt) autoCostOpt.textContent = `Auto (${mythStepCost} Münzen)`;
+      if (autoCostOpt) autoCostOpt.textContent = `Auto (${is331MilestoneUnlocked() ? 10 : 20} Münzen)`;
 
       const mythCap  = getCharCrestNumbers(char, 'myth');
       const heroCap  = getCharCrestNumbers(char, 'hero');
@@ -1393,7 +1402,7 @@
         const is2HMain = (blocked.key === 'mainhand' && using2H);
         const curVal = simSlots[blocked.key];
         const meta = char.slotMeta?.[blocked.key] || {};
-        const useCraft = isSlotPlannedForCraft(char, blocked) && replaceTarget <= 331 && curVal < 331;
+        const useCraft = isSlotPlannedForCraft(char, blocked) && curVal < 331;
 
         const toIlvl = useCraft ? 331 : replaceTarget;
         const dropSteps = MYTH_UPGRADE_STEPS.filter(st => st > 321 && st <= toIlvl).length;
@@ -1512,6 +1521,7 @@
       const m334 = sim.max334;
       const keyLbl = getKeyLabel(rules.selectedKeyLevel);
       const cPerKey = getKeyCrestsPerRun();
+      const useDisc = sim.mythStepCost === 10;
 
       document.getElementById('topKpiGrid').innerHTML = `
         <div class="flex flex-wrap items-center justify-between gap-4 text-xs">
@@ -1523,6 +1533,9 @@
             <span class="px-3.5 py-1.5 rounded-xl bg-wow-card border border-wow-border text-slate-200">
               Mit Tasche & Beutel: <strong class="text-wow-gold text-sm">${sim.reachableAvgWithWallet.toFixed(2)} Ø</strong>
             </span>
+            <span class="px-3 py-1.5 rounded-xl font-bold ${useDisc ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/60' : 'bg-amber-950 text-amber-300 border border-amber-500/60'}">
+              ${useDisc ? '✅ Mit Rabatt (10M / Stufe)' : '❌ Ohne Rabatt (20M / Stufe)'}
+            </span>
           </div>
 
           <div class="flex flex-wrap items-center gap-2.5">
@@ -1533,7 +1546,7 @@
               🎯 Bis Ø ${sim.targetAvg}: <strong>${sim.missingMyth} M. (${Math.ceil(sim.missingMyth / cPerKey)}× M+${keyLbl})</strong>
             </span>
             <span class="px-3.5 py-1.5 rounded-xl bg-rose-950/60 border border-rose-500/60 text-rose-200">
-              🔥 Bis 334 Max: <strong>${m334.ownedMissing} M. (${Math.ceil(m334.ownedMissing / cPerKey)}× M+${keyLbl})</strong>
+              🔥 Vorhandene Mythos auf 334: <strong>${m334.ownedMissing} M. (${Math.ceil(m334.ownedMissing / cPerKey)}× M+${keyLbl})</strong>
             </span>
           </div>
         </div>
@@ -1962,7 +1975,6 @@
       openModal('simcModal');
     }
 
-    // LIVE-VORSCHAU ZEIGT DIR SOFORT DEN ABGLEICH MIT DEINEM BISHERIGEN STAND
     function previewSimcInput() {
       const raw = document.getElementById('simcTextarea').value;
       const box = document.getElementById('simcPreviewBox');
@@ -1988,7 +2000,6 @@
       }
     }
 
-    // ÜBERSCHREIBT IMMER ALLE WAPPEN & ITEMS UND AKTUALISIERT DIE AUSWAHL BEI ÄNDERUNGEN
     function importSimcProfile() {
       const raw = document.getElementById('simcTextarea').value;
       if (!raw.trim()) return;
@@ -2003,7 +2014,7 @@
           ...p,
           has331Achievement: Boolean(ex.has331Achievement || p.has331Achievement),
           slotModes: reconciledModes,
-          completedHistory: [] // Frischer SimC-Stand enthält bereits alle im Spiel gemachten Upgrades
+          completedHistory: []
         };
         activeCharIndex = idx;
         saveCharsToStorage();
@@ -2055,7 +2066,7 @@
           completedHistory: [], slotModes: {}, catalystCharges: 0,
           mythMarks: 0, heroMarks: 0, champMarks: 0, vetMarks: 0, advMarks: 0,
           mythSpent: 0, heroSpent: 0, champSpent: 0, vetSpent: 0, advSpent: 0
-        }));
+        }, CURRENT_SCHEMA_VERSION));
         activeCharIndex = characters.length - 1;
         saveCharsToStorage();
         renderAll();
