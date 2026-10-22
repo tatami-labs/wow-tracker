@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>WoW Kriegsmeuten-Tracker v23.0</title>
+  <title>WoW Kriegsmeuten-Tracker v24.0</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -43,126 +43,125 @@
       -moz-osx-font-smoothing: grayscale;
       font-variant-numeric: tabular-nums;
     }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: rgb(var(--wow-bg-rgb)); }
-    ::-webkit-scrollbar-thumb { background: rgb(var(--wow-border-rgb)); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb { background: rgb(var(--wow-border-rgb)); border-radius: 4px; }
     input[type="range"] { accent-color: rgb(var(--wow-gold-rgb)); }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col w-full">
 
-  <!-- HEADER -->
-  <header class="bg-wow-panel border-b border-wow-border sticky top-0 z-30 shadow-md">
-    <div class="max-w-[1580px] mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
-      <div class="flex items-center gap-2.5">
-        <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 to-yellow-600 flex items-center justify-center text-slate-950 font-black text-sm">W</div>
-        <h1 class="text-base font-extrabold text-white tracking-tight flex items-center gap-2">
-          Kriegsmeuten-Tracker
-          <span class="text-xs px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v23.0</span>
+  <!-- HEADER ÜBER DIE KOMPLETTE BREITE -->
+  <header class="bg-wow-panel border-b border-wow-border sticky top-0 z-30 shadow-md w-full">
+    <div class="w-full px-4 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-yellow-600 flex items-center justify-center text-slate-950 font-black text-base shadow">W</div>
+        <h1 class="text-lg font-extrabold text-white tracking-tight flex items-center gap-2.5">
+          Kriegsmeuten-Upgrade-Tracker
+          <span class="text-xs px-2.5 py-0.5 rounded-md bg-emerald-500 text-slate-950 font-black">v24.0 WIDESCREEN</span>
         </h1>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2">
-        <button type="button" onclick="openSimcModal()" class="px-3.5 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow transition">
+      <div class="flex flex-wrap items-center gap-2.5">
+        <button type="button" onclick="openSimcModal()" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow transition">
           📋 /simc Import
         </button>
-        <button type="button" onclick="openModal('addCharModal')" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 text-white border border-wow-border text-xs font-semibold transition">
+        <button type="button" onclick="openModal('addCharModal')" class="px-3.5 py-2 rounded-xl bg-wow-card hover:bg-slate-700 text-white border border-wow-border text-xs font-semibold transition">
           🌐 + Raider.IO
         </button>
-        <button type="button" onclick="refreshActiveCharRaiderIO()" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 text-cyan-300 border border-wow-border text-xs font-semibold transition">
+        <button type="button" onclick="refreshActiveCharRaiderIO()" class="px-3.5 py-2 rounded-xl bg-wow-card hover:bg-slate-700 text-cyan-300 border border-wow-border text-xs font-semibold transition">
           🔄 RIO Update
         </button>
-        <button type="button" onclick="openModal('backupModal')" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 text-slate-200 border border-wow-border text-xs font-semibold transition">
+        <button type="button" onclick="openModal('backupModal')" class="px-3.5 py-2 rounded-xl bg-wow-card hover:bg-slate-700 text-slate-200 border border-wow-border text-xs font-semibold transition">
           💾 Backup
         </button>
-        <button type="button" onclick="hardResetStorage()" class="px-3 py-1.5 rounded-lg bg-red-950/80 hover:bg-red-900 text-red-200 border border-red-700/50 text-xs font-bold transition">
+        <button type="button" onclick="hardResetStorage()" class="px-3.5 py-2 rounded-xl bg-red-950/80 hover:bg-red-900 text-red-200 border border-red-700/50 text-xs font-bold transition">
           🧹 Leeren
         </button>
-        <!-- NEU OBEN RECHTS: FARBEN & HINTERGRUND-SCHIEBEREGLER -->
-        <button type="button" onclick="openModal('themeModal')" class="px-3.5 py-1.5 rounded-lg bg-wow-gold hover: brightness-110 text-slate-950 text-xs font-black shadow transition flex items-center gap-1.5">
+        <button type="button" onclick="openModal('themeModal')" class="px-4 py-2 rounded-xl bg-wow-gold hover:brightness-110 text-slate-950 text-xs font-black shadow transition flex items-center gap-1.5">
           <span>🎨</span> Farben & Kontrast
         </button>
       </div>
     </div>
   </header>
 
-  <!-- MAIN CONTENT -->
-  <main class="flex-1 max-w-[1580px] w-full mx-auto px-4 py-3.5 space-y-3.5">
+  <!-- MAIN CONTENT: VOLLE SEITENBREITE AUSNUTZEN -->
+  <main class="flex-1 w-full px-4 lg:px-8 py-5 space-y-5">
 
     <!-- LEERZUSTAND -->
-    <section id="emptyStateContainer" class="hidden bg-wow-panel border-2 border-purple-500/50 rounded-2xl p-6 max-w-xl mx-auto my-6 text-center space-y-3 shadow-2xl">
-      <h2 class="text-lg font-black text-white">📋 Noch kein Charakter eingefügt</h2>
+    <section id="emptyStateContainer" class="hidden bg-wow-panel border-2 border-purple-500/50 rounded-2xl p-8 max-w-2xl mx-auto my-10 text-center space-y-4 shadow-2xl">
+      <h2 class="text-xl font-black text-white">📋 Noch kein Charakter eingefügt</h2>
       <p class="text-sm text-slate-200">Füge deinen Charakter über das <strong>/simc</strong>-Addon ein oder lade ihn über <strong>Raider.IO</strong>.</p>
-      <div class="flex justify-center gap-2.5 pt-1">
-        <button type="button" onclick="openSimcModal()" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-black shadow transition">📋 /simc Text einfügen</button>
-        <button type="button" onclick="openModal('addCharModal')" class="px-4 py-2 rounded-xl bg-wow-card hover:bg-slate-700 text-white border border-wow-border text-xs font-bold transition">🌐 Raider.IO</button>
+      <div class="flex justify-center gap-3 pt-2">
+        <button type="button" onclick="openSimcModal()" class="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-sm font-black shadow transition">📋 /simc Text einfügen</button>
+        <button type="button" onclick="openModal('addCharModal')" class="px-5 py-2.5 rounded-xl bg-wow-card hover:bg-slate-700 text-white border border-wow-border text-sm font-bold transition">🌐 Raider.IO</button>
       </div>
     </section>
 
     <!-- DASHBOARD -->
-    <div id="dashboardWrapper" class="space-y-3.5">
+    <div id="dashboardWrapper" class="space-y-5 w-full">
 
-      <!-- 1. OBEN: CHARAKTER-LEISTE -->
-      <section class="bg-wow-panel border border-wow-border rounded-xl p-2.5 shadow">
-        <div id="charSelectorBar" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5"></div>
+      <!-- 1. OBEN: CHARAKTER-LEISTE ÜBER DIE VOLLE BREITE -->
+      <section class="bg-wow-panel border border-wow-border rounded-2xl p-3.5 shadow-lg w-full">
+        <div id="charSelectorBar" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3.5"></div>
       </section>
 
-      <!-- 2. UNTEN: SEITENMENÜ LINKS + RECHTER BEREICH -->
-      <div class="flex flex-col lg:flex-row gap-4 items-start">
+      <!-- 2. UNTEN: SEITENMENÜ GANZ LINKS + GROSSZÜGIGER HAUPTBEREICH RECHTS -->
+      <div class="flex flex-col lg:flex-row gap-6 items-start w-full">
 
-        <!-- LINKES MENÜ -->
-        <aside class="w-full lg:w-64 shrink-0 space-y-3 lg:sticky lg:top-16">
-          <div class="bg-wow-panel border border-wow-border rounded-xl p-2.5 space-y-1.5 shadow">
-            <div class="px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-slate-300">Ansichten</div>
+        <!-- LINKES MENÜ (GANZ LINKS AM RAND, BREIT & ÜBERSICHTLICH) -->
+        <aside class="w-full lg:w-72 xl:w-80 shrink-0 space-y-4 lg:sticky lg:top-20">
+          <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 space-y-2 shadow-lg">
+            <div class="px-2 py-0.5 text-xs font-extrabold uppercase tracking-wider text-slate-300">Ansichten</div>
 
-            <button type="button" onclick="switchTab('slotplanner')" id="tabBtn-slotplanner" class="w-full text-left px-3 py-2.5 rounded-lg transition flex items-center gap-2.5 bg-wow-gold text-slate-950 font-bold shadow">
-              <span class="text-base">🛠️</span>
+            <button type="button" onclick="switchTab('slotplanner')" id="tabBtn-slotplanner" class="w-full text-left px-4 py-3 rounded-xl transition flex items-center gap-3 bg-wow-gold text-slate-950 font-bold shadow">
+              <span class="text-lg">🛠️</span>
               <div>
-                <div class="text-xs font-extrabold leading-tight">Kompakter Slot-Rechner</div>
-                <div class="text-[11px] opacity-85 font-semibold">Offene Items, M+ & Weglassen</div>
+                <div class="text-sm font-extrabold leading-tight">Slot-Rechner</div>
+                <div class="text-xs opacity-85 font-semibold mt-0.5">Offene Items, M+ & Weglassen</div>
               </div>
             </button>
 
-            <button type="button" onclick="switchTab('plan')" id="tabBtn-plan" class="w-full text-left px-3 py-2.5 rounded-lg transition flex items-center gap-2.5 bg-wow-card/70 hover:bg-wow-card text-white">
-              <span class="text-base">🎯</span>
+            <button type="button" onclick="switchTab('plan')" id="tabBtn-plan" class="w-full text-left px-4 py-3 rounded-xl transition flex items-center gap-3 bg-wow-card/70 hover:bg-wow-card text-white">
+              <span class="text-lg">🎯</span>
               <div>
-                <div class="text-xs font-bold leading-tight">Schritt-für-Schritt Plan</div>
-                <div class="text-[11px] text-slate-300">Reihenfolge & Slot-Ampel</div>
+                <div class="text-sm font-bold leading-tight">Schritt-für-Schritt Plan</div>
+                <div class="text-xs text-slate-300 mt-0.5">Reihenfolge & Slot-Ampel</div>
               </div>
             </button>
 
-            <button type="button" onclick="switchTab('caps')" id="tabBtn-caps" class="w-full text-left px-3 py-2.5 rounded-lg transition flex items-center gap-2.5 bg-wow-card/70 hover:bg-wow-card text-white">
-              <span class="text-base">🎒</span>
+            <button type="button" onclick="switchTab('caps')" id="tabBtn-caps" class="w-full text-left px-4 py-3 rounded-xl transition flex items-center gap-3 bg-wow-card/70 hover:bg-wow-card text-white">
+              <span class="text-lg">🎒</span>
               <div>
-                <div class="text-xs font-bold leading-tight">Wappen-Beutel</div>
-                <div class="text-[11px] text-slate-300">Bestand (♾️ Uncapped)</div>
+                <div class="text-sm font-bold leading-tight">Wappen-Beutel</div>
+                <div class="text-xs text-slate-300 mt-0.5">Bestand (♾️ Uncapped)</div>
               </div>
             </button>
 
-            <button type="button" onclick="switchTab('milestone')" id="tabBtn-milestone" class="w-full text-left px-3 py-2.5 rounded-lg transition flex items-center gap-2.5 bg-wow-card/70 hover:bg-wow-card text-white">
-              <span class="text-base">🏆</span>
+            <button type="button" onclick="switchTab('milestone')" id="tabBtn-milestone" class="w-full text-left px-4 py-3 rounded-xl transition flex items-center gap-3 bg-wow-card/70 hover:bg-wow-card text-white">
+              <span class="text-lg">🏆</span>
               <div>
-                <div class="text-xs font-bold leading-tight">331-Meilenstein</div>
-                <div class="text-[11px] text-slate-300">16-Slot Rabatt-Check</div>
+                <div class="text-sm font-bold leading-tight">331-Meilenstein</div>
+                <div class="text-xs text-slate-300 mt-0.5">16-Slot Rabatt-Check</div>
               </div>
             </button>
           </div>
 
-          <!-- PARAMETER -->
-          <div class="bg-wow-panel border border-wow-border rounded-xl p-3.5 space-y-2.5 shadow">
-            <div class="text-[11px] font-bold text-slate-300 uppercase tracking-wider border-b border-wow-border pb-1.5">Parameter</div>
+          <!-- PARAMETER MIT VIEL PLATZ -->
+          <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 space-y-3.5 shadow-lg">
+            <div class="text-xs font-extrabold text-slate-300 uppercase tracking-wider border-b border-wow-border pb-2">Parameter</div>
 
-            <div class="flex items-center justify-between gap-2">
-              <span class="text-xs font-semibold text-slate-200">🎯 Ziel:</span>
-              <select id="targetIlvlSelect" onchange="onSettingsChange()" class="w-36 bg-wow-card border border-wow-border rounded-lg px-2 py-1.5 text-wow-gold font-bold text-xs">
+            <div class="flex items-center justify-between gap-3">
+              <span class="text-sm font-semibold text-slate-200">🎯 Ziel-Schnitt:</span>
+              <select id="targetIlvlSelect" onchange="onSettingsChange()" class="w-44 bg-wow-card border border-wow-border rounded-xl px-3 py-2 text-wow-gold font-bold text-xs">
                 <option value="331" selected>Ø 331.00 (Rabatt)</option>
                 <option value="334">Ø 334.00 (Max)</option>
               </select>
             </div>
 
-            <div class="flex items-center justify-between gap-2">
-              <span class="text-xs font-semibold text-cyan-300">🗝️ M+ Key:</span>
-              <select id="selectedKeyLevelSelect" onchange="onSettingsChange()" class="w-36 bg-wow-card border border-cyan-700/60 rounded-lg px-2 py-1.5 text-cyan-300 font-bold text-xs">
+            <div class="flex items-center justify-between gap-3">
+              <span class="text-sm font-semibold text-cyan-300">🗝️ M+ Key:</span>
+              <select id="selectedKeyLevelSelect" onchange="onSettingsChange()" class="w-44 bg-wow-card border border-cyan-700/60 rounded-xl px-3 py-2 text-cyan-300 font-bold text-xs">
                 <option value="9">M+ 9 (10 Münzen)</option>
                 <option value="10">M+ 10 (12 Münzen)</option>
                 <option value="11">M+ 11 (14 Münzen)</option>
@@ -170,72 +169,72 @@
               </select>
             </div>
 
-            <div class="flex items-center justify-between gap-2">
-              <span class="text-xs font-semibold text-slate-200">🟠 Preis:</span>
-              <select id="crestStepCostSelect" onchange="onSettingsChange()" class="w-36 bg-wow-card border border-wow-border rounded-lg px-2 py-1.5 text-white font-bold text-xs">
+            <div class="flex items-center justify-between gap-3">
+              <span class="text-sm font-semibold text-slate-200">🟠 Myth-Preis:</span>
+              <select id="crestStepCostSelect" onchange="onSettingsChange()" class="w-44 bg-wow-card border border-wow-border rounded-xl px-3 py-2 text-white font-bold text-xs">
                 <option value="auto" selected id="autoCostOption">Auto (Prüft 331)</option>
                 <option value="20">20 Münzen (Ohne)</option>
                 <option value="10">10 Münzen (Rabatt)</option>
               </select>
             </div>
 
-            <div class="pt-2 border-t border-wow-border/60 space-y-2">
-              <label class="flex items-center justify-between text-xs font-medium text-amber-300 cursor-pointer">
+            <div class="pt-3 border-t border-wow-border/60 space-y-2.5">
+              <label class="flex items-center justify-between text-xs font-semibold text-amber-300 cursor-pointer">
                 <span>🏆 331er-Erfolg aktiv</span>
                 <input type="checkbox" id="has331AchToggle" onchange="onSettingsChange()" class="w-4 h-4 accent-amber-500 rounded cursor-pointer" />
               </label>
-              <label class="flex items-center justify-between text-xs font-medium text-purple-300 cursor-pointer">
+              <label class="flex items-center justify-between text-xs font-semibold text-purple-300 cursor-pointer">
                 <span>🟣 Held/Champ 10M</span>
                 <input type="checkbox" id="heroChampDiscToggle" onchange="onSettingsChange()" class="w-4 h-4 accent-purple-500 rounded cursor-pointer" checked />
               </label>
-              <label class="flex items-center justify-between text-xs font-medium text-emerald-300 cursor-pointer">
-                <span>⏱️ M+ Intime</span>
+              <label class="flex items-center justify-between text-xs font-semibold text-emerald-300 cursor-pointer">
+                <span>⏱️ M+ Keys Intime</span>
                 <input type="checkbox" id="keyTimedToggle" onchange="onSettingsChange()" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer" checked />
               </label>
-              <label class="flex items-center justify-between text-xs font-medium text-cyan-300 cursor-pointer">
-                <span>🎒 Taschen-Items</span>
+              <label class="flex items-center justify-between text-xs font-semibold text-cyan-300 cursor-pointer">
+                <span>🎒 Taschen-Items nutzen</span>
                 <input type="checkbox" id="includeBagsToggle" onchange="onSettingsChange()" class="w-4 h-4 accent-cyan-400 rounded cursor-pointer" checked />
               </label>
             </div>
           </div>
         </aside>
 
-        <!-- RECHTER HAUPTBEREICH -->
-        <div class="flex-1 min-w-0 w-full space-y-3.5">
+        <!-- RECHTER HAUPTBEREICH (NUTZT DEN KOMPLETTEN RESTLICHEN BILDSCHIRM) -->
+        <div class="flex-1 min-w-0 w-full space-y-5">
 
           <!-- STATUS-LEISTE OBEN -->
-          <div id="topKpiGrid" class="bg-wow-panel border border-wow-border rounded-xl p-3.5 shadow"></div>
+          <div id="topKpiGrid" class="bg-wow-panel border border-wow-border rounded-2xl p-4 shadow-lg w-full"></div>
 
-          <!-- REITER 1: KOMPAKTER SLOT-RECHNER -->
-          <section id="tab-slotplanner" class="space-y-3.5">
-            <div id="slotPlannerContainer" class="space-y-3.5"></div>
+          <!-- REITER 1: SLOT-RECHNER -->
+          <section id="tab-slotplanner" class="space-y-5 w-full">
+            <div id="slotPlannerContainer" class="space-y-5 w-full"></div>
           </section>
 
           <!-- REITER 2: SCHRITT-FÜR-SCHRITT UPGRADE-PLAN & AMPEL -->
-          <section id="tab-plan" class="hidden grid grid-cols-1 xl:grid-cols-12 gap-4 items-start">
-            <div id="planLeftColumn" class="xl:col-span-7 bg-wow-panel border border-wow-border rounded-xl p-4 space-y-2.5 shadow"></div>
-            <div id="planRightColumn" class="xl:col-span-5 bg-wow-panel border border-wow-border rounded-xl p-4 space-y-3 shadow"></div>
+          <section id="tab-plan" class="hidden grid grid-cols-1 xl:grid-cols-12 gap-6 items-start w-full">
+            <div id="planLeftColumn" class="xl:col-span-7 bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-3.5 shadow-lg"></div>
+            <div id="planRightColumn" class="xl:col-span-5 bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-3.5 shadow-lg"></div>
           </section>
 
           <!-- REITER 3: WAPPEN-BEUTEL -->
-          <section id="tab-caps" class="hidden bg-wow-panel border border-wow-border rounded-xl overflow-hidden shadow">
+          <section id="tab-caps" class="hidden bg-wow-panel border border-wow-border rounded-2xl overflow-hidden shadow-lg w-full">
             <div id="capsContainer"></div>
           </section>
 
           <!-- REITER 4: MEILENSTEIN -->
-          <section id="tab-milestone" class="hidden bg-wow-panel border border-wow-border rounded-xl p-4 space-y-3 shadow">
-            <div class="flex flex-wrap items-center justify-between gap-3">
+          <section id="tab-milestone" class="hidden bg-wow-panel border border-wow-border rounded-2xl p-5 space-y-4 shadow-lg w-full">
+            <div class="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <h3 class="text-sm font-bold text-white">🏆 Kriegsmeuten-Meilenstein (50 % Rabatt: 10 statt 20 Münzen)</h3>
+                <h3 class="text-base font-bold text-white">🏆 Kriegsmeuten-Meilenstein (50 % Rabatt: 10 statt 20 Münzen)</h3>
                 <p class="text-xs text-slate-300">Prüft alle 16 Slots deiner eingefügten Charaktere.</p>
               </div>
-              <div class="flex items-center gap-1.5">
-                <button type="button" id="milestoneBtn321" onclick="setMilestoneTarget(321)" class="px-3 py-1.5 rounded-lg bg-wow-card border border-wow-border text-xs text-purple-300 font-bold">Held (321)</button>
-                <button type="button" id="milestoneBtn331" onclick="setMilestoneTarget(331)" class="px-3 py-1.5 rounded-lg bg-wow-gold text-slate-950 text-xs font-black shadow">Mythos (331)</button>
+              <div class="flex items-center gap-2">
+                <button type="button" id="milestoneBtn321" onclick="setMilestoneTarget(321)" class="px-4 py-2 rounded-xl bg-wow-card border border-wow-border text-xs text-purple-300 font-bold">Held (321)</button>
+                <button type="button" id="milestoneBtn331" onclick="setMilestoneTarget(331)" class="px-4 py-2 rounded-xl bg-wow-gold text-slate-950 text-xs font-black shadow">Mythos (331)</button>
               </div>
             </div>
-            <div id="crestStatusBanner" class="p-3 rounded-xl border text-xs"></div>
-            <div id="crestSlotsGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
+            <div id="crestStatusBanner" class="p-4 rounded-xl border text-sm"></div>
+            <div id="crestSlotsGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3.5"></div>
           </section>
 
         </div>
@@ -243,10 +242,8 @@
     </div>
   </main>
 
-  <!-- ===================================================================== -->
-  <!-- NEU OBEN RECHTS: LIVE-FARB- & HINTERGRUND-REGLER (MIT SCHIEBEREGLERN) -->
-  <!-- ===================================================================== -->
-  <div id="themeModal" class="fixed inset-0 bg-black/25 z-50 hidden items-start justify-end p-4 pt-14">
+  <!-- LIVE-FARB- & HINTERGRUND-REGLER -->
+  <div id="themeModal" class="fixed inset-0 bg-black/25 z-50 hidden items-start justify-end p-4 pt-16">
     <div class="bg-wow-panel border-2 border-wow-gold rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between border-b border-wow-border pb-2.5">
         <div>
@@ -258,7 +255,6 @@
         <button type="button" onclick="closeModal('themeModal')" class="px-2.5 py-1 rounded-lg bg-wow-card hover:bg-slate-700 text-slate-200 text-xs font-bold">&times; Schließen</button>
       </div>
 
-      <!-- Schnell-Vorlagen -->
       <div class="space-y-1.5">
         <div class="text-[11px] font-bold uppercase text-slate-300">Schnell-Vorlagen:</div>
         <div class="grid grid-cols-4 gap-1.5 text-xs">
@@ -269,7 +265,6 @@
         </div>
       </div>
 
-      <!-- Globale Farbton- & Sättigungs-Schieberegler -->
       <div class="p-3 rounded-xl bg-wow-card border border-wow-border space-y-3">
         <div>
           <div class="flex justify-between text-xs font-bold mb-1">
@@ -288,51 +283,46 @@
         </div>
       </div>
 
-      <!-- 4 Einzel-Schieberegler für Dunkel vs. Hell (inkl. direktem Farbwähler) -->
       <div class="space-y-3">
-        <!-- 1. Außen-Hintergrund (Dunkel) -->
         <div class="p-2.5 rounded-xl bg-wow-card/60 border border-wow-border">
           <div class="flex items-center justify-between text-xs font-bold mb-1">
             <span class="text-white">1. Außen-Hintergrund (Dunkel)</span>
             <div class="flex items-center gap-2">
               <span id="themeBgLightLabel" class="text-slate-300">6%</span>
-              <input type="color" id="themeBgColorPicker" oninput="onDirectColorPick('bg', this.value)" class="w-6 h-5 rounded cursor-pointer bg-transparent border-0" title="Direkte Farbe wählen" />
+              <input type="color" id="themeBgColorPicker" oninput="onDirectColorPick('bg', this.value)" class="w-6 h-5 rounded cursor-pointer bg-transparent border-0" />
             </div>
           </div>
           <input type="range" id="themeBgLightSlider" min="0" max="45" value="6" oninput="onThemeSliderInput()" class="w-full h-2 rounded-lg cursor-pointer" />
         </div>
 
-        <!-- 2. Bereichs-Boxen (Mittel) -->
         <div class="p-2.5 rounded-xl bg-wow-card/60 border border-wow-border">
           <div class="flex items-center justify-between text-xs font-bold mb-1">
             <span class="text-white">2. Tabellen- & Bereichs-Boxen</span>
             <div class="flex items-center gap-2">
               <span id="themePanelLightLabel" class="text-slate-300">11%</span>
-              <input type="color" id="themePanelColorPicker" oninput="onDirectColorPick('panel', this.value)" class="w-6 h-5 rounded cursor-pointer bg-transparent border-0" title="Direkte Farbe wählen" />
+              <input type="color" id="themePanelColorPicker" oninput="onDirectColorPick('panel', this.value)" class="w-6 h-5 rounded cursor-pointer bg-transparent border-0" />
             </div>
           </div>
           <input type="range" id="themePanelLightSlider" min="2" max="55" value="11" oninput="onThemeSliderInput()" class="w-full h-2 rounded-lg cursor-pointer" />
         </div>
 
-        <!-- 3. Innere Karten & Schalter (Hellere Ebene) -->
         <div class="p-2.5 rounded-xl bg-wow-card/60 border border-wow-border">
           <div class="flex items-center justify-between text-xs font-bold mb-1">
             <span class="text-white">3. Innere Karten & Felder (Hellere Ebene)</span>
             <div class="flex items-center gap-2">
               <span id="themeCardLightLabel" class="text-slate-300">17%</span>
-              <input type="color" id="themeCardColorPicker" oninput="onDirectColorPick('card', this.value)" class="w-6 h-5 rounded cursor-pointer bg-transparent border-0" title="Direkte Farbe wählen" />
+              <input type="color" id="themeCardColorPicker" oninput="onDirectColorPick('card', this.value)" class="w-6 h-5 rounded cursor-pointer bg-transparent border-0" />
             </div>
           </div>
           <input type="range" id="themeCardLightSlider" min="5" max="65" value="17" oninput="onThemeSliderInput()" class="w-full h-2 rounded-lg cursor-pointer" />
         </div>
 
-        <!-- 4. Rahmen & Linien-Helligkeit -->
         <div class="p-2.5 rounded-xl bg-wow-card/60 border border-wow-border">
           <div class="flex items-center justify-between text-xs font-bold mb-1">
             <span class="text-white">4. Rahmen & Trennlinien-Kontrast</span>
             <div class="flex items-center gap-2">
               <span id="themeBorderLightLabel" class="text-slate-300">27%</span>
-              <input type="color" id="themeBorderColorPicker" oninput="onDirectColorPick('border', this.value)" class="w-6 h-5 rounded cursor-pointer bg-transparent border-0" title="Direkte Farbe wählen" />
+              <input type="color" id="themeBorderColorPicker" oninput="onDirectColorPick('border', this.value)" class="w-6 h-5 rounded cursor-pointer bg-transparent border-0" />
             </div>
           </div>
           <input type="range" id="themeBorderLightSlider" min="10" max="80" value="27" oninput="onThemeSliderInput()" class="w-full h-2 rounded-lg cursor-pointer" />
@@ -445,11 +435,11 @@
     const STORAGE_KEY_MAIN  = 'wow_warband_tracker_data';
     const STORAGE_KEY_RULES = 'wow_warband_tracker_rules';
     const STORAGE_KEY_THEME = 'wow_warband_tracker_theme';
-    const CURRENT_SCHEMA_VERSION = 23;
+    const CURRENT_SCHEMA_VERSION = 24;
     const CRAFTED_MYTH_COST = 80;
 
     // =========================================================================
-    // 1. HINTERGRUND- & KONTRAST-ENGINE (SCHIEBEREGLER + COLOR PICKER)
+    // 1. HINTERGRUND- & KONTRAST-ENGINE
     // =========================================================================
     const DEFAULT_THEME = {
       hue: 220, sat: 30,
@@ -489,7 +479,6 @@
       root.style.setProperty('--wow-card-rgb',   `${cardRgb[0]} ${cardRgb[1]} ${cardRgb[2]}`);
       root.style.setProperty('--wow-border-rgb', `${borderRgb[0]} ${borderRgb[1]} ${borderRgb[2]}`);
 
-      // Synchronisiere Regler & Farbwähler im Modal
       const elHue = document.getElementById('themeHueSlider');
       if (elHue) {
         elHue.value = hue;
@@ -993,7 +982,7 @@
         if (mode === 'done') {
           newTotalIlvlSum += eq * slotMult;
           doneChipsHtml.push(`
-            <span class="px-2.5 py-1 rounded-lg bg-emerald-950/60 text-emerald-200 border border-emerald-700/50 text-xs font-semibold">
+            <span class="px-3 py-1.5 rounded-lg bg-emerald-950/60 text-emerald-200 border border-emerald-700/50 text-xs font-semibold">
               ✔️ <strong class="text-white">${s.label}</strong> (${eq}${isCrafted331 ? ' Handwerk' : ''})
             </span>
           `);
@@ -1004,7 +993,7 @@
           newTotalIlvlSum += eq * slotMult;
           skippedChipsHtml.push(`
             <button type="button" onclick="restoreSkippedSlot(${charIdx}, '${s.key}')"
-                    class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 text-white border border-amber-500/60 text-xs font-bold shadow transition flex items-center gap-1.5"
+                    class="px-3.5 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 text-white border border-amber-500/60 text-xs font-bold shadow transition flex items-center gap-1.5"
                     title="Klicken, um ${s.label} wieder in die Liste einzufügen">
               <span class="text-amber-400 font-black">+</span>
               <span>${s.label}</span>
@@ -1044,8 +1033,8 @@
         newTotalIlvlSum += targetSlotIlvl * slotMult;
 
         const stateBadge = hasOwnedMyth
-          ? `<span class="px-2 py-0.5 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-600/60 text-xs font-bold">${hasMythInBag && eq <= 321 ? '🎒 321 Mythos in Tasche' : '🟠 Mythos vorhanden'}</span>`
-          : `<span class="px-2 py-0.5 rounded-md bg-amber-950 text-amber-300 border border-amber-600/60 text-xs font-bold">🔒 ${meta.label || 'Held'} (${maxTrack})</span>`;
+          ? `<span class="px-2.5 py-0.5 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-600/60 text-xs font-bold">${hasMythInBag && eq <= 321 ? '🎒 321 Mythos in Tasche' : '🟠 Mythos vorhanden'}</span>`
+          : `<span class="px-2.5 py-0.5 rounded-md bg-amber-950 text-amber-300 border border-amber-600/60 text-xs font-bold">🔒 ${meta.label || 'Held'} (${maxTrack})</span>`;
 
         const upgLabel = hasOwnedMyth
           ? `⬆️ Upgraden (${upgradeCoins}M)`
@@ -1053,21 +1042,21 @@
 
         activeRowsHtml.push(`
           <tr class="border-b border-wow-border/70 last:border-0 hover:bg-white/[0.03] transition">
-            <td class="py-3 px-4">
-              <div class="flex items-center gap-2.5 flex-wrap">
-                <span class="text-base font-extrabold text-white tracking-tight">${s.label}${is2HMain ? ' (2H)' : ''}</span>
-                <span class="px-2 py-0.5 rounded-md bg-wow-bg border border-wow-border text-sm font-black text-wow-gold">${eq}</span>
+            <td class="py-4 px-6">
+              <div class="flex items-center gap-3 flex-wrap">
+                <span class="text-base font-extrabold text-white tracking-tight min-w-[110px]">${s.label}${is2HMain ? ' (2H)' : ''}</span>
+                <span class="px-2.5 py-0.5 rounded-md bg-wow-bg border border-wow-border text-sm font-black text-wow-gold">${eq}</span>
                 ${stateBadge}
-                ${s.isTierSlot ? '<span class="px-1.5 py-0.5 rounded bg-purple-950/80 text-purple-200 border border-purple-700/50 text-[11px] font-bold">Set-Slot</span>' : ''}
+                ${s.isTierSlot ? '<span class="px-2 py-0.5 rounded bg-purple-950/80 text-purple-200 border border-purple-700/50 text-xs font-bold">Set-Slot</span>' : ''}
               </div>
-              <div class="text-xs font-medium text-slate-200 truncate max-w-[320px] mt-1">„${escapeHtml(itemName)}“</div>
+              <div class="text-sm font-medium text-slate-200 mt-1">„${escapeHtml(itemName)}“</div>
             </td>
 
-            <td class="py-3 px-3">
-              <div class="inline-flex items-center gap-1.5 bg-wow-bg p-1 rounded-xl border border-wow-border">
+            <td class="py-4 px-4">
+              <div class="inline-flex items-center gap-2 bg-wow-bg p-1.5 rounded-xl border border-wow-border">
                 ${canCraft ? `
                   <button type="button" onclick="setSlotPlannerMode(${charIdx}, '${s.key}', 'craft')"
-                          class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+                          class="px-4 py-2 rounded-lg text-xs font-bold transition ${
                             mode === 'craft'
                               ? 'bg-blue-500 text-slate-950 font-black shadow'
                               : 'text-slate-200 hover:text-white'
@@ -1075,10 +1064,10 @@
                     🔨 Herstellen 331 (80M)
                   </button>
                 ` : `
-                  <span class="px-2.5 py-1.5 text-xs font-medium text-slate-400">Kein Craft</span>
+                  <span class="px-3 py-2 text-xs font-medium text-slate-400">Kein Craft</span>
                 `}
                 <button type="button" onclick="setSlotPlannerMode(${charIdx}, '${s.key}', 'upgrade')"
-                        class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+                        class="px-4 py-2 rounded-lg text-xs font-bold transition ${
                           mode === 'upgrade'
                             ? 'bg-wow-gold text-slate-950 font-black shadow'
                             : 'text-slate-200 hover:text-white'
@@ -1088,19 +1077,19 @@
               </div>
             </td>
 
-            <td class="py-3 px-3 text-center whitespace-nowrap">
-              <span class="text-sm font-bold text-white">${eq} &rarr; <strong class="text-wow-gold">${targetSlotIlvl}</strong></span>
+            <td class="py-4 px-4 text-center whitespace-nowrap">
+              <span class="text-base font-bold text-white">${eq} &rarr; <strong class="text-wow-gold">${targetSlotIlvl}</strong></span>
               <span class="text-xs text-emerald-400 font-extrabold block mt-0.5">+${avgGain} Ø</span>
             </td>
 
-            <td class="py-3 px-4 text-right whitespace-nowrap">
-              <span class="text-sm font-black text-amber-300">${activeCoins} Münzen</span>
+            <td class="py-4 px-6 text-right whitespace-nowrap">
+              <span class="text-base font-black text-amber-300">${activeCoins} Münzen</span>
               <span class="text-xs font-extrabold text-cyan-300 block mt-0.5">🏃 ${activeRuns}× M+${keyLbl}</span>
             </td>
 
-            <td class="py-3 px-4 text-right">
+            <td class="py-4 px-6 text-right">
               <button type="button" onclick="setSlotPlannerMode(${charIdx}, '${s.key}', 'skip')"
-                      class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-red-900/70 text-slate-200 hover:text-white border border-wow-border text-xs font-bold transition"
+                      class="px-3.5 py-2 rounded-xl bg-wow-card hover:bg-red-900/70 text-slate-200 hover:text-white border border-wow-border text-xs font-bold transition"
                       title="Diesen Slot weglassen und aus der Tabelle ausblenden">
                 ✕ Weglassen
               </button>
@@ -1115,69 +1104,69 @@
       const avgGainTotal = Math.max(0, (newTotalIlvlSum / 16) - sim.startAvg).toFixed(2);
 
       container.innerHTML = `
-        <div class="bg-wow-panel border-2 border-wow-gold/70 rounded-xl p-4 shadow-lg space-y-3">
-          <div class="flex flex-wrap items-center justify-between gap-2.5">
-            <div class="flex flex-wrap items-center gap-2">
-              <div class="inline-flex rounded-lg bg-wow-bg p-1 border border-wow-border text-xs">
-                <button type="button" onclick="setCalcTarget(334)" class="px-3 py-1 rounded-md font-bold transition ${goalIlvl === 334 ? 'bg-wow-gold text-slate-950 font-black' : 'text-slate-200'}">🔥 Ziel 334</button>
-                <button type="button" onclick="setCalcTarget(331)" class="px-3 py-1 rounded-md font-bold transition ${goalIlvl === 331 ? 'bg-wow-gold text-slate-950 font-black' : 'text-slate-200'}">🎯 Ziel 331</button>
+        <div class="bg-wow-panel border-2 border-wow-gold/70 rounded-2xl p-5 shadow-lg space-y-4 w-full">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2.5">
+              <div class="inline-flex rounded-xl bg-wow-bg p-1 border border-wow-border text-xs">
+                <button type="button" onclick="setCalcTarget(334)" class="px-3.5 py-1.5 rounded-lg font-bold transition ${goalIlvl === 334 ? 'bg-wow-gold text-slate-950 font-black' : 'text-slate-200'}">🔥 Ziel 334</button>
+                <button type="button" onclick="setCalcTarget(331)" class="px-3.5 py-1.5 rounded-lg font-bold transition ${goalIlvl === 331 ? 'bg-wow-gold text-slate-950 font-black' : 'text-slate-200'}">🎯 Ziel 331</button>
               </div>
 
-              <div class="inline-flex rounded-lg bg-wow-bg p-1 border border-wow-border text-xs">
-                <button type="button" onclick="setCalcDiscount(false)" class="px-3 py-1 rounded-md font-bold transition ${!useDisc ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-200'}">20M (Ohne Rabatt)</button>
-                <button type="button" onclick="setCalcDiscount(true)" class="px-3 py-1 rounded-md font-bold transition ${useDisc ? 'bg-emerald-500 text-slate-950 font-black' : 'text-slate-200'}">10M (Mit Rabatt)</button>
+              <div class="inline-flex rounded-xl bg-wow-bg p-1 border border-wow-border text-xs">
+                <button type="button" onclick="setCalcDiscount(false)" class="px-3.5 py-1.5 rounded-lg font-bold transition ${!useDisc ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-200'}">20M (Ohne Rabatt)</button>
+                <button type="button" onclick="setCalcDiscount(true)" class="px-3.5 py-1.5 rounded-lg font-bold transition ${useDisc ? 'bg-emerald-500 text-slate-950 font-black' : 'text-slate-200'}">10M (Mit Rabatt)</button>
               </div>
 
-              <div class="inline-flex rounded-lg bg-wow-bg p-1 border border-cyan-700/50 text-xs">
+              <div class="inline-flex rounded-xl bg-wow-bg p-1 border border-cyan-700/50 text-xs">
                 ${[9, 10, 11, 12].map(lvl => {
                   const isK = lvl === keyLvl;
                   const w = rules.keyTimedMode ? MPLUS_KEY_REWARDS[lvl].timed : MPLUS_KEY_REWARDS[lvl].untimed;
-                  return `<button type="button" onclick="selectCalcKeyLevel(${lvl})" class="px-2.5 py-1 rounded-md font-bold transition ${isK ? 'bg-cyan-400 text-slate-950 font-black' : 'text-slate-200'}">M+${lvl === 12 ? '12+' : lvl} (${w}M)</button>`;
+                  return `<button type="button" onclick="selectCalcKeyLevel(${lvl})" class="px-3 py-1.5 rounded-lg font-bold transition ${isK ? 'bg-cyan-400 text-slate-950 font-black' : 'text-slate-200'}">M+${lvl === 12 ? '12+' : lvl} (${w}M)</button>`;
                 }).join('')}
               </div>
             </div>
 
-            <div class="flex items-center gap-2">
-              <button type="button" onclick="setBatchSlotPlannerMode(${charIdx}, 'only_owned_myth')" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs font-bold text-cyan-300 transition">
+            <div class="flex items-center gap-2.5">
+              <button type="button" onclick="setBatchSlotPlannerMode(${charIdx}, 'only_owned_myth')" class="px-3.5 py-2 rounded-xl bg-wow-card hover:bg-slate-700 border border-wow-border text-xs font-bold text-cyan-300 transition">
                 ⚡ Nur vorhandene Mythos-Items
               </button>
-              <button type="button" onclick="setBatchSlotPlannerMode(${charIdx}, 'smart')" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border text-xs font-bold text-white transition">
+              <button type="button" onclick="setBatchSlotPlannerMode(${charIdx}, 'smart')" class="px-3.5 py-2 rounded-xl bg-wow-card hover:bg-slate-700 border border-wow-border text-xs font-bold text-white transition">
                 🔄 Alle offenen zeigen
               </button>
             </div>
           </div>
 
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2.5 border-t border-wow-border text-xs">
-            <div class="bg-wow-card px-3.5 py-2.5 rounded-lg border border-wow-border flex items-center justify-between">
-              <span class="text-slate-300 font-medium">Auswahl:</span>
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5 pt-3 border-t border-wow-border text-xs">
+            <div class="bg-wow-card px-4 py-3 rounded-xl border border-wow-border flex items-center justify-between">
+              <span class="text-slate-300 font-medium">Aktive Auswahl:</span>
               <strong class="text-white text-sm">${selectedCraftCount}× Craft | ${selectedUpgradeCount}× Upg.</strong>
             </div>
-            <div class="bg-wow-card px-3.5 py-2.5 rounded-lg border border-wow-border flex items-center justify-between">
+            <div class="bg-wow-card px-4 py-3 rounded-xl border border-wow-border flex items-center justify-between">
               <span class="text-slate-300 font-medium">Münzen (−${walletMyth} Beutel):</span>
               <strong class="text-amber-300 text-base font-black">${netCoinsToFarm} Münzen</strong>
             </div>
-            <div class="bg-emerald-950/35 px-3.5 py-2.5 rounded-lg border border-emerald-500/70 flex items-center justify-between">
+            <div class="bg-emerald-950/35 px-4 py-3 rounded-xl border border-emerald-500/70 flex items-center justify-between">
               <span class="text-emerald-200 font-bold">Gesamt M+ Runs:</span>
-              <strong class="text-emerald-300 text-base font-black">🏃 ${totalMplusToRun}× M+${keyLbl}</strong>
+              <strong class="text-emerald-300 text-lg font-black">🏃 ${totalMplusToRun}× M+${keyLbl}</strong>
             </div>
-            <div class="bg-wow-card px-3.5 py-2.5 rounded-lg border border-wow-border flex items-center justify-between">
+            <div class="bg-wow-card px-4 py-3 rounded-xl border border-wow-border flex items-center justify-between">
               <span class="text-slate-300 font-medium">Neuer Schnitt:</span>
               <strong class="text-wow-gold text-base font-black">${newAvgIlvl} Ø <span class="text-emerald-400 text-xs">(+${avgGainTotal})</span></strong>
             </div>
           </div>
         </div>
 
-        <div class="bg-wow-panel border border-wow-border rounded-xl overflow-hidden shadow-lg">
+        <div class="bg-wow-panel border border-wow-border rounded-2xl overflow-hidden shadow-lg w-full">
           ${activeRowsHtml.length > 0 ? `
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto w-full">
               <table class="w-full text-left border-collapse">
                 <thead>
                   <tr class="bg-wow-card border-b border-wow-border text-xs font-bold uppercase text-slate-300">
-                    <th class="py-2.5 px-4">Offener Slot & Item (${activeRowsHtml.length})</th>
-                    <th class="py-2.5 px-3">Aktion (Herstellen vs. Upgraden)</th>
-                    <th class="py-2.5 px-3 text-center">Ziel & Gewinn</th>
-                    <th class="py-2.5 px-4 text-right">Aufwand (Slot)</th>
-                    <th class="py-2.5 px-4 text-right">Ausblenden</th>
+                    <th class="py-3.5 px-6">Offener Slot & Item (${activeRowsHtml.length})</th>
+                    <th class="py-3.5 px-4">Aktion (Herstellen vs. Upgraden)</th>
+                    <th class="py-3.5 px-4 text-center">Ziel & Gewinn</th>
+                    <th class="py-3.5 px-6 text-right">Aufwand (Slot)</th>
+                    <th class="py-3.5 px-6 text-right">Ausblenden</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1186,22 +1175,22 @@
               </table>
             </div>
           ` : `
-            <div class="p-6 text-center text-sm text-emerald-400 font-bold">
+            <div class="p-8 text-center text-sm text-emerald-400 font-bold">
               🎉 Keine offenen Slots in der Liste! Klicke unten auf einen weggelassenen Slot, um ihn wieder einzublenden.
             </div>
           `}
         </div>
 
         ${(skippedChipsHtml.length > 0 || doneChipsHtml.length > 0) ? `
-          <div class="bg-wow-panel border border-wow-border rounded-xl p-3.5 space-y-2.5">
+          <div class="bg-wow-panel border border-wow-border rounded-2xl p-4 space-y-3 w-full">
             ${skippedChipsHtml.length > 0 ? `
-              <div class="flex flex-wrap items-center gap-2">
+              <div class="flex flex-wrap items-center gap-2.5">
                 <span class="text-xs font-bold text-amber-300 mr-1">🙈 Weggelassene Slots (Klicken zum Zurückholen):</span>
                 ${skippedChipsHtml.join('')}
               </div>
             ` : ''}
             ${doneChipsHtml.length > 0 ? `
-              <div class="flex flex-wrap items-center gap-2">
+              <div class="flex flex-wrap items-center gap-2.5">
                 <span class="text-xs font-bold text-slate-300 mr-1">✔️ Bereits fertig (${doneChipsHtml.length}):</span>
                 ${doneChipsHtml.join('')}
               </div>
@@ -1436,11 +1425,11 @@
         const runs = Math.ceil(r.missingMyth / cPerKey);
         return `
           <div onclick="activeCharIndex=${r.charIdx}; renderAll();" style="border-left: 4px solid ${col};"
-               class="px-3.5 py-2.5 rounded-xl border cursor-pointer transition flex items-center justify-between gap-2 ${isSel ? 'bg-wow-card border-wow-gold ring-1 ring-wow-gold/50 shadow' : 'bg-wow-card/50 hover:bg-wow-card border-wow-border opacity-85 hover:opacity-100'}">
+               class="px-4 py-3 rounded-xl border cursor-pointer transition flex items-center justify-between gap-3 ${isSel ? 'bg-wow-card border-wow-gold ring-1 ring-wow-gold/50 shadow' : 'bg-wow-card/50 hover:bg-wow-card border-wow-border opacity-85 hover:opacity-100'}">
             <div class="min-w-0">
               <div class="flex items-center gap-2">
                 <span class="px-1.5 py-0.5 rounded text-xs font-black ${isTop ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-200'}">#${rankIdx + 1}</span>
-                <span class="text-sm font-extrabold truncate" style="color:${col}">${escapeHtml(r.char.name)}</span>
+                <span class="text-base font-extrabold truncate" style="color:${col}">${escapeHtml(r.char.name)}</span>
               </div>
               <div class="text-xs text-slate-300 mt-1">
                 Angezogen: <strong class="text-white">${r.startAvg.toFixed(2)}</strong> &rarr; Beutel: <strong class="text-wow-gold">${r.reachableAvgWithWallet.toFixed(2)}</strong>
@@ -1467,25 +1456,25 @@
       const cPerKey = getKeyCrestsPerRun();
 
       document.getElementById('topKpiGrid').innerHTML = `
-        <div class="flex flex-wrap items-center justify-between gap-3 text-xs">
-          <div class="flex flex-wrap items-center gap-2.5">
-            <span class="text-base font-black" style="color:${col}">${escapeHtml(sim.char.name)}</span>
-            <span class="px-3 py-1 rounded-lg bg-wow-card border border-wow-border text-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-4 text-xs">
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="text-lg font-black" style="color:${col}">${escapeHtml(sim.char.name)}</span>
+            <span class="px-3.5 py-1.5 rounded-xl bg-wow-card border border-wow-border text-slate-200">
               Angezogen: <strong class="text-white text-sm">${sim.startAvg.toFixed(2)} Ø</strong>
             </span>
-            <span class="px-3 py-1 rounded-lg bg-wow-card border border-wow-border text-slate-200">
+            <span class="px-3.5 py-1.5 rounded-xl bg-wow-card border border-wow-border text-slate-200">
               Mit Tasche & Beutel: <strong class="text-wow-gold text-sm">${sim.reachableAvgWithWallet.toFixed(2)} Ø</strong>
             </span>
           </div>
 
-          <div class="flex flex-wrap items-center gap-2">
-            <span class="px-3 py-1 rounded-lg bg-wow-card border border-wow-border">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <span class="px-3.5 py-1.5 rounded-xl bg-wow-card border border-wow-border">
               🎒 Beutel: <strong class="text-wow-gold">${myth.wallet} Myth</strong> | <strong class="text-purple-300">${hero.wallet} Held</strong>
             </span>
-            <span class="px-3 py-1 rounded-lg bg-amber-950/60 border border-amber-500/60 text-amber-200">
+            <span class="px-3.5 py-1.5 rounded-xl bg-amber-950/60 border border-amber-500/60 text-amber-200">
               🎯 Bis Ø ${sim.targetAvg}: <strong>${sim.missingMyth} M. (${Math.ceil(sim.missingMyth / cPerKey)}× M+${keyLbl})</strong>
             </span>
-            <span class="px-3 py-1 rounded-lg bg-rose-950/60 border border-rose-500/60 text-rose-200">
+            <span class="px-3.5 py-1.5 rounded-xl bg-rose-950/60 border border-rose-500/60 text-rose-200">
               🔥 Bis 334 Max: <strong>${m334.ownedMissing} M. (${Math.ceil(m334.ownedMissing / cPerKey)}× M+${keyLbl})</strong>
             </span>
           </div>
@@ -1505,11 +1494,11 @@
         completedHtml = completedList.map((h, hIdx) => {
           const avgGain = ((h.pointGain || (h.toIlvl - h.fromIlvl)) / 16).toFixed(2);
           return `
-            <div class="p-3 rounded-xl bg-emerald-950/35 border border-emerald-500/60 flex items-center justify-between gap-2">
-              <div class="text-xs font-bold text-emerald-200 truncate">
+            <div class="p-3.5 rounded-xl bg-emerald-950/35 border border-emerald-500/60 flex items-center justify-between gap-3">
+              <div class="text-xs font-bold text-emerald-200">
                 ☑️ <strong class="text-white text-sm">${escapeHtml(h.slotLabel)}</strong>: <span class="text-wow-gold">${h.fromIlvl} &rarr; ${h.toIlvl}</span> (+${avgGain} Ø)
               </div>
-              <button type="button" onclick="undoCompletedStep(${charIdx}, ${hIdx})" class="px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 text-xs font-black shrink-0">↩️ Zurück</button>
+              <button type="button" onclick="undoCompletedStep(${charIdx}, ${hIdx})" class="px-3 py-1 rounded-lg bg-amber-500 text-slate-950 text-xs font-black shrink-0">↩️ Zurück</button>
             </div>
           `;
         }).join('');
@@ -1527,33 +1516,33 @@
         const isNow = g.availability === 'now';
         const avgGain = (g.pointGain / 16).toFixed(2);
         return `
-          <div class="p-3 rounded-xl border ${isNow ? 'bg-wow-card border-cyan-500/50' : 'bg-wow-card/60 border-wow-border'} flex items-center justify-between gap-3">
-            <div class="flex items-center gap-2.5 min-w-0">
-              <div class="w-6 h-6 rounded-md ${isNow ? 'bg-cyan-400 text-slate-950' : 'bg-slate-700 text-white'} font-black text-xs flex items-center justify-center shrink-0">${i + 1}</div>
+          <div class="p-3.5 rounded-xl border ${isNow ? 'bg-wow-card border-cyan-500/50' : 'bg-wow-card/60 border-wow-border'} flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-7 h-7 rounded-lg ${isNow ? 'bg-cyan-400 text-slate-950' : 'bg-slate-700 text-white'} font-black text-xs flex items-center justify-center shrink-0">${i + 1}</div>
               <div class="min-w-0">
-                <div class="text-sm font-extrabold text-white truncate">
+                <div class="text-base font-extrabold text-white">
                   ${escapeHtml(g.slotLabel)} ${g.itemName ? `<span class="text-xs text-amber-200 font-medium">„${escapeHtml(g.itemName)}“</span>` : ''}
                   <span class="text-wow-gold ml-1">${g.fromIlvl} &rarr; ${g.toIlvl}</span> <span class="text-xs text-emerald-400">(+${avgGain} Ø)</span>
                 </div>
-                <div class="text-xs text-slate-300 truncate mt-0.5">${escapeHtml(g.reason)} • Schnitt danach: <strong class="text-white">${g.runningAvgAfter} Ø</strong></div>
+                <div class="text-xs text-slate-300 mt-0.5">${escapeHtml(g.reason)} • Schnitt danach: <strong class="text-white">${g.runningAvgAfter} Ø</strong></div>
               </div>
             </div>
-            <div class="flex items-center gap-2.5 shrink-0">
-              <span class="text-xs font-extrabold text-amber-300">${g.markCost} M.</span>
+            <div class="flex items-center gap-3 shrink-0">
+              <span class="text-sm font-extrabold text-amber-300">${g.markCost} M.</span>
               <button type="button" onclick="completeUpgradeStep(${charIdx}, '${g.slotKey}', ${g.toIlvl}, '${g.markType}', ${g.markCost}, ${Boolean(g.isCraftReplacement)})"
-                      class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black text-xs">✅</button>
+                      class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black text-xs">✅</button>
             </div>
           </div>
         `;
       }).join('');
 
       document.getElementById('planLeftColumn').innerHTML = `
-        <div class="flex items-center justify-between border-b border-wow-border pb-2.5">
+        <div class="flex items-center justify-between border-b border-wow-border pb-3">
           <h3 class="text-sm font-extrabold uppercase text-white">🎯 Optimale Reihenfolge auf Ø ${sim.targetAvg.toFixed(2)}</h3>
           ${completedCount > 0 ? `<button type="button" onclick="toggleShowCompletedSteps()" class="text-xs text-emerald-300 font-bold">${rules.showCompletedSteps ? '🙈 Erledigte ausblenden' : `👁️ Erledigte (${completedCount})`}</button>` : ''}
         </div>
         ${completedHtml ? `<div class="space-y-2 pb-2 border-b border-wow-border/60">${completedHtml}</div>` : ''}
-        <div class="space-y-2">${stepsHtml || '<div class="text-sm text-emerald-400 font-bold py-2">🎉 Ziel erreicht!</div>'}</div>
+        <div class="space-y-2.5">${stepsHtml || '<div class="text-sm text-emerald-400 font-bold py-2">🎉 Ziel erreicht!</div>'}</div>
       `;
 
       const zone1 = [], zone2 = [];
@@ -1570,19 +1559,19 @@
       });
 
       const renderSlotCard = (it, type) => `
-        <div onclick="openEditSlotModal(${charIdx}, '${it.slot.key}', '${it.slot.label}')" class="p-2.5 rounded-xl border ${type === 'action' ? 'border-emerald-500/50 bg-emerald-950/20' : 'border-amber-700/50 bg-amber-950/15'} hover:bg-slate-800/70 cursor-pointer flex items-center justify-between gap-2">
+        <div onclick="openEditSlotModal(${charIdx}, '${it.slot.key}', '${it.slot.label}')" class="p-3 rounded-xl border ${type === 'action' ? 'border-emerald-500/50 bg-emerald-950/20' : 'border-amber-700/50 bg-amber-950/15'} hover:bg-slate-800/70 cursor-pointer flex items-center justify-between gap-3">
           <div class="min-w-0">
-            <span class="text-sm font-extrabold text-white">${it.slot.label}</span>
-            <span class="text-xs text-slate-200 font-medium block truncate">${escapeHtml(it.meta.eqName || '')}</span>
+            <span class="text-base font-extrabold text-white">${it.slot.label}</span>
+            <span class="text-xs text-slate-200 font-medium block mt-0.5">${escapeHtml(it.meta.eqName || '')}</span>
           </div>
           <span class="text-sm font-black text-wow-gold shrink-0">${it.eq} iLvl</span>
         </div>
       `;
 
       document.getElementById('planRightColumn').innerHTML = `
-        <h3 class="text-sm font-extrabold uppercase text-white border-b border-wow-border pb-2.5">🚦 Offene Slots (Klick = Bearbeiten)</h3>
-        <div class="space-y-2"><div class="text-xs font-bold text-emerald-400">🟢 Direkt aufwertbar (${zone1.length})</div>${zone1.map(x => renderSlotCard(x, 'action')).join('')}</div>
-        <div class="space-y-2 pt-2.5 border-t border-wow-border/60"><div class="text-xs font-bold text-amber-300">🔒 Am Limit blockiert (${zone2.length})</div>${zone2.map(x => renderSlotCard(x, 'blocked')).join('')}</div>
+        <h3 class="text-sm font-extrabold uppercase text-white border-b border-wow-border pb-3">🚦 Offene Slots (Klick = Bearbeiten)</h3>
+        <div class="space-y-2.5"><div class="text-xs font-bold text-emerald-400">🟢 Direkt aufwertbar (${zone1.length})</div>${zone1.map(x => renderSlotCard(x, 'action')).join('')}</div>
+        <div class="space-y-2.5 pt-3 border-t border-wow-border/60"><div class="text-xs font-bold text-amber-300">🔒 Am Limit blockiert (${zone2.length})</div>${zone2.map(x => renderSlotCard(x, 'blocked')).join('')}</div>
       `;
     }
 
@@ -1597,17 +1586,17 @@
         const cost = tier.key === 'myth' ? mythStepCost : heroChampCost;
         return `
           <tr class="border-b border-wow-border/60 last:border-0">
-            <td class="py-3 px-4"><div class="font-bold text-sm ${tier.colorText}">${tier.name}</div></td>
-            <td class="py-3 px-3 text-center"><input type="number" value="${c.wallet}" min="0" step="5" onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'wallet', this.value)" class="w-24 bg-wow-bg border border-wow-border rounded-lg px-2 py-1 text-sm font-black text-white text-center" /></td>
-            <td class="py-3 px-3 text-center"><input type="number" value="${c.spent}" min="0" step="20" onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'spent', this.value)" class="w-24 bg-wow-bg border border-amber-600/50 rounded-lg px-2 py-1 text-sm font-bold text-amber-200 text-center" /></td>
-            <td class="py-3 px-4 text-right text-sm font-black text-amber-300">${Math.floor(c.wallet / cost)} Stufen im Beutel (à ${cost}M)</td>
+            <td class="py-3.5 px-6"><div class="font-bold text-sm ${tier.colorText}">${tier.name}</div></td>
+            <td class="py-3.5 px-4 text-center"><input type="number" value="${c.wallet}" min="0" step="5" onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'wallet', this.value)" class="w-24 bg-wow-bg border border-wow-border rounded-lg px-2 py-1 text-sm font-black text-white text-center" /></td>
+            <td class="py-3.5 px-4 text-center"><input type="number" value="${c.spent}" min="0" step="20" onchange="onCrestInputUpdate(${charIdx}, '${tier.key}', 'spent', this.value)" class="w-24 bg-wow-bg border border-amber-600/50 rounded-lg px-2 py-1 text-sm font-bold text-amber-200 text-center" /></td>
+            <td class="py-3.5 px-6 text-right text-sm font-black text-amber-300">${Math.floor(c.wallet / cost)} Stufen im Beutel (à ${cost}M)</td>
           </tr>
         `;
       }).join('');
 
       document.getElementById('capsContainer').innerHTML = `
         <table class="w-full text-left border-collapse">
-          <thead><tr class="bg-wow-card border-b border-wow-border text-xs font-bold uppercase text-slate-300"><th class="py-2.5 px-4">Wappen-Art</th><th class="py-2.5 px-3 text-center">🎒 Im Beutel</th><th class="py-2.5 px-3 text-center">🔨 Verbraucht</th><th class="py-2.5 px-4 text-right">Sofort kaufbar</th></tr></thead>
+          <thead><tr class="bg-wow-card border-b border-wow-border text-xs font-bold uppercase text-slate-300"><th class="py-3 px-6">Wappen-Art</th><th class="py-3 px-4 text-center">🎒 Im Beutel</th><th class="py-3 px-4 text-center">🔨 Verbraucht</th><th class="py-3 px-6 text-right">Sofort kaufbar</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
       `;
@@ -1615,8 +1604,8 @@
 
     function setMilestoneTarget(val) {
       milestoneTarget = val;
-      document.getElementById('milestoneBtn321').className = val === 321 ? 'px-3 py-1.5 rounded-lg bg-wow-gold text-slate-950 text-xs font-black shadow' : 'px-3 py-1.5 rounded-lg bg-wow-card border border-wow-border text-xs text-purple-300 font-bold';
-      document.getElementById('milestoneBtn331').className = val === 331 ? 'px-3 py-1.5 rounded-lg bg-wow-gold text-slate-950 text-xs font-black shadow' : 'px-3 py-1.5 rounded-lg bg-wow-card border border-wow-border text-xs text-wow-gold font-bold';
+      document.getElementById('milestoneBtn321').className = val === 321 ? 'px-4 py-2 rounded-xl bg-wow-gold text-slate-950 text-xs font-black shadow' : 'px-4 py-2 rounded-xl bg-wow-card border border-wow-border text-xs text-purple-300 font-bold';
+      document.getElementById('milestoneBtn331').className = val === 331 ? 'px-4 py-2 rounded-xl bg-wow-gold text-slate-950 text-xs font-black shadow' : 'px-4 py-2 rounded-xl bg-wow-card border border-wow-border text-xs text-wow-gold font-bold';
       renderMilestoneView();
     }
 
@@ -1624,11 +1613,11 @@
       const bm = calculateMilestoneBenchmarks();
       const missing = SLOTS.filter(s => bm[s.key] < milestoneTarget);
       const banner = document.getElementById('crestStatusBanner');
-      banner.className = missing.length === 0 ? 'p-3.5 rounded-xl bg-emerald-950/50 border border-emerald-700/50 text-emerald-200 text-xs font-semibold' : 'p-3.5 rounded-xl bg-amber-950/40 border border-amber-700/50 text-amber-200 text-xs';
+      banner.className = missing.length === 0 ? 'p-4 rounded-xl bg-emerald-950/50 border border-emerald-700/50 text-emerald-200 text-sm font-semibold' : 'p-4 rounded-xl bg-amber-950/40 border border-amber-700/50 text-amber-200 text-sm';
       banner.innerHTML = missing.length === 0 ? `✅ Alle 16 Slots haben mindestens ${milestoneTarget} erreicht!` : `⏳ Es fehlen noch ${missing.length} Slots bis ${milestoneTarget}: <strong class="text-white">${missing.map(s => s.label).join(', ')}</strong>`;
       document.getElementById('crestSlotsGrid').innerHTML = SLOTS.map(s => {
         const ok = bm[s.key] >= milestoneTarget;
-        return `<div class="p-3 rounded-xl border ${ok ? 'bg-emerald-950/25 border-emerald-700/50' : 'bg-red-950/25 border-red-800/50'} flex justify-between items-center text-sm"><span class="font-extrabold text-white">${s.label}: <strong class="text-wow-gold">${bm[s.key]}</strong></span><span>${ok ? '✔️' : '⚠️'}</span></div>`;
+        return `<div class="p-3.5 rounded-xl border ${ok ? 'bg-emerald-950/25 border-emerald-700/50' : 'bg-red-950/25 border-red-800/50'} flex justify-between items-center text-sm"><span class="font-extrabold text-white">${s.label}: <strong class="text-wow-gold">${bm[s.key]}</strong></span><span>${ok ? '✔️' : '⚠️'}</span></div>`;
       }).join('');
     }
 
@@ -2089,8 +2078,8 @@
         const btn = document.getElementById(`tabBtn-${t}`);
         if (sec) sec.classList.toggle('hidden', t !== tab);
         if (btn) btn.className = t === tab
-          ? 'w-full text-left px-3 py-2.5 rounded-lg transition flex items-center gap-2.5 bg-wow-gold text-slate-950 font-bold shadow'
-          : 'w-full text-left px-3 py-2.5 rounded-lg transition flex items-center gap-2.5 bg-wow-card/70 hover:bg-wow-card text-white';
+          ? 'w-full text-left px-4 py-3 rounded-xl transition flex items-center gap-3 bg-wow-gold text-slate-950 font-bold shadow'
+          : 'w-full text-left px-4 py-3 rounded-xl transition flex items-center gap-3 bg-wow-card/70 hover:bg-wow-card text-white';
       });
     }
 
