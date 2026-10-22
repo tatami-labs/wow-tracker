@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>WoW Kriegsmeuten-Tracker v22.0</title>
+  <title>WoW Kriegsmeuten-Tracker v23.0</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -15,15 +15,28 @@
       theme: {
         extend: {
           colors: {
-            wow: { bg: '#0b0e14', panel: '#131822', card: '#1b2232', border: '#2e3a52', gold: '#fbbf24' }
+            wow: {
+              bg:     'rgb(var(--wow-bg-rgb) / <alpha-value>)',
+              panel:  'rgb(var(--wow-panel-rgb) / <alpha-value>)',
+              card:   'rgb(var(--wow-card-rgb) / <alpha-value>)',
+              border: 'rgb(var(--wow-border-rgb) / <alpha-value>)',
+              gold:   'rgb(var(--wow-gold-rgb) / <alpha-value>)'
+            }
           }
         }
       }
     };
   </script>
   <style>
+    :root {
+      --wow-bg-rgb: 11 14 20;
+      --wow-panel-rgb: 19 24 34;
+      --wow-card-rgb: 29 37 54;
+      --wow-border-rgb: 48 61 87;
+      --wow-gold-rgb: 251 191 36;
+    }
     body {
-      background-color: #0b0e14;
+      background-color: rgb(var(--wow-bg-rgb));
       color: #f1f5f9;
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
       -webkit-font-smoothing: antialiased;
@@ -31,8 +44,9 @@
       font-variant-numeric: tabular-nums;
     }
     ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #0b0e14; }
-    ::-webkit-scrollbar-thumb { background: #2e3a52; border-radius: 3px; }
+    ::-webkit-scrollbar-track { background: rgb(var(--wow-bg-rgb)); }
+    ::-webkit-scrollbar-thumb { background: rgb(var(--wow-border-rgb)); border-radius: 3px; }
+    input[type="range"] { accent-color: rgb(var(--wow-gold-rgb)); }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -44,7 +58,7 @@
         <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 to-yellow-600 flex items-center justify-center text-slate-950 font-black text-sm">W</div>
         <h1 class="text-base font-extrabold text-white tracking-tight flex items-center gap-2">
           Kriegsmeuten-Tracker
-          <span class="text-xs px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v22.0 KLAR</span>
+          <span class="text-xs px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">v23.0</span>
         </h1>
       </div>
 
@@ -63,6 +77,10 @@
         </button>
         <button type="button" onclick="hardResetStorage()" class="px-3 py-1.5 rounded-lg bg-red-950/80 hover:bg-red-900 text-red-200 border border-red-700/50 text-xs font-bold transition">
           🧹 Leeren
+        </button>
+        <!-- NEU OBEN RECHTS: FARBEN & HINTERGRUND-SCHIEBEREGLER -->
+        <button type="button" onclick="openModal('themeModal')" class="px-3.5 py-1.5 rounded-lg bg-wow-gold hover: brightness-110 text-slate-950 text-xs font-black shadow transition flex items-center gap-1.5">
+          <span>🎨</span> Farben & Kontrast
         </button>
       </div>
     </div>
@@ -225,6 +243,109 @@
     </div>
   </main>
 
+  <!-- ===================================================================== -->
+  <!-- NEU OBEN RECHTS: LIVE-FARB- & HINTERGRUND-REGLER (MIT SCHIEBEREGLERN) -->
+  <!-- ===================================================================== -->
+  <div id="themeModal" class="fixed inset-0 bg-black/25 z-50 hidden items-start justify-end p-4 pt-14">
+    <div class="bg-wow-panel border-2 border-wow-gold rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-wow-border pb-2.5">
+        <div>
+          <h3 class="text-sm font-extrabold text-white flex items-center gap-2">
+            <span>🎨</span> Hintergrund- & Kontrast-Regler
+          </h3>
+          <p class="text-[11px] text-slate-300">Ziehe die Regler – die Seite passt sich sofort live im Hintergrund an!</p>
+        </div>
+        <button type="button" onclick="closeModal('themeModal')" class="px-2.5 py-1 rounded-lg bg-wow-card hover:bg-slate-700 text-slate-200 text-xs font-bold">&times; Schließen</button>
+      </div>
+
+      <!-- Schnell-Vorlagen -->
+      <div class="space-y-1.5">
+        <div class="text-[11px] font-bold uppercase text-slate-300">Schnell-Vorlagen:</div>
+        <div class="grid grid-cols-4 gap-1.5 text-xs">
+          <button type="button" onclick="applyThemePreset('default')" class="py-1.5 px-2 rounded-lg bg-wow-card hover:bg-slate-700 border border-wow-border font-bold text-white">Standard</button>
+          <button type="button" onclick="applyThemePreset('oled')" class="py-1.5 px-2 rounded-lg bg-black hover:bg-slate-900 border border-slate-700 font-bold text-white">Tiefschwarz</button>
+          <button type="button" onclick="applyThemePreset('contrast')" class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-500 font-bold text-amber-300">Kontrast+</button>
+          <button type="button" onclick="applyThemePreset('slate')" class="py-1.5 px-2 rounded-lg bg-slate-700 hover:bg-slate-600 border border-slate-400 font-bold text-white">Heller</button>
+        </div>
+      </div>
+
+      <!-- Globale Farbton- & Sättigungs-Schieberegler -->
+      <div class="p-3 rounded-xl bg-wow-card border border-wow-border space-y-3">
+        <div>
+          <div class="flex justify-between text-xs font-bold mb-1">
+            <span class="text-white">🌈 Grund-Farbton (Blau / Grau / Violett / Grün)</span>
+            <span id="themeHueLabel" class="text-wow-gold">220°</span>
+          </div>
+          <input type="range" id="themeHueSlider" min="0" max="360" value="220" oninput="onThemeSliderInput()" class="w-full h-2 rounded-lg cursor-pointer" />
+        </div>
+
+        <div>
+          <div class="flex justify-between text-xs font-bold mb-1">
+            <span class="text-white">💧 Farb-Sättigung (0% = Reines Grau)</span>
+            <span id="themeSatLabel" class="text-wow-gold">30%</span>
+          </div>
+          <input type="range" id="themeSatSlider" min="0" max="65" value="30" oninput="onThemeSliderInput()" class="w-full h-2 rounded-lg cursor-pointer" />
+        </div>
+      </div>
+
+      <!-- 4 Einzel-Schieberegler für Dunkel vs. Hell (inkl. direktem Farbwähler) -->
+      <div class="space-y-3">
+        <!-- 1. Außen-Hintergrund (Dunkel) -->
+        <div class="p-2.5 rounded-xl bg-wow-card/60 border border-wow-border">
+          <div class="flex items-center justify-between text-xs font-bold mb-1">
+            <span class="text-white">1. Außen-Hintergrund (Dunkel)</span>
+            <div class="flex items-center gap-2">
+              <span id="themeBgLightLabel" class="text-slate-300">6%</span>
+              <input type="color" id="themeBgColorPicker" oninput="onDirectColorPick('bg', this.value)" class="w-6 h-5 rounded cursor-pointer bg-transparent border-0" title="Direkte Farbe wählen" />
+            </div>
+          </div>
+          <input type="range" id="themeBgLightSlider" min="0" max="45" value="6" oninput="onThemeSliderInput()" class="w-full h-2 rounded-lg cursor-pointer" />
+        </div>
+
+        <!-- 2. Bereichs-Boxen (Mittel) -->
+        <div class="p-2.5 rounded-xl bg-wow-card/60 border border-wow-border">
+          <div class="flex items-center justify-between text-xs font-bold mb-1">
+            <span class="text-white">2. Tabellen- & Bereichs-Boxen</span>
+            <div class="flex items-center gap-2">
+              <span id="themePanelLightLabel" class="text-slate-300">11%</span>
+              <input type="color" id="themePanelColorPicker" oninput="onDirectColorPick('panel', this.value)" class="w-6 h-5 rounded cursor-pointer bg-transparent border-0" title="Direkte Farbe wählen" />
+            </div>
+          </div>
+          <input type="range" id="themePanelLightSlider" min="2" max="55" value="11" oninput="onThemeSliderInput()" class="w-full h-2 rounded-lg cursor-pointer" />
+        </div>
+
+        <!-- 3. Innere Karten & Schalter (Hellere Ebene) -->
+        <div class="p-2.5 rounded-xl bg-wow-card/60 border border-wow-border">
+          <div class="flex items-center justify-between text-xs font-bold mb-1">
+            <span class="text-white">3. Innere Karten & Felder (Hellere Ebene)</span>
+            <div class="flex items-center gap-2">
+              <span id="themeCardLightLabel" class="text-slate-300">17%</span>
+              <input type="color" id="themeCardColorPicker" oninput="onDirectColorPick('card', this.value)" class="w-6 h-5 rounded cursor-pointer bg-transparent border-0" title="Direkte Farbe wählen" />
+            </div>
+          </div>
+          <input type="range" id="themeCardLightSlider" min="5" max="65" value="17" oninput="onThemeSliderInput()" class="w-full h-2 rounded-lg cursor-pointer" />
+        </div>
+
+        <!-- 4. Rahmen & Linien-Helligkeit -->
+        <div class="p-2.5 rounded-xl bg-wow-card/60 border border-wow-border">
+          <div class="flex items-center justify-between text-xs font-bold mb-1">
+            <span class="text-white">4. Rahmen & Trennlinien-Kontrast</span>
+            <div class="flex items-center gap-2">
+              <span id="themeBorderLightLabel" class="text-slate-300">27%</span>
+              <input type="color" id="themeBorderColorPicker" oninput="onDirectColorPick('border', this.value)" class="w-6 h-5 rounded cursor-pointer bg-transparent border-0" title="Direkte Farbe wählen" />
+            </div>
+          </div>
+          <input type="range" id="themeBorderLightSlider" min="10" max="80" value="27" oninput="onThemeSliderInput()" class="w-full h-2 rounded-lg cursor-pointer" />
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-2 border-t border-wow-border">
+        <button type="button" onclick="applyThemePreset('default')" class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-slate-700 text-xs font-semibold text-slate-200">↺ Standard-Farben</button>
+        <button type="button" onclick="closeModal('themeModal')" class="px-4 py-1.5 rounded-lg bg-wow-gold text-slate-950 text-xs font-black shadow">✓ Fertig</button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: SIMCRAFT IMPORT -->
   <div id="simcModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-wow-panel border border-wow-border rounded-2xl max-w-2xl w-full p-5 space-y-3 shadow-2xl">
@@ -323,9 +444,119 @@
   <script>
     const STORAGE_KEY_MAIN  = 'wow_warband_tracker_data';
     const STORAGE_KEY_RULES = 'wow_warband_tracker_rules';
-    const CURRENT_SCHEMA_VERSION = 22;
+    const STORAGE_KEY_THEME = 'wow_warband_tracker_theme';
+    const CURRENT_SCHEMA_VERSION = 23;
     const CRAFTED_MYTH_COST = 80;
 
+    // =========================================================================
+    // 1. HINTERGRUND- & KONTRAST-ENGINE (SCHIEBEREGLER + COLOR PICKER)
+    // =========================================================================
+    const DEFAULT_THEME = {
+      hue: 220, sat: 30,
+      bgL: 6, panelL: 11, cardL: 17, borderL: 27,
+      customRgb: null
+    };
+    let themeConfig = { ...DEFAULT_THEME };
+
+    function hslToRgb(h, s, l) {
+      s /= 100; l /= 100;
+      const k = n => (n + h / 30) % 12;
+      const a = s * Math.min(l, 1 - l);
+      const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+      return [Math.round(255 * f(0)), Math.round(255 * f(8)), Math.round(255 * f(4))];
+    }
+
+    function rgbToHex(r, g, b) {
+      return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+    }
+
+    function hexToRgb(hex) {
+      const clean = hex.replace('#', '');
+      const num = parseInt(clean, 16);
+      return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
+    }
+
+    function applyThemeToDom() {
+      const { hue, sat, bgL, panelL, cardL, borderL, customRgb } = themeConfig;
+      const bgRgb     = customRgb?.bg     || hslToRgb(hue, sat, bgL);
+      const panelRgb  = customRgb?.panel  || hslToRgb(hue, sat, panelL);
+      const cardRgb   = customRgb?.card   || hslToRgb(hue, sat, cardL);
+      const borderRgb = customRgb?.border || hslToRgb(hue, sat, borderL);
+
+      const root = document.documentElement;
+      root.style.setProperty('--wow-bg-rgb',     `${bgRgb[0]} ${bgRgb[1]} ${bgRgb[2]}`);
+      root.style.setProperty('--wow-panel-rgb',  `${panelRgb[0]} ${panelRgb[1]} ${panelRgb[2]}`);
+      root.style.setProperty('--wow-card-rgb',   `${cardRgb[0]} ${cardRgb[1]} ${cardRgb[2]}`);
+      root.style.setProperty('--wow-border-rgb', `${borderRgb[0]} ${borderRgb[1]} ${borderRgb[2]}`);
+
+      // Synchronisiere Regler & Farbwähler im Modal
+      const elHue = document.getElementById('themeHueSlider');
+      if (elHue) {
+        elHue.value = hue;
+        document.getElementById('themeSatSlider').value = sat;
+        document.getElementById('themeBgLightSlider').value = bgL;
+        document.getElementById('themePanelLightSlider').value = panelL;
+        document.getElementById('themeCardLightSlider').value = cardL;
+        document.getElementById('themeBorderLightSlider').value = borderL;
+
+        document.getElementById('themeHueLabel').textContent = `${hue}°`;
+        document.getElementById('themeSatLabel').textContent = `${sat}%`;
+        document.getElementById('themeBgLightLabel').textContent = `${bgL}%`;
+        document.getElementById('themePanelLightLabel').textContent = `${panelL}%`;
+        document.getElementById('themeCardLightLabel').textContent = `${cardL}%`;
+        document.getElementById('themeBorderLightLabel').textContent = `${borderL}%`;
+
+        document.getElementById('themeBgColorPicker').value     = rgbToHex(...bgRgb);
+        document.getElementById('themePanelColorPicker').value  = rgbToHex(...panelRgb);
+        document.getElementById('themeCardColorPicker').value   = rgbToHex(...cardRgb);
+        document.getElementById('themeBorderColorPicker').value = rgbToHex(...borderRgb);
+      }
+    }
+
+    function onThemeSliderInput() {
+      themeConfig.hue     = parseInt(document.getElementById('themeHueSlider').value, 10);
+      themeConfig.sat     = parseInt(document.getElementById('themeSatSlider').value, 10);
+      themeConfig.bgL     = parseInt(document.getElementById('themeBgLightSlider').value, 10);
+      themeConfig.panelL  = parseInt(document.getElementById('themePanelLightSlider').value, 10);
+      themeConfig.cardL   = parseInt(document.getElementById('themeCardLightSlider').value, 10);
+      themeConfig.borderL = parseInt(document.getElementById('themeBorderLightSlider').value, 10);
+      themeConfig.customRgb = null;
+      applyThemeToDom();
+      try { localStorage.setItem(STORAGE_KEY_THEME, JSON.stringify(themeConfig)); } catch (e) {}
+    }
+
+    function onDirectColorPick(layerKey, hexVal) {
+      if (!themeConfig.customRgb) {
+        const { hue, sat, bgL, panelL, cardL, borderL } = themeConfig;
+        themeConfig.customRgb = {
+          bg:     hslToRgb(hue, sat, bgL),
+          panel:  hslToRgb(hue, sat, panelL),
+          card:   hslToRgb(hue, sat, cardL),
+          border: hslToRgb(hue, sat, borderL)
+        };
+      }
+      themeConfig.customRgb[layerKey] = hexToRgb(hexVal);
+      applyThemeToDom();
+      try { localStorage.setItem(STORAGE_KEY_THEME, JSON.stringify(themeConfig)); } catch (e) {}
+    }
+
+    function applyThemePreset(preset) {
+      if (preset === 'oled') {
+        themeConfig = { hue: 220, sat: 15, bgL: 0, panelL: 5, cardL: 12, borderL: 24, customRgb: null };
+      } else if (preset === 'contrast') {
+        themeConfig = { hue: 222, sat: 35, bgL: 4, panelL: 12, cardL: 22, borderL: 38, customRgb: null };
+      } else if (preset === 'slate') {
+        themeConfig = { hue: 215, sat: 22, bgL: 14, panelL: 20, cardL: 28, borderL: 42, customRgb: null };
+      } else {
+        themeConfig = { ...DEFAULT_THEME };
+      }
+      applyThemeToDom();
+      try { localStorage.setItem(STORAGE_KEY_THEME, JSON.stringify(themeConfig)); } catch (e) {}
+    }
+
+    // =========================================================================
+    // 2. DATENSTRUKTUREN & HELFER
+    // =========================================================================
     const MPLUS_KEY_REWARDS = {
       9:  { timed: 10, untimed: 6 },
       10: { timed: 12, untimed: 8 },
@@ -537,6 +768,10 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       try {
+        const savedTheme = localStorage.getItem(STORAGE_KEY_THEME);
+        if (savedTheme) themeConfig = { ...DEFAULT_THEME, ...JSON.parse(savedTheme) };
+        applyThemeToDom();
+
         const raw = localStorage.getItem(STORAGE_KEY_MAIN);
         if (raw) {
           const parsed = JSON.parse(raw);
@@ -654,9 +889,6 @@
       };
     }
 
-    // =========================================================================
-    // KOMPAKTER SLOT-RECHNER (MIT GROSSER, KLARER WEISSER SCHRIFT FÜR DIE SLOTS!)
-    // =========================================================================
     function setSlotPlannerMode(charIdx, slotKey, mode) {
       const char = characters[charIdx];
       if (!char) return;
@@ -821,7 +1053,6 @@
 
         activeRowsHtml.push(`
           <tr class="border-b border-wow-border/70 last:border-0 hover:bg-white/[0.03] transition">
-            <!-- Spalte 1: Slot-Name groß & strahlend weiß + Item-Name gut lesbar -->
             <td class="py-3 px-4">
               <div class="flex items-center gap-2.5 flex-wrap">
                 <span class="text-base font-extrabold text-white tracking-tight">${s.label}${is2HMain ? ' (2H)' : ''}</span>
@@ -832,7 +1063,6 @@
               <div class="text-xs font-medium text-slate-200 truncate max-w-[320px] mt-1">„${escapeHtml(itemName)}“</div>
             </td>
 
-            <!-- Spalte 2: Umschalter (Herstellen vs. Upgraden) -->
             <td class="py-3 px-3">
               <div class="inline-flex items-center gap-1.5 bg-wow-bg p-1 rounded-xl border border-wow-border">
                 ${canCraft ? `
@@ -858,19 +1088,16 @@
               </div>
             </td>
 
-            <!-- Spalte 3: Ziel & Schnitt-Gewinn -->
             <td class="py-3 px-3 text-center whitespace-nowrap">
               <span class="text-sm font-bold text-white">${eq} &rarr; <strong class="text-wow-gold">${targetSlotIlvl}</strong></span>
               <span class="text-xs text-emerald-400 font-extrabold block mt-0.5">+${avgGain} Ø</span>
             </td>
 
-            <!-- Spalte 4: Münzen & M+ für diesen Slot -->
             <td class="py-3 px-4 text-right whitespace-nowrap">
               <span class="text-sm font-black text-amber-300">${activeCoins} Münzen</span>
               <span class="text-xs font-extrabold text-cyan-300 block mt-0.5">🏃 ${activeRuns}× M+${keyLbl}</span>
             </td>
 
-            <!-- Spalte 5: Weglassen -->
             <td class="py-3 px-4 text-right">
               <button type="button" onclick="setSlotPlannerMode(${charIdx}, '${s.key}', 'skip')"
                       class="px-3 py-1.5 rounded-lg bg-wow-card hover:bg-red-900/70 text-slate-200 hover:text-white border border-wow-border text-xs font-bold transition"
@@ -888,7 +1115,6 @@
       const avgGainTotal = Math.max(0, (newTotalIlvlSum / 16) - sim.startAvg).toFixed(2);
 
       container.innerHTML = `
-        <!-- 1. STEUER- & ERGEBNIS-LEISTE -->
         <div class="bg-wow-panel border-2 border-wow-gold/70 rounded-xl p-4 shadow-lg space-y-3">
           <div class="flex flex-wrap items-center justify-between gap-2.5">
             <div class="flex flex-wrap items-center gap-2">
@@ -921,7 +1147,6 @@
             </div>
           </div>
 
-          <!-- SUMMEN-ZEILE -->
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2.5 border-t border-wow-border text-xs">
             <div class="bg-wow-card px-3.5 py-2.5 rounded-lg border border-wow-border flex items-center justify-between">
               <span class="text-slate-300 font-medium">Auswahl:</span>
@@ -942,7 +1167,6 @@
           </div>
         </div>
 
-        <!-- 2. TABELLE DER AKTIVEN SLOTS -->
         <div class="bg-wow-panel border border-wow-border rounded-xl overflow-hidden shadow-lg">
           ${activeRowsHtml.length > 0 ? `
             <div class="overflow-x-auto">
@@ -968,7 +1192,6 @@
           `}
         </div>
 
-        <!-- 3. WEGGELASSENE & BEREITS FERTIGE SLOTS -->
         ${(skippedChipsHtml.length > 0 || doneChipsHtml.length > 0) ? `
           <div class="bg-wow-panel border border-wow-border rounded-xl p-3.5 space-y-2.5">
             ${skippedChipsHtml.length > 0 ? `
@@ -988,9 +1211,6 @@
       `;
     }
 
-    // =========================================================================
-    // SIMULATION FÜR DEN SCHRITT-FÜR-SCHRITT-FAHRPLAN
-    // =========================================================================
     function simulateCharacter(char, charIdx) {
       const targetAvg = Number(rules.targetIlvl || 331);
       const targetTotalPoints = Math.ceil(targetAvg * 16);
