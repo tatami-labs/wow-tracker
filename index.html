@@ -1800,4 +1800,413 @@
       for (const id of ids) {
         if (MYTH_BONUS_IDS[id]) return { track: 'myth', label: MYTH_BONUS_IDS[id], eqMaxUpgradable: 334, tierKey: 'myth', stepsSpent: Math.max(0, id - 12849) };
         if (HERO_BONUS_IDS[id]) return { track: id === 12846 ? 'hero_max' : 'hero', label: HERO_BONUS_IDS[id], eqMaxUpgradable: 321, tierKey: 'hero', stepsSpent: Math.max(0, id - 12841) };
-        if (CHAMP_BONUS_IDS[id]) return { track: id === 12838 ? 'champ_max' : 'champ', label: CHAMP_BONUS_IDS[id], eqMaxUpgradable: 308, tierKey: 'champ
+        if (CHAMP_BONUS_IDS[id]) return { track: id === 12838 ? 'champ_max' : 'champ', label: CHAMP_BONUS_IDS[id], eqMaxUpgradable: 308, tierKey: 'champ', stepsSpent: Math.max(0, id - 12833) };
+        if (VET_BONUS_IDS[id]) return { track: 'vet', label: 'Veteran', eqMaxUpgradable: 295, tierKey: 'vet', stepsSpent: Math.max(0, VET_BONUS_IDS[id] - 1) };
+        if (ADV_BONUS_IDS[id]) return { track: 'adv', label: 'Abenteurer', eqMaxUpgradable: 282, tierKey: 'adv', stepsSpent: Math.max(0, ADV_BONUS_IDS[id] - 1) };
+      }
+      if (itemIlvl > 321) return { track: 'myth', label: 'Mythos', eqMaxUpgradable: 334, tierKey: 'myth', stepsSpent: MYTH_UPGRADE_STEPS.filter(st => st <= itemIlvl).length };
+      if (itemIlvl > 308) return { track: itemIlvl >= 321 ? 'hero_max' : 'hero', label: 'Held', eqMaxUpgradable: 321, tierKey: 'hero', stepsSpent: 0 };
+      if (itemIlvl > 295) return { track: itemIlvl >= 308 ? 'champ_max' : 'champ', label: 'Champion', eqMaxUpgradable: 308, tierKey: 'champ', stepsSpent: 0 };
+      return { track: 'hero_max', label: 'Max 321', eqMaxUpgradable: 321, tierKey: 'hero', stepsSpent: 0 };
+    }
+
+    function parseSimcString(rawText) {
+      const lines = (rawText || '').split(/\r?\n/);
+      let charName = '', realm = 'Unbekannt', region = 'eu', className = '', catalystCharges = 0;
+      let has331Achievement = Boolean(rules.manual331Achievement);
+      let advMarks = 0, vetMarks = 0, champMarks = 0, heroMarks = 0, mythMarks = 0;
+
+      const equippedSlots = {}, bagSlots = {}, slotMeta = {}, charWatermarks = {};
+      SLOTS.forEach(s => { equippedSlots[s.key] = 0; bagSlots[s.key] = 0; slotMeta[s.key] = { track: 'hero_max', label: '', eqMaxUpgradable: 321, eqName: '' }; });
+
+      let mythCrafted = 0, mythSteps = 0, heroSteps = 0, champSteps = 0, vetSteps = 0, advSteps = 0;
+      const bagRings = [], bagTrinkets = [], bagMythRings = [], bagMythTrinkets = [];
+      let section = 'equipped', lastIlvl = 0, lastName = '';
+      const mapKey = { head: 'head', neck: 'neck', shoulder: 'shoulder', back: 'back', chest: 'chest', wrist: 'wrist', hands: 'hands', waist: 'waist', legs: 'legs', feet: 'feet', finger1: 'finger1', finger2: 'finger2', trinket1: 'trinket1', trinket2: 'trinket2', main_hand: 'mainhand', off_hand: 'offhand' };
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line || /^#\s*(?:Saved Loadout|talents=)/i.test(line)) continue;
+        if (line.startsWith('###')) { section = line.toLowerCase().includes('gear from bags') ? 'bags' : 'other'; lastIlvl = 0; lastName = ''; continue; }
+        if (/^#\s*catalyst_currencies=/i.test(line)) { const m = line.match(/\b3465:(\d+)/); if (m) catalystCharges = parseInt(m[1], 10); continue; }
+        if (/^#\s*upgrade_currencies=/i.test(line)) {
+          advMarks   = parseInt((line.match(/\bc:3442:(\d+)/) || [])[1] || '0', 10);
+          vetMarks   = parseInt((line.match(/\bc:3443:(\d+)/) || [])[1] || '0', 10);
+          champMarks = parseInt((line.match(/\bc:3444:(\d+)/) || [])[1] || '0', 10);
+          heroMarks  = parseInt((line.match(/\bc:3445:(\d+)/) || [])[1] || '0', 10);
+          mythMarks  = parseInt((line.match(/\bc:3446:(\d+)/) || [])[1] || '0', 10);
+          continue;
+        }
+        if (/^#\s*slot_high_watermarks=/i.test(line)) {
+          const charMap = {};
+          line.replace(/^#\s*slot_high_watermarks=/i, '').trim().split('/').forEach(e => {
+            const p = e.split(':').map(n => parseInt(n, 10));
+            if (p.length >= 3 && !isNaN(p[0])) charMap[p[0]] = p[1] || 0;
+          });
+          SLOTS.forEach(s => { if (charMap[s.redundancyId] !== undefined) charWatermarks[s.key] = charMap[s.redundancyId]; });
+          continue;
+        }
+        if (section === 'equipped') {
+          const cm = line.match(/^(warrior|paladin|hunter|rogue|priest|deathknight|shaman|mage|warlock|monk|druid|demonhunter|evoker)="?([^"\n]+)"?/i);
+          if (cm) { className = cm[1].toLowerCase(); charName = cm[2].trim(); continue; }
+          const sm = line.match(/^server=(.+)$/i);
+          if (sm) { realm = sm[1].trim().replace(/_/g, ' '); continue; }
+          const rm = line.match(/^region=(.+)$/i);
+          if (rm) { region = rm[1].trim().toLowerCase(); continue; }
+          if (line.startsWith('#')) {
+            const im = line.replace(/^#\s*/, '').match(/^(.*?)\s*\((\d+)\)\s*$/);
+            if (im) { lastName = im[1].trim(); lastIlvl = parseInt(im[2], 10); }
+            continue;
+          }
+          const slm = line.match(/^(head|neck|shoulder|back|chest|wrist|hands|waist|legs|feet|finger1|finger2|trinket1|trinket2|main_hand|off_hand)=/i);
+          if (slm) {
+            const key = mapKey[slm[1].toLowerCase()];
+            const bonus = (line.match(/bonus_id=([0-9\/]+)/i) || [])[1] || '';
+            const isCrafted = /crafting_quality=/i.test(line);
+            if (key && lastIlvl > 0) {
+              equippedSlots[key] = lastIlvl;
+              const info = classifyItemTrackFromBonusIds(bonus, isCrafted, lastIlvl);
+              slotMeta[key] = { ...info, eqName: lastName };
+              if (info.track === 'crafted' && lastIlvl >= 331) mythCrafted++;
+              else if (info.tierKey === 'myth') mythSteps += info.stepsSpent;
+              else if (info.tierKey === 'hero') heroSteps += info.stepsSpent;
+              else if (info.tierKey === 'champ') champSteps += info.stepsSpent;
+              else if (info.tierKey === 'vet') vetSteps += info.stepsSpent;
+              else if (info.tierKey === 'adv') advSteps += info.stepsSpent;
+            }
+            lastIlvl = 0; lastName = '';
+          }
+        } else if (section === 'bags') {
+          const stripped = line.replace(/^#\s*/, '');
+          const slm = stripped.match(/^(head|neck|shoulder|back|chest|wrist|hands|waist|legs|feet|finger1|finger2|trinket1|trinket2|main_hand|off_hand)=/i);
+          if (slm) {
+            const raw = slm[1].toLowerCase();
+            const key = mapKey[raw];
+            const bonus = (stripped.match(/bonus_id=([0-9\/]+)/i) || [])[1] || '';
+            const trackInfo = classifyItemTrackFromBonusIds(bonus, /crafting_quality=/i.test(stripped), lastIlvl);
+            if (key && lastIlvl > 0) {
+              if (raw === 'finger1' || raw === 'finger2') {
+                bagRings.push({ ilvl: lastIlvl, name: lastName, maxUp: trackInfo.eqMaxUpgradable });
+                if (trackInfo.track === 'myth') bagMythRings.push({ ilvl: lastIlvl, name: lastName });
+              } else if (raw === 'trinket1' || raw === 'trinket2') {
+                bagTrinkets.push({ ilvl: lastIlvl, name: lastName, maxUp: trackInfo.eqMaxUpgradable });
+                if (trackInfo.track === 'myth') bagMythTrinkets.push({ ilvl: lastIlvl, name: lastName });
+              } else {
+                if (lastIlvl > (bagSlots[key] || 0)) { bagSlots[key] = lastIlvl; slotMeta[key].bagName = lastName; slotMeta[key].bagMaxUpgradable = trackInfo.eqMaxUpgradable; }
+                if (trackInfo.track === 'myth') { slotMeta[key].bagMythIlvl = lastIlvl; slotMeta[key].bagMythName = lastName; slotMeta[key].bagMaxUpgradable = 334; }
+              }
+            }
+            lastIlvl = 0; lastName = '';
+          } else {
+            const im = stripped.match(/^(.*?)\s*\((\d+)\)\s*$/);
+            if (im) { lastName = im[1].trim(); lastIlvl = parseInt(im[2], 10); }
+          }
+        }
+      }
+
+      const assignPairBagItems = (list, slotA, slotB) => {
+        if (!list.length) return;
+        list.sort((a, b) => b.ilvl - a.ilvl);
+        const weakerSlot = (equippedSlots[slotA] || 0) <= (equippedSlots[slotB] || 0) ? slotA : slotB;
+        const strongerSlot = weakerSlot === slotA ? slotB : slotA;
+        bagSlots[weakerSlot] = list[0].ilvl;
+        slotMeta[weakerSlot].bagName = list[0].name;
+        slotMeta[weakerSlot].bagMaxUpgradable = list[0].maxUp;
+        if (list.length >= 2) {
+          bagSlots[strongerSlot] = list[1].ilvl;
+          slotMeta[strongerSlot].bagName = list[1].name;
+          slotMeta[strongerSlot].bagMaxUpgradable = list[1].maxUp;
+        }
+      };
+      assignPairBagItems(bagRings, 'finger1', 'finger2');
+      assignPairBagItems(bagTrinkets, 'trinket1', 'trinket2');
+
+      const assignPairMythBagItems = (list, slotA, slotB) => {
+        if (!list.length) return;
+        list.sort((a, b) => b.ilvl - a.ilvl);
+        const targetFirst = slotMeta[slotA].track !== 'myth' ? slotA : slotB;
+        const targetSecond = targetFirst === slotA ? slotB : slotA;
+        slotMeta[targetFirst].bagMythIlvl = list[0].ilvl;
+        slotMeta[targetFirst].bagMythName = list[0].name;
+        slotMeta[targetFirst].bagMaxUpgradable = 334;
+        if (list.length >= 2) {
+          slotMeta[targetSecond].bagMythIlvl = list[1].ilvl;
+          slotMeta[targetSecond].bagMythName = list[1].name;
+          slotMeta[targetSecond].bagMaxUpgradable = 334;
+        }
+      };
+      assignPairMythBagItems(bagMythRings, 'finger1', 'finger2');
+      assignPairMythBagItems(bagMythTrinkets, 'trinket1', 'trinket2');
+
+      const mythUnitCost      = getEffectiveMythStepCost();
+      const heroChampUnitCost = getEffectiveHeroChampStepCost();
+
+      return {
+        name: charName, realm, region, className, has331Achievement, catalystCharges,
+        hasTwoHand: equippedSlots.mainhand > 0 && equippedSlots.offhand === 0,
+        slots: equippedSlots, bagSlots, slotMeta, charWatermarks,
+        advMarks, vetMarks, champMarks, heroMarks, mythMarks,
+        advSpent: advSteps * heroChampUnitCost,
+        vetSpent: vetSteps * heroChampUnitCost,
+        champSpent: champSteps * heroChampUnitCost,
+        heroSpent: heroSteps * heroChampUnitCost,
+        mythSpent: mythCrafted * CRAFTED_MYTH_COST + mythSteps * mythUnitCost,
+        mythSpentNote: `${mythCrafted}× Handwerk (331 à 80M) + ${mythSteps}× Mythos-Stufen (à ${mythUnitCost}M)`,
+        completedHistory: [], slotModes: {}
+      };
+    }
+
+    function openSimcModal() {
+      document.getElementById('simcTextarea').value = '';
+      document.getElementById('simcPreviewBox').classList.add('hidden');
+      openModal('simcModal');
+    }
+
+    // LIVE-VORSCHAU ZEIGT DIR SOFORT DEN ABGLEICH MIT DEINEM BISHERIGEN STAND
+    function previewSimcInput() {
+      const raw = document.getElementById('simcTextarea').value;
+      const box = document.getElementById('simcPreviewBox');
+      if (!raw.trim()) { box.classList.add('hidden'); return; }
+      const p = parseSimcString(raw);
+      box.classList.remove('hidden');
+
+      const existing = characters.find(c => c.name.toLowerCase() === (p.name || '').toLowerCase());
+      if (existing) {
+        const { changesLog } = reconcileSlotModesOnSimcUpdate(existing, p);
+        const mythDiff = p.mythMarks - (existing.mythMarks || 0);
+        const diffSign = mythDiff >= 0 ? `+${mythDiff}` : `${mythDiff}`;
+        box.innerHTML = `
+          <div class="font-bold text-emerald-300">🔄 Bestehender Charakter erkannt: <span class="text-white">${escapeHtml(p.name)} (${escapeHtml(p.realm)})</span> – Daten werden überschrieben!</div>
+          <div class="text-slate-200">🟠 <strong>Mythisch-Wappen im Beutel:</strong> ${existing.mythMarks || 0} &rarr; <strong class="text-wow-gold">${p.mythMarks}</strong> (${diffSign}) | 🟣 <strong>Held:</strong> ${existing.heroMarks || 0} &rarr; <strong>${p.heroMarks}</strong></div>
+          <div class="text-amber-300">${changesLog.length > 0 ? `⚡ <strong>Erkannte Slot-Updates (${changesLog.length}):</strong> ${escapeHtml(changesLog.join(' • '))}` : '✔️ Deine bisherige Slot-Auswahl stimmt noch mit den Items überein und bleibt erhalten.'}</div>
+        `;
+      } else {
+        box.innerHTML = `
+          <div class="font-bold text-purple-300">✔️ Neuer Charakter erkannt: <span class="text-white">${escapeHtml(p.name || 'Unbekannt')} (${escapeHtml(p.realm)})</span></div>
+          <div>🟠 Beutel: <strong>${p.mythMarks} Mythisch</strong> | 🟣 Held: <strong>${p.heroMarks}</strong> | 🔨 Bisher verbraucht: <strong>${p.mythSpent}</strong></div>
+        `;
+      }
+    }
+
+    // ÜBERSCHREIBT IMMER ALLE WAPPEN & ITEMS UND AKTUALISIERT DIE AUSWAHL BEI ÄNDERUNGEN
+    function importSimcProfile() {
+      const raw = document.getElementById('simcTextarea').value;
+      if (!raw.trim()) return;
+      const p = parseSimcString(raw);
+      if (!p.name) { showToast('Kein Charakter im SimC erkannt.', 'error'); return; }
+
+      const idx = characters.findIndex(c => c.name.toLowerCase() === p.name.toLowerCase());
+      if (idx >= 0) {
+        const ex = characters[idx];
+        const { reconciledModes, changesLog } = reconcileSlotModesOnSimcUpdate(ex, p);
+        characters[idx] = {
+          ...p,
+          has331Achievement: Boolean(ex.has331Achievement || p.has331Achievement),
+          slotModes: reconciledModes,
+          completedHistory: [] // Frischer SimC-Stand enthält bereits alle im Spiel gemachten Upgrades
+        };
+        activeCharIndex = idx;
+        saveCharsToStorage();
+        renderAll();
+        closeModal('simcModal');
+        showToast(
+          changesLog.length > 0
+            ? `🔄 ${p.name} aktualisiert (${p.mythMarks} Wappen, ${changesLog.length} Slot-Auswahlen angepasst)!`
+            : `🔄 ${p.name} aktualisiert (Wappen & Items überschrieben, Auswahl beibehalten)!`,
+          'success'
+        );
+      } else {
+        characters.push(p);
+        activeCharIndex = characters.length - 1;
+        saveCharsToStorage();
+        renderAll();
+        closeModal('simcModal');
+        showToast(`${p.name} neu importiert!`, 'success');
+      }
+    }
+
+    async function fetchCharacterFromRaiderIO(name, realm, region = 'eu') {
+      const res = await fetch(`https://raider.io/api/v1/characters/profile?region=${region}&realm=${encodeURIComponent(realm.trim())}&name=${encodeURIComponent(name.trim())}&fields=gear`);
+      if (!res.ok) throw new Error(`Charakter "${name}" nicht gefunden.`);
+      const data = await res.json();
+      const items = data.gear?.items || {};
+      const slots = {}, eqMeta = {};
+      SLOTS.forEach(s => {
+        const it = items[s.key];
+        const ilvl = it?.item_level || 0;
+        slots[s.key] = ilvl;
+        const info = classifyItemTrackFromBonusIds((it?.bonuses || []).join('/'), false, ilvl);
+        eqMeta[s.key] = { ...info, eqName: it?.name || '' };
+      });
+      const hasTwoHand = slots.mainhand > 0 && slots.offhand === 0;
+      return { name: data.name || name, realm: data.realm || realm, region, className: data.class || '', hasTwoHand, slots, eqMeta };
+    }
+
+    async function addSingleCharacterRaiderIO() {
+      const region = document.getElementById('rioRegionInput').value || 'eu';
+      const name = document.getElementById('singleCharName').value.trim();
+      const realm = document.getElementById('singleCharRealm').value.trim();
+      if (!name || !realm) return;
+      try {
+        const c = await fetchCharacterFromRaiderIO(name, realm, region);
+        characters.push(migrateCharacterObject({
+          name: c.name, realm: c.realm, region: c.region, className: c.className, hasTwoHand: c.hasTwoHand,
+          slots: c.slots, bagSlots: {}, slotMeta: c.eqMeta, charWatermarks: { ...c.slots },
+          completedHistory: [], slotModes: {}, catalystCharges: 0,
+          mythMarks: 0, heroMarks: 0, champMarks: 0, vetMarks: 0, advMarks: 0,
+          mythSpent: 0, heroSpent: 0, champSpent: 0, vetSpent: 0, advSpent: 0
+        }));
+        activeCharIndex = characters.length - 1;
+        saveCharsToStorage();
+        renderAll();
+        closeModal('addCharModal');
+        showToast(`${c.name} geladen!`, 'success');
+      } catch (e) { showToast(e.message, 'error'); }
+    }
+
+    async function refreshActiveCharRaiderIO() {
+      const char = characters[activeCharIndex];
+      if (!char) return;
+      try {
+        const updated = await fetchCharacterFromRaiderIO(char.name, char.realm, char.region || 'eu');
+        const mergedMeta = {};
+        SLOTS.forEach(s => {
+          const oldMeta = char.slotMeta?.[s.key] || {};
+          const newMeta = updated.eqMeta[s.key] || {};
+          const newIlvl = updated.slots[s.key] || 0;
+          const keepCrafted = oldMeta.track === 'crafted' && newIlvl === 331;
+          mergedMeta[s.key] = {
+            ...oldMeta,
+            track: keepCrafted ? 'crafted' : newMeta.track,
+            label: keepCrafted ? '80M Handwerk (331)' : newMeta.label,
+            eqMaxUpgradable: keepCrafted ? 331 : newMeta.eqMaxUpgradable,
+            eqName: newMeta.eqName || oldMeta.eqName
+          };
+        });
+        const tempNewChar = { ...char, hasTwoHand: updated.hasTwoHand, slots: updated.slots, slotMeta: mergedMeta };
+        const { reconciledModes } = reconcileSlotModesOnSimcUpdate(char, tempNewChar);
+        characters[activeCharIndex] = {
+          ...tempNewChar,
+          slotModes: reconciledModes
+        };
+        saveCharsToStorage();
+        renderAll();
+        showToast(`${char.name} aktualisiert!`, 'success');
+      } catch (e) { showToast(e.message, 'error'); }
+    }
+
+    function removeCharacter(idx) {
+      if (!confirm(`"${characters[idx]?.name}" wirklich entfernen?`)) return;
+      characters.splice(idx, 1);
+      activeCharIndex = 0;
+      saveCharsToStorage();
+      renderAll();
+    }
+
+    function openEditSlotModal(charIdx, slotKey, slotLabel) {
+      const char = characters[charIdx];
+      currentEditingCell = { charIdx, slotKey };
+      const meta = char.slotMeta?.[slotKey] || {};
+      document.getElementById('editSlotTitle').textContent = `${char.name} – ${slotLabel}`;
+      document.getElementById('editSlotEquippedInput').value = char.slots?.[slotKey] || 0;
+      document.getElementById('editSlotBagInput').value = char.bagSlots?.[slotKey] || 0;
+      const trackVal = meta.track === 'crafted' ? 'crafted' : (meta.eqMaxUpgradable >= 334 ? 'myth' : (meta.eqMaxUpgradable <= 308 ? 'champ_max' : 'hero_max'));
+      document.getElementById('editSlotTrackSelect').value = trackVal;
+      openModal('editSlotModal');
+    }
+
+    function saveManualSlotEdit() {
+      if (!currentEditingCell) return;
+      const { charIdx, slotKey } = currentEditingCell;
+      const char = characters[charIdx];
+      const newEq = Math.max(0, parseInt(document.getElementById('editSlotEquippedInput').value || '0', 10));
+      const newBag = Math.max(0, parseInt(document.getElementById('editSlotBagInput').value || '0', 10));
+      const selTrack = document.getElementById('editSlotTrackSelect').value;
+
+      char.slots[slotKey] = newEq;
+      char.bagSlots[slotKey] = newBag;
+      if (!char.slotMeta[slotKey]) char.slotMeta[slotKey] = {};
+
+      if (selTrack === 'crafted') {
+        char.slotMeta[slotKey].track = 'crafted';
+        char.slotMeta[slotKey].label = '80M Handwerk (331)';
+        char.slotMeta[slotKey].eqMaxUpgradable = 331;
+      } else if (selTrack === 'myth') {
+        char.slotMeta[slotKey].track = 'myth';
+        char.slotMeta[slotKey].label = 'Mythos';
+        char.slotMeta[slotKey].eqMaxUpgradable = 334;
+      } else if (selTrack === 'champ_max') {
+        char.slotMeta[slotKey].track = 'champ_max';
+        char.slotMeta[slotKey].label = 'Champion 6/6';
+        char.slotMeta[slotKey].eqMaxUpgradable = 308;
+      } else {
+        char.slotMeta[slotKey].track = 'hero_max';
+        char.slotMeta[slotKey].label = 'Held 6/6';
+        char.slotMeta[slotKey].eqMaxUpgradable = 321;
+      }
+
+      if (newBag > 321) char.slotMeta[slotKey].bagMaxUpgradable = 334;
+      saveCharsToStorage();
+      renderAll();
+      closeModal('editSlotModal');
+    }
+
+    function switchTab(tab) {
+      ['slotplanner', 'plan', 'caps', 'milestone'].forEach(t => {
+        const sec = document.getElementById(`tab-${t}`);
+        const btn = document.getElementById(`tabBtn-${t}`);
+        if (sec) sec.classList.toggle('hidden', t !== tab);
+        if (btn) btn.className = t === tab
+          ? 'w-full text-left px-4 py-3 rounded-xl transition flex items-center gap-3 bg-wow-gold text-slate-950 font-bold shadow'
+          : 'w-full text-left px-4 py-3 rounded-xl transition flex items-center gap-3 bg-wow-card/70 hover:bg-wow-card text-white';
+      });
+    }
+
+    function openModal(id)  { const el = document.getElementById(id); if (el) { el.classList.remove('hidden'); el.classList.add('flex'); } }
+    function closeModal(id) { const el = document.getElementById(id); if (el) { el.classList.add('hidden'); el.classList.remove('flex'); } }
+
+    function exportJsonBackup() {
+      const blob = new Blob([JSON.stringify({ schemaVersion: CURRENT_SCHEMA_VERSION, characters }, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'wow-kriegsmeute-backup.json';
+      a.click();
+    }
+
+    function importJsonBackup(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          const migrated = migrateStoragePayload(parsed);
+          if (!migrated) throw new Error('Ungültige JSON-Struktur');
+          characters = migrated;
+          activeCharIndex = 0;
+          saveCharsToStorage();
+          renderAll();
+          closeModal('backupModal');
+          showToast('Backup geladen!', 'success');
+        } catch (err) { showToast('Ungültige Backup-Datei.', 'error'); }
+      };
+      reader.readAsText(file);
+    }
+
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const el = document.createElement('div');
+      const colors = { success: 'bg-emerald-950 border-emerald-600 text-emerald-200', error: 'bg-red-950 border-red-600 text-red-200', info: 'bg-slate-900 border-slate-600 text-slate-200' };
+      el.className = `px-3.5 py-2.5 rounded-xl border shadow-xl text-xs font-medium ${colors[type] || colors.info}`;
+      el.textContent = msg;
+      container.appendChild(el);
+      setTimeout(() => el.remove(), 3500);
+    }
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+  </script>
+</body>
+</html>
